@@ -1,0 +1,15 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const {JSDOM,VirtualConsole}=require('jsdom');const {FakeHID}=require('./fake-hid.cjs');
+const device=new FakeHID({bytes:10,hook:r=>r.command===2?{mutate:(d,p)=>p[8]=1}:{}});device.vendorId=0x303a;device.productId=0x4004;let picked=null,tests=0;
+const errors=[],vc=new VirtualConsole();vc.on('jsdomError',e=>errors.push(e.message));
+const dom=new JSDOM(fs.readFileSync(path.join(__dirname,'../AC10x-Audio-Lab.html'),'utf8'),{url:'https://ui-check.invalid/',runScripts:'dangerously',pretendToBeVisual:true,virtualConsole:vc,beforeParse(w){w.scrollTo=()=>{};w.URL.createObjectURL=()=> 'blob:qa';w.URL.revokeObjectURL=()=>{};Object.defineProperty(w.navigator,'hid',{value:{requestDevice:async options=>{picked=options;return[device];},addEventListener(){},removeEventListener(){}}});}});
+const w=dom.window,d=w.document,$=s=>d.querySelector(s);function pass(n){tests++;console.log('PASS '+n);}async function wait(f){const deadline=Date.now()+8000;while(!f()){if(Date.now()>deadline)throw Error('UI wait timeout: '+$('#hwStatus')?.textContent);await new Promise(r=>setTimeout(r,10));}}
+(async()=>{try{
+$('#usbConnect').click();await wait(()=>d.body.dataset.hardware==='ready');
+assert.ok(picked.filters.some(f=>f.vendorId===0x303a&&f.productId===0x4004&&f.usagePage===0xff00));assert.ok(picked.filters.some(f=>f.vendorId===0x0451&&f.productId===0x4822));assert.equal(device.writes,0);assert.match($('#connectionLabel').textContent,/S31.*0x12/);pass('S31 picker selects control HID and connect performs read-only ID/snapshot');
+w.AudioLab.navigate('clock');const valid=w.AudioLab.getConfig();Object.assign(valid.clock,{fs:48000,bits:16,slot:32,slots:2,format:'I2S',role:'slave'});w.AudioLab.importHardwareConfig(valid);assert.equal($('#hwApply').disabled,false,$('#hwPlanError').textContent);pass('S31 fixed 48k/16/32x2/slave format permits a clock plan');
+for(const change of [{fs:44100},{bits:24},{role:'master'}]){const cfg=JSON.parse(JSON.stringify(valid));Object.assign(cfg.clock,change);w.AudioLab.importHardwareConfig(cfg);assert.equal($('#hwApply').disabled,true);assert.match($('#hwPlanError').textContent,/S31/);}pass('S31 rejects unsupported sample rate, data width and master role');
+$('#hwApply').dispatchEvent(new w.MouseEvent('click',{bubbles:true}));await wait(()=>!$('#hwRead').disabled);assert.equal(device.writes,0);pass('unsupported format cannot write through an injected apply event');
+w.AudioLab.importHardwareConfig(valid);$('#hwMclk').value='12000000';$('#hwMclk').dispatchEvent(new w.Event('change',{bubbles:true}));assert.equal($('#hwApply').disabled,true);assert.match($('#hwPlanError').textContent,/S31/);pass('S31 rejects a mismatched MCLK reference');
+assert.deepEqual(errors,[]);console.log(tests+' S31 UI integration checks passed; simulated, no hardware I/O');
+}finally{w.dispatchEvent(new w.Event('pagehide'));w.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

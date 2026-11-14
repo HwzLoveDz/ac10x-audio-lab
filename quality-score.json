@@ -1,0 +1,44 @@
+{
+  "version": "0.8.5-rc.1",
+  "scope": "Full graph wire layout and unchanged behavior; software only",
+  "status": "PASSED",
+  "manualAssessment": true,
+  "score": 9.5,
+  "points": 95,
+  "minimum": 9,
+  "entrySHA256": "0fc98a4489c18e026f7ca10e2e9ead3e4ddd2ebc7e56c8db06d6ba549c7801ff",
+  "rubric": "acceptance/scoring-rubric.json",
+  "dimensions": [
+    {
+      "name": "graph_readability",
+      "weight": 30,
+      "awarded": 28,
+      "deduction": "The full graph remains complex and needs zoom on narrow windows."
+    },
+    {
+      "name": "theme_consistency",
+      "weight": 25,
+      "awarded": 24,
+      "deduction": "OS-native controls and every browser are not certified."
+    },
+    {
+      "name": "bilingual_keyboard_layout",
+      "weight": 15,
+      "awarded": 14,
+      "deduction": "IME/screen-reader certification and arbitrary zoom combinations excluded."
+    },
+    {
+      "name": "behavior_regression",
+      "weight": 15,
+      "awarded": 14,
+      "deduction": "Parameter and concurrency cases sampled, not exhaustive."
+    },
+    {
+      "name": "delivery_and_preservation",
+      "weight": 15,
+      "awarded": 15,
+      "evidence": "Cold HTTP start, verified windowed launcher reuse, exact draft/reference preservation, old-release hashes and final ZIP gate passed."
+    }
+  ],
+  "notCertification": true
+}

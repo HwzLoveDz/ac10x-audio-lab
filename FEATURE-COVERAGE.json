@@ -1,0 +1,46 @@
+{
+  "version": "0.8.5-rc.1",
+  "fullGraphs": 1,
+  "quickStartActions": 1,
+  "removed": [
+    "observation range selector",
+    "simple/full diagram selector",
+    "multi-route recipes",
+    "independent four-step guide",
+    "duplicate muted ECM template button"
+  ],
+  "eqPresets": 16,
+  "workspaceEntries": 7,
+  "searchEntries": 33,
+  "evidence": {
+    "version": "0.8.5-rc.1",
+    "entrySHA256": "0fc98a4489c18e026f7ca10e2e9ead3e4ddd2ebc7e56c8db06d6ba549c7801ff",
+    "offlineChecks": 287,
+    "suites": 34,
+    "propertyCases": 104,
+    "schedulerCases": 110,
+    "browserStates": 24,
+    "moduleLocationClicks": 58,
+    "browserFlows": 58,
+    "semanticRegisterPlanComparisonCases": 256,
+    "logicalConnections": 35,
+    "modules": 29,
+    "dataNodes": 3,
+    "randomActions": 0,
+    "hardwareAccessed": false,
+    "flashed": false,
+    "limits": "No current 360-step random run; counts are separate evidence categories."
+  },
+  "knownLimits": [
+    "QA wrapper uses FakeHID with native device/audio APIs blocked before boot",
+    "Not physical audio, firmware or electrical validation",
+    "Windows IME and screen readers not certified",
+    "axe color-contrast missed known negative control; independent rendered contrast used"
+  ],
+  "deliveryPending": false,
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "themePreferenceIndependent": true
+}

@@ -1,0 +1,189 @@
+{
+  "version": "0.8.5-rc.1",
+  "scope": "Software and simulated protocol only; no firmware flashing or hardware I/O",
+  "entry": "AC10x-Audio-Lab-v0.8.5-rc.1.html",
+  "entrySHA256": "0fc98a4489c18e026f7ca10e2e9ead3e4ddd2ebc7e56c8db06d6ba549c7801ff",
+  "offlineChecks": 287,
+  "softwareSuites": 34,
+  "suites": [
+    {
+      "suite": "build.cjs",
+      "checks": 0,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify.cjs",
+      "checks": 11,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify-hardware.cjs",
+      "checks": 21,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify-lineout.cjs",
+      "checks": 4,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify-monitor.cjs",
+      "checks": 6,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify-transitions.cjs",
+      "checks": 13,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify-s31.cjs",
+      "checks": 6,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify-s31-ui.cjs",
+      "checks": 5,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify-adapters.cjs",
+      "checks": 10,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify-s3-ui.cjs",
+      "checks": 9,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify-usability.cjs",
+      "checks": 15,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify-ui-review-regressions.cjs",
+      "checks": 11,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify-release-core.cjs",
+      "checks": 12,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify-release-ui.cjs",
+      "checks": 9,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify-audio-lifecycle.cjs",
+      "checks": 4,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify-examples.cjs",
+      "checks": 5,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify-route-ui.cjs",
+      "checks": 5,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify-legacy.cjs",
+      "checks": 14,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify-capture.cjs",
+      "checks": 10,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify-capture-ui.cjs",
+      "checks": 4,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify-viewport.cjs",
+      "checks": 18,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify-i18n.cjs",
+      "checks": 13,
+      "exitCode": 0
+    },
+    {
+      "suite": "audit-locale.cjs",
+      "checks": 1,
+      "exitCode": 0
+    },
+    {
+      "suite": "audit-messages.cjs",
+      "checks": 1,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify-bilingual-review.cjs",
+      "checks": 7,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify-http.cjs",
+      "checks": 7,
+      "exitCode": 0
+    },
+    {
+      "suite": "monkey-probes.cjs",
+      "checks": 7,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify-quick-start.cjs",
+      "checks": 11,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify-accessibility.cjs",
+      "checks": 13,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify-handoff.cjs",
+      "checks": 12,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify-theme-layout.cjs",
+      "checks": 4,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify-full-wiring.cjs",
+      "checks": 6,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify-properties.cjs",
+      "checks": 4,
+      "exitCode": 0
+    },
+    {
+      "suite": "verify-scheduler.cjs",
+      "checks": 9,
+      "exitCode": 0
+    }
+  ],
+  "httpStates": 24,
+  "moduleEntryClicks": 58,
+  "configurationParityCases": 256,
+  "propertyCases": 104,
+  "schedulerCases": 110,
+  "hardwareAccessed": false,
+  "flashed": false,
+  "s3HardwareValidated": false,
+  "evidence": "Full original evidence and per-file checksums are inside the sealed release archive."
+}

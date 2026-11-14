@@ -1,0 +1,326 @@
+/* Workbench layout: shared geometry for the header, drawer and graph viewport. */
+body.workbench [hidden]{display:none!important}
+body.workbench{--header-height:76px;--panel-width:360px;overflow:hidden;min-width:0}
+body.workbench .workbench-header{height:var(--header-height);min-width:0;gap:16px;padding:0 24px;overflow:visible}
+.workbench-brand,.workbench-tools,.workbench-metrics{min-width:0}
+.workbench-header .workbench-brand{flex:none;gap:8px}.workbench-header .workbench-tools{gap:10px}.workbench-header .connection-pill{display:inline-block;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tools-menu{z-index:50;flex:none}.tools-menu>div{width:200px;max-width:calc(100vw - 24px);z-index:51}.tools-menu summary{white-space:nowrap}
+body.workbench main.workbench-canvas{inset:var(--header-height) 0 0;min-width:0;min-height:0}
+body.workbench #routingPanel{position:absolute;inset:0;display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;gap:12px;padding:20px 24px 12px;min-width:0;min-height:0;overflow:hidden;box-sizing:border-box}
+#routingPanel .canvas-heading{position:static;min-width:0;transition:none;z-index:1}.canvas-heading h1{line-height:1.3}.canvas-heading .eyebrow{line-height:1.5}
+#routingPanel .canvas-heading p{max-width:100%;white-space:normal;overflow-wrap:anywhere;margin:0;line-height:1.5}
+#routingPanel .removed-range-bar{position:relative;inset:auto;min-width:0;max-width:100%;display:flex;align-items:center;overflow:hidden;gap:10px;z-index:1}
+#routingPanel .route-filters{flex:1 1 0%;min-width:0;max-width:100%;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;white-space:nowrap;scrollbar-width:thin}
+#routingPanel .route-filter-label{flex:none}
+#routingPanel #removedRecipeButton{flex:none;min-height:36px;max-width:100%;margin:0;padding:6px 10px;font-size:12px;line-height:1.5;white-space:nowrap}
+#routingPanel #removedRecipeButton:focus-visible{outline:2px solid #238872;outline-offset:-2px}
+.route-filters button{min-height:32px;flex:none}.route-filters button:focus-visible,.route-toolbar button:focus-visible{outline:2px solid #238872;outline-offset:-2px}
+body.workbench #canvasScroll{position:relative;inset:auto;width:100%;height:100%;min-width:0;min-height:0;overflow:hidden;overscroll-behavior:contain;touch-action:none;isolation:isolate;cursor:grab;border:1px solid #e0e9e4;border-radius:10px;background-color:#f6f9f7;background-image:radial-gradient(#b9cfc366 .7px,transparent .7px);background-size:18px 18px}
+body.workbench #canvasScroll:focus-visible{outline:2px solid #258a73;outline-offset:2px}body.workbench #canvasScroll.panning,body.workbench #canvasScroll.panning *{cursor:grabbing!important;user-select:none}
+body.workbench #routeDiagram{position:absolute;inset:0 auto auto 0;min-width:0;min-height:0;max-width:none;max-height:none;margin:0;padding:0;transform-origin:0 0;transition:none;will-change:transform;user-select:none}
+body.workbench #routingSVG{width:100%;height:100%;max-width:none;display:block;overflow:visible}
+#routingPanel .canvas-bottom{position:relative;inset:auto;min-width:0;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 14px;background:none;z-index:1}
+#routingPanel .routing-legend{display:flex;min-width:0;flex-wrap:wrap;gap:9px 16px;font-size:11px}
+#routingPanel .route-toolbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:6px;margin-left:auto;min-width:0}
+#routingPanel .route-toolbar .btn{min-width:34px;min-height:34px;padding:6px 10px;font-size:12px}
+#routingPanel #routeZoomValue{min-width:44px;font:12px var(--mono)}#routingPanel #routeCount{font:10px var(--mono);margin-right:8px}
+#canvasHelp{color:#617d6d;font-size:11px;margin-right:8px;white-space:nowrap}.canvas-notice{display:none!important}
+body.workbench #settingsWindow{left:16px;right:auto;top:calc(var(--header-height) + 16px);bottom:16px;width:var(--panel-width);max-width:calc(100vw - 32px);min-height:0;overflow:hidden;box-sizing:border-box}
+#settingsWindow .settings-heading{min-width:0;padding:14px 18px;gap:12px;flex:none}#settingsWindow .settings-heading>div{min-width:0}#settingsWindow .settings-heading h2{font-size:18px;line-height:1.4;overflow-wrap:anywhere}
+#settingsWindow .settings-body{min-width:0;min-height:0;overflow-x:hidden;overflow-y:auto;padding-bottom:12px;scrollbar-gutter:stable;overscroll-behavior:contain}
+#settingsWindow .panel,#settingsWindow .panel-heading>div,#settingsWindow .form-grid>*,#settingsWindow .inline-controls{min-width:0}
+#settingsWindow .panel-heading h2{font-size:14px}#settingsWindow .panel-heading p,#settingsWindow .inset-note,#settingsWindow .detail-identity p{font-size:12px;line-height:1.7;color:#607b6b}
+#settingsWindow .form-grid{gap:14px}#settingsWindow label{font-size:12px}#settingsWindow input:not([type=checkbox]):not([type=range]),#settingsWindow select{min-width:0;max-width:100%;box-sizing:border-box;font-size:13px;min-height:36px}#settingsWindow select{width:100%}#settingsWindow input[type=range]{max-width:100%}
+#settingsWindow .btn{min-height:36px;font-size:12px;white-space:normal;line-height:1.5}#settingsWindow .hardware-actions{display:flex;flex-wrap:wrap;align-items:stretch;gap:8px}
+#settingsWindow fieldset{min-width:0;max-width:100%;box-sizing:border-box;margin:0 18px 16px;padding:12px;border:1px solid #dce7e0;border-radius:7px}#settingsWindow legend{font-size:12px;padding:0 5px;max-width:100%;white-space:normal;line-height:1.6}#settingsWindow fieldset>label{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0}#settingsWindow .hardware-fieldset{margin:0;padding:0;border:0}
+#settingsWindow .table-wrap{max-width:100%;overflow:auto;overscroll-behavior:contain}#settingsWindow table{font-size:12px}#settingsWindow th,#settingsWindow td{font-size:11px;line-height:1.6;padding:10px 12px}#settingsWindow td:last-child{white-space:normal;overflow-wrap:anywhere}
+#settingsWindow .register-table{max-height:min(360px,42vh)}#settingsWindow .register-table thead{position:sticky;top:0;z-index:1;background:#f4f8f5}
+#settingsWindow .settings-action{min-height:0;max-height:42%;overflow-y:auto;overscroll-behavior:contain;padding:12px 18px;flex:none}#settingsWindow .settings-action>p{font-size:11px;margin:5px 0 8px}#settingsWindow .settings-action .hardware-progress{padding-bottom:6px}
+#settingsWindow #eqPreset{width:auto;flex:1;min-width:140px;max-width:100%}#settingsWindow .inline-controls{flex-wrap:wrap}#settingsWindow .eq-chart-wrap{padding:0 12px 8px}#settingsWindow #eqChart{display:block;max-width:100%;height:auto;touch-action:none}
+#settingsWindow .pre-gain>span,#settingsWindow .chart-caption,#settingsWindow .chart-caption b{font-size:11px;line-height:1.6;color:#607b6b}.band-card>summary{min-width:0;gap:8px}.band-card>summary>span:nth-child(2){min-width:0;font-size:11px}.band-card>summary .switch-label{font-size:11px;flex:none}.band-fields>select{margin-bottom:4px}
+#settingsWindow .route-example-card p,#settingsWindow .route-path-summary,#settingsWindow .route-tools>p{font-size:12px;color:#607b6b}
+.settings-message{margin:12px 18px 0;padding:12px;border:1px solid #c6e2d4;border-radius:7px;background:#eff9f3;font-size:12px;line-height:1.65;color:#28614a;overflow-wrap:anywhere}.settings-message button{float:right;border:0;background:none;color:inherit;font-size:18px;padding:0 0 4px 10px;cursor:pointer}
+@media(min-width:980px){
+ body.workbench[data-view=eq],body.workbench[data-view=registers],body.workbench[data-view=audio],body.workbench[data-view=hardware],body.workbench[data-view=clock],body.workbench[data-view=dynamics]{--panel-width:min(660px,calc(100vw - 380px))}
+ body.workbench[data-inspector-open=true] #routingPanel{padding-left:calc(var(--panel-width) + 32px)}
+ body.workbench[data-view=eq] #settingsWindow .form-grid,body.workbench[data-view=clock] #settingsWindow .form-grid,body.workbench[data-view=audio] #settingsWindow .form-grid,body.workbench[data-view=hardware] #settingsWindow .form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ body.workbench[data-view=eq] #settingsWindow .eq-bands{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:start;padding:0 6px}
+ body.workbench[data-view=eq] .band-card>summary{flex-wrap:wrap;padding:14px 10px}.band-card .band-fields{padding:0 12px 18px}body.workbench[data-view=eq] .band-card .switch-label{margin-left:0}body.workbench[data-view=eq] .band-card{height:100%}
+}
+@media(max-width:1279px){.workbench-header .workbench-metrics{display:none}.workbench-header .connection-pill{max-width:160px}.workbench-header .workbench-tools{gap:8px}}
+@media(max-width:979px){body.workbench{--panel-width:620px}body.workbench #routingPanel{padding-left:16px;padding-right:16px}body.workbench #settingsWindow{box-shadow:0 12px 48px #244b3a44}#canvasHelp{display:none}#routingPanel .routing-legend span:last-child{display:none}}
+@media(max-width:639px){
+ body.workbench{--header-height:104px;--panel-width:calc(100vw - 24px)}
+ body.workbench .workbench-header{height:var(--header-height);display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto;gap:6px 12px;padding:8px 12px;align-content:center;box-sizing:border-box}
+ .workbench-header .workbench-brand{font-size:14px;gap:6px}.workbench-header .workbench-brand strong{font-size:17px}.workbench-header .brand-icon{display:none}.workbench-header .workbench-brand>.app-version{display:inline-flex;font-size:9px}
+ .workbench-header .graph-mode-switch{justify-self:end}.workbench-header .graph-mode-switch button{font-size:11px;padding:6px 10px}
+ .workbench-header .workbench-tools{grid-column:1/-1;display:flex;width:100%;margin:0;gap:10px;justify-content:flex-end}.workbench-header .connection-pill{display:block;margin-right:auto;max-width:calc(100vw - 220px);font-size:10px}.workbench-tools .btn{min-height:32px;font-size:11px;padding:6px 12px}.tools-menu summary{font-size:11px;max-width:none;white-space:nowrap;padding:6px 2px}
+ body.workbench #routingPanel{padding:12px;gap:8px}#routingPanel .canvas-heading h1{font-size:18px}#routingPanel .canvas-heading .eyebrow{display:none}#routingPanel .route-filter-label{display:none}#routingPanel .route-filters button{font-size:11px;padding:6px 9px}
+ body.workbench #settingsWindow{left:12px;top:calc(var(--header-height) + 10px);bottom:10px;max-width:calc(100vw - 24px)}#routingPanel .routing-legend{display:none}#routingPanel #routeCount{display:none}#routingPanel .route-toolbar{width:100%;justify-content:flex-end}.settings-body .eq-bands{display:block}
+ #settingsWindow .settings-action{padding:10px 14px}#settingsWindow .form-grid{grid-template-columns:1fr}
+}
+@media(max-height:560px){#settingsWindow .settings-heading{padding:8px 14px}#settingsWindow .settings-heading h2{font-size:16px}#settingsWindow .settings-action{padding:8px 12px;max-height:46%}#routingPanel .canvas-heading p,#routingPanel .canvas-heading .eyebrow{display:none}body.workbench #routingPanel{padding-top:10px;gap:8px}}
+
+/* Language selector and longer English labels. */
+.workbench-header .language-switch{flex:none;width:82px;min-height:34px;padding:5px 7px;border:1px solid #d6e2dc;border-radius:6px;background:#fff;color:#335e50;font-size:12px}
+html[lang=en] .tools-menu>div{width:230px}html[lang=en] .tools-menu button{line-height:1.5}html[lang=en] .route-filters button{padding-left:10px;padding-right:10px}html[lang=en] .settings-body .band-card>summary{flex-wrap:wrap}html[lang=en] #canvasHelp{font-size:10px}
+@media(max-width:1499px){.workbench-header .workbench-metrics{display:none}}
+@media(max-width:639px){.workbench-header .language-switch{width:74px;min-height:32px;font-size:11px}.workbench-header .connection-pill{max-width:calc(100vw - 300px)}html[lang=en] .workbench-tools .btn{font-size:11px;padding-left:8px;padding-right:8px}}
+@media(max-width:399px){.workbench-header .connection-pill{display:none}.workbench-header .workbench-tools{justify-content:space-between}}
+
+/* Respond to the remaining canvas width, including a desktop with a wide drawer. */
+#routingPanel .route-toolbar{flex-wrap:nowrap}#routingPanel .route-toolbar .btn{flex:none}#routingPanel .route-toolbar #routeZoomValue{flex:none}
+#routingPanel[data-canvas-size=narrow] #canvasHelp,#routingPanel[data-canvas-size=narrow] #routeCount{display:none}
+#routingPanel[data-canvas-size=narrow] .routing-legend{font-size:10px;gap:6px 12px}#routingPanel[data-canvas-size=medium] #canvasHelp{display:none}
+#settingsWindow .panel-heading>div,#settingsWindow .detail-identity,#settingsWindow .technical>summary,#settingsWindow .settings-message{overflow-wrap:anywhere}
+html[lang=en] #settingsWindow .hardware-actions .btn{max-width:100%}html[lang=en] #settingsWindow fieldset>label{align-items:flex-start}
+
+/* Show the center and the content bounds while dragging toward a corner limit. */
+body.workbench #canvasScroll.panning #routeDiagram{outline:1px dashed #86a69a}
+body.workbench #canvasScroll.panning::after{content:'';position:absolute;left:50%;top:50%;width:16px;height:16px;transform:translate(-50%,-50%);pointer-events:none;z-index:2;background:linear-gradient(#39816d,#39816d) center/1px 16px no-repeat,linear-gradient(#39816d,#39816d) center/16px 1px no-repeat;opacity:.65}
+
+/* Two header rows also cover narrow desktop side panels, not just phone widths. */
+@media(min-width:640px) and (max-width:759px){
+ body.workbench{--header-height:104px}
+ body.workbench .workbench-header{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto;gap:6px 12px;padding:8px 12px;align-content:center;box-sizing:border-box}
+ .workbench-header .workbench-tools{grid-column:1/-1;display:flex;width:100%;margin:0;gap:10px;justify-content:flex-end}
+ .workbench-header .connection-pill{margin-right:auto;max-width:calc(100vw - 300px)}
+ .workbench-header .graph-mode-switch{justify-self:end}.workbench-header .workbench-brand strong{font-size:18px}
+}
+
+/* Persistent feature entry points; independent of graph pan and module settings. */
+body.workbench{--workspace-nav-height:44px}
+body.workbench .workspace-nav{position:fixed;top:var(--header-height);left:0;right:0;height:var(--workspace-nav-height);display:flex;align-items:center;gap:12px;padding:0 24px;background:#fff;border-bottom:1px solid #dce8e2;z-index:45;box-sizing:border-box;min-width:0}
+.workspace-tabs{display:flex;gap:4px;flex:1;min-width:0;overflow-x:auto;white-space:nowrap;scrollbar-width:thin}.workspace-tabs button,.feature-trigger{flex:none;white-space:nowrap;border:0;border-radius:5px;background:transparent;color:#466458;font-size:12px;min-height:32px;padding:6px 10px}.workspace-tabs button.active{background:#e2f2eb;color:#12614a;font-weight:600}.feature-trigger{background:#f0f6f3;border:1px solid #dce8e2}.feature-trigger kbd{font:10px Consolas,monospace;margin-left:8px;color:#72887c}.workspace-nav button:focus-visible{outline:2px solid #238872;outline-offset:-2px}
+body.workbench main.workbench-canvas{top:calc(var(--header-height) + var(--workspace-nav-height))}body.workbench #settingsWindow{top:calc(var(--header-height) + var(--workspace-nav-height) + 18px)}
+.feature-backdrop{position:fixed;inset:0;background:#163d3355;z-index:2000;display:flex;align-items:flex-start;justify-content:center;padding:clamp(16px,10vh,100px) 16px;box-sizing:border-box}.feature-dialog{width:min(680px,100%);max-height:78vh;display:flex;flex-direction:column;min-width:0;padding:18px;background:white;border:1px solid #d0e1d7;border-radius:12px;box-shadow:0 16px 64px #17382a44}.feature-dialog header{display:flex;align-items:center;justify-content:space-between;gap:12px}.feature-dialog h2{margin:0 0 12px;font-size:18px}.feature-dialog>input{box-sizing:border-box;width:100%;min-height:40px;padding:10px;border:1px solid #c4d9cd;border-radius:6px}.feature-hint{font-size:12px;line-height:1.6;color:#6f8579;margin:10px 0}.feature-results{overflow:auto;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.feature-results button{text-align:left;min-width:0;overflow-wrap:anywhere;border:1px solid #e1ebe5;border-radius:5px;background:#f8fbf9;color:#274c3c;font-size:13px;padding:10px;min-height:40px}.feature-results button:focus,.feature-results button:hover{background:#e5f4ec;border-color:#43977b;outline:2px solid transparent}.feature-results p{grid-column:1/-1;font-size:13px;color:#6f8579}.settings-body input[readonly]{background:#f0f4f2;color:#557667;cursor:default}
+@media(max-width:759px){body.workbench .workspace-nav{padding:0 12px;gap:6px}.workspace-tabs button{padding:6px 8px;font-size:11px}.feature-trigger{font-size:11px;padding:6px 9px}.feature-trigger kbd{display:none}.feature-results{grid-template-columns:1fr}.feature-dialog{padding:12px}}
+
+/* Menu belongs to the fixed header; keep its stacking context above the workspace strip. */
+body.workbench .workbench-header{z-index:60}
+body.workbench .tools-menu summary{max-width:none}
+
+/* Native register actions preserve table semantics and expose keyboard focus. */
+.register-select{font:inherit;color:inherit;background:transparent;border:0;border-radius:3px;padding:3px 5px;cursor:pointer;white-space:nowrap}.register-select:focus-visible{outline:2px solid #238872;outline-offset:2px}
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important}
+
+/* Readable secondary text on the existing white, mint and cream surfaces.
+   Keep hue/state cues in borders, fills and routes; lower priority is not lower legibility. */
+body.workbench .graph-mode-switch button{color:#4c685a}
+body.workbench .graph-mode-switch button.active{color:#1f654f}
+body.workbench .workbench-header .connection-pill,
+body.workbench .workbench-header .metric-button small,
+body.workbench .workbench-header .metric-draft-label,
+body.workbench .feature-trigger kbd{color:#526b60}
+body.workbench .canvas-heading .eyebrow,
+body.workbench .canvas-heading p,
+body.workbench .route-filter-label,
+body.workbench .canvas-bottom .routing-legend,
+body.workbench #routingPanel #canvasHelp,
+body.workbench #routingPanel #routeCount,
+body.workbench #routingPanel #routeZoomValue{color:#526b60}
+body.workbench .route-filters button{color:#526b60}
+body.workbench .route-filters button.active{color:#176b58}
+body.workbench .feature-hint,
+body.workbench .feature-results p,
+body.workbench .feature-dialog .icon-button{color:#526b60}
+
+#settingsWindow .settings-heading .eyebrow,
+#settingsWindow .icon-button,
+#settingsWindow .panel-heading p,
+#settingsWindow .inset-note,
+#settingsWindow .detail-identity p,
+#settingsWindow .detail-reference p,
+#settingsWindow .detail-reference b,
+#settingsWindow .detail-reference .eyebrow,
+#settingsWindow .mix-input label:nth-child(2),
+#settingsWindow .route-state-note:not([data-enabled=true]),
+#settingsWindow .form-grid label,
+#settingsWindow .route-select,
+#settingsWindow .route-range,
+#settingsWindow .band-control>div,
+#settingsWindow .band-card>summary>span:nth-child(2),
+#settingsWindow .band-card>summary:after,
+#settingsWindow .technical>summary,
+#settingsWindow .technical>summary:after,
+#settingsWindow .technical>summary #hwPlanCount,
+#settingsWindow .chart-caption,
+#settingsWindow .chart-caption b,
+#settingsWindow .pre-gain>span,
+#settingsWindow .route-example-card p,
+#settingsWindow .route-path-summary,
+#settingsWindow .route-tools>p,
+#settingsWindow .panel-footnote,
+#settingsWindow .muted,
+#settingsWindow .hardware-device-info,
+#settingsWindow .hardware-clock-note,
+#settingsWindow .hardware-progress span,
+#settingsWindow .hardware-log-table td:last-child,
+#settingsWindow .settings-action>p{color:#526b60}
+#settingsWindow .tiny-tag,
+#settingsWindow th,
+#settingsWindow .stale-register,
+#settingsWindow .clock-metric,
+#settingsWindow .clock-formula{color:#52646d}
+#settingsWindow .device-register{color:#176d63}
+#settingsWindow .pending,
+#settingsWindow .hardware-error,
+#settingsWindow .audio-stats .warning{color:#875217}
+#settingsWindow .stable{color:#146f63}
+#settingsWindow .audition-action,
+#settingsWindow .audio-banner p,
+#settingsWindow .transport span,
+#settingsWindow .monitor-volume,
+#settingsWindow .audio-stats,
+#settingsWindow .audio-plots .eyebrow{color:#526b60}
+#settingsWindow .ab-toggle button{color:#52646d}
+#settingsWindow .ab-toggle button.active{color:#14675d}
+
+/* SVG labels use readable text colors independently of low emphasis wire styling. */
+body.workbench .workbench-canvas .graph-node .node-subtitle,
+body.workbench .workbench-canvas .simple-routing .node-subtitle,
+body.workbench .workbench-canvas .graph-note,
+body.workbench .workbench-canvas .simple-routing .graph-note,
+body.workbench .workbench-canvas .simple-lane-caption,
+body.workbench .workbench-canvas .focus-subtitle{fill:#526b60}
+body.workbench .workbench-canvas .graph-node.off .node-subtitle{fill:#3d584c}
+body.workbench .workbench-canvas .graph-tap text{fill:#52646d}
+body.workbench .workbench-canvas .graph-edge.disabled .edge-caption{fill:#5a6b73}
+body.workbench .workbench-canvas .graph-edge.enabled.play .edge-caption{fill:#8e571d}
+body.workbench .workbench-canvas .graph-edge.enabled.record .edge-caption{fill:#176d63}
+body.workbench .workbench-canvas .graph-edge.enabled.monitor .edge-caption,
+body.workbench .workbench-canvas .graph-edge.enabled.debug .edge-caption{fill:#62539a}
+body.workbench .workbench-canvas .graph-warning{fill:#875217}
+#settingsWindow .plot-label{fill:#52646d}
+#settingsWindow #frameChart text[fill="#398b83"]{fill:#236657}
+#settingsWindow #frameChart text[fill="#7773b0"]{fill:#5d5296}
+
+/* Band enable is a sibling of the disclosure, so Space toggles only the switch. */
+#settingsWindow .eq-band{position:relative;min-width:0}
+#settingsWindow .eq-band>.band-enable{position:absolute;right:10px;top:10px;z-index:1;min-height:24px;margin:0;font-size:11px;color:#526b60;white-space:nowrap}
+#settingsWindow .band-card>summary{min-height:18px;padding-right:96px;gap:6px}
+#settingsWindow .band-card>summary:after{margin-left:auto}
+
+/* Observation stays available above a narrow overlay editor. */
+.workbench-header div.metric-button{cursor:default;box-shadow:none}.workbench-header div.metric-button:hover{background:transparent;box-shadow:none}
+@media(max-width:979px){
+ body.workbench[data-inspector-open=true] #routingPanel .canvas-heading{position:absolute;inset:0 auto auto 0;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);clip-path:inset(50%);white-space:nowrap;border:0}
+ body.workbench[data-inspector-open=true] #routingPanel{grid-template-rows:auto minmax(0,1fr) auto}
+ body.workbench[data-inspector-open=true] #settingsWindow{top:calc(var(--header-height) + var(--workspace-nav-height) + 84px)}
+}
+
+/* One full graph and a single explicit initialization action. */
+.quick-start{border-color:#1b7e6c;color:#14675d;background:#e9f5ef;white-space:normal;flex-shrink:0}
+.quick-start-status{display:flex;align-items:center;gap:12px;padding:0 28px 12px;color:#526b60;font-size:13px;line-height:1.7}
+.quick-start-status p{margin:0;overflow-wrap:anywhere;min-width:0}.quick-start-status .btn{flex-shrink:0}
+@media(max-width:759px){.quick-start-status{padding:0 14px 10px;align-items:flex-start}.workbench-header .quick-start{font-size:12px;padding:8px 10px}}
+
+/* One graph, aligned signal lanes, and a presentation-only theme. */
+:root{
+ --surface:#ffffff;--surface-raised:#f5f9f7;--surface-soft:#e9f3ee;--canvas:#f3f7f6;
+ --text-primary:#243c35;--text-secondary:#4c665b;--text-quiet:#577168;--border:#d2e1da;
+ --graph-title:#29473e;--graph-subtitle:#426158;--graph-grid:#dfe9e4;
+ --signal-record:#237f70;--signal-play:#8e571d;--signal-monitor:#7862ae;--signal-loopback:#396fa3;--signal-debug:#7864b5;--signal-muted:#788f9a;
+ --band1:#8e571d;--band2:#086d69;--band3:#62539a;
+}
+html[data-theme=dark]{
+ color-scheme:dark;--ink:#e2ecef;--muted:#b3c6cd;--accent:#6bd3c3;--accent-soft:#203f39;
+ --paper:#15232b;--line:#38505d;--bg:#10191f;
+ --surface:#15232b;--surface-raised:#1c2e38;--surface-soft:#233b44;--canvas:#101b22;
+ --text-primary:#e2ecef;--text-secondary:#b3c6cd;--text-quiet:#9db7c1;--border:#38505d;
+ --graph-title:#e0edf0;--graph-subtitle:#c1d3da;--graph-grid:#263943;
+ --signal-record:#7bd8c4;--signal-play:#edbd77;--signal-monitor:#c5a9f3;--signal-loopback:#91c0ef;--signal-debug:#c5a9f3;--signal-muted:#7d99a5;
+ --band1:#edbd77;--band2:#7bd8c4;--band3:#c5a9f3;
+}
+.workbench-header .theme-switch{width:34px;height:34px;flex:none;display:inline-grid;place-items:center;padding:0;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text-primary);font-size:22px;line-height:1}
+.workbench-header .theme-switch[aria-pressed=true]{background:var(--surface-soft);border-color:var(--accent)}
+body.workbench .workbench-canvas .graph-node .node-title{font-size:17px;fill:var(--graph-title);font-weight:650}
+body.workbench .workbench-canvas .graph-node .node-subtitle{font-size:14px;fill:var(--graph-subtitle)}
+body.workbench .workbench-canvas .graph-node.off{opacity:1}
+body.workbench .workbench-canvas .graph-node.off .node-title,
+body.workbench .workbench-canvas .graph-node.off .node-subtitle{fill:var(--graph-subtitle)}
+body.workbench .workbench-canvas .graph-section{font-size:18px;font-weight:650;fill:var(--graph-title)}
+body.workbench .workbench-canvas .graph-region-label{font-size:11px;fill:var(--graph-subtitle);letter-spacing:.6px}
+body.workbench .workbench-canvas .graph-note{font-size:13px;fill:var(--graph-subtitle)}
+body.workbench .workbench-canvas .graph-tap text{font-size:12px;fill:var(--graph-subtitle)}
+body.workbench .workbench-canvas .edge-caption{font-size:12px}
+body.workbench .workbench-canvas .graph-edge.record{--route-color:var(--signal-record)}
+body.workbench .workbench-canvas .graph-edge.play{--route-color:var(--signal-play)}
+body.workbench .workbench-canvas .graph-edge.monitor{--route-color:var(--signal-monitor)}
+body.workbench .workbench-canvas .graph-edge.loopback{--route-color:var(--signal-loopback)}
+body.workbench .workbench-canvas .graph-edge.debug{--route-color:var(--signal-debug)}
+body.workbench .workbench-canvas .graph-edge.disabled{--route-color:var(--signal-muted)}
+body.workbench .workbench-canvas .graph-edge.enabled .edge-caption{fill:var(--route-color)}
+body.workbench .workbench-canvas .graph-edge.disabled .edge-caption{fill:var(--graph-subtitle)}
+body.workbench .workbench-canvas .graph-edge.enabled:is(.record,.play,.monitor,.loopback,.debug) .edge-line{stroke:var(--route-color)}
+body.workbench .workbench-canvas .graph-edge.enabled:is(.record,.play,.monitor,.loopback,.debug) .edge-caption{fill:var(--route-color)}
+
+html[data-theme=dark] body.workbench{background:var(--canvas);color:var(--text-primary)}
+html[data-theme=dark] body.workbench :is(.workbench-header,.workspace-nav,.settings-window,.settings-heading,.settings-action,.panel,.band-card,.feature-dialog,.tools-menu>div,.register-table thead){background:var(--surface);border-color:var(--border);color:var(--text-primary)}
+html[data-theme=dark] body.workbench main.workbench-canvas{background:var(--canvas)}
+html[data-theme=dark] body.workbench :is(.workbench-brand,.canvas-heading h1,h2,h3,.detail-identity h3,.clock-metric b,.transport strong,.audio-stats b){color:var(--text-primary)}
+html[data-theme=dark] body.workbench :is(.workspace-tabs button,.feature-trigger,.tools-menu summary,.tools-menu button,.btn,.icon-button,.language-switch,.settings-body input,.settings-body select,.feature-dialog>input){color:var(--text-primary);background:var(--surface);border-color:var(--border)}
+html[data-theme=dark] body.workbench :is(.workspace-tabs button.active,.feature-trigger,.feature-results button,.inset-note,.tiny-tag,.clock-metric,.clock-formula,.ab-toggle,.audio-banner,.detail-reference,.settings-body input[readonly],.settings-message,.eq-band>.band-enable){background:var(--surface-raised);border-color:var(--border);color:var(--text-secondary)}
+html[data-theme=dark] body.workbench :is(.workspace-tabs button.active,.feature-results button:hover,.feature-results button:focus,.ab-toggle button.active){background:var(--surface-soft);color:var(--text-primary)}
+html[data-theme=dark] body.workbench :is(.btn.primary,.play-btn){background:#22796f;border-color:#3ea591;color:#ffffff}
+html[data-theme=dark] body.workbench .quick-start{background:#203f39;border-color:#4da998;color:#d6f7ed}
+html[data-theme=dark] body.workbench :is(.quick-start-status,.canvas-heading p,.canvas-heading .eyebrow,.canvas-bottom,.connection-pill,.metric-button,.metric-button small,.metric-draft-label,.route-toolbar,.routing-legend,.feature-hint,.feature-results p,.feature-trigger kbd,.settings-heading .eyebrow,.settings-action>p,.panel-heading p,.panel-footnote,.chart-caption,.chart-caption b,.pre-gain>span,.detail-identity p,.detail-reference p,.detail-reference b,.detail-reference .eyebrow,.mix-input label:nth-child(2),.route-state-note,.form-grid label,.route-select,.route-range,.band-control>div,.band-card>summary,.band-card>summary:after,.technical>summary,.technical>summary:after,.technical>summary #hwPlanCount,.muted,.hardware-device-info,.hardware-clock-note,.hardware-progress span,.hardware-log-table td:last-child,.settings-action>p,.inset-note,.tiny-tag,.audio-banner p,.audio-symbol,.transport span,.ab-toggle button,.ab-toggle button span,.clock-metric small,.audio-stats,.monitor-volume){color:var(--text-secondary)}
+html[data-theme=dark] body.workbench :is(.settings-body th,.settings-body td,.table-wrap,.technical,.band-card>summary,.settings-body fieldset,.eq-chart-wrap,.chart-caption,.pre-gain,.audition-action,.audio-controls,.audio-plots){border-color:var(--border)}
+html[data-theme=dark] body.workbench .settings-body th{background:var(--surface-raised);color:var(--text-secondary)}
+html[data-theme=dark] body.workbench :is(.register-table tr:hover td,.register-table tr.selected td){background:var(--surface-soft);color:var(--text-primary)}
+html[data-theme=dark] body.workbench :is(.stable,.hardware-ok,.route-state-note[data-enabled=true]){color:#8ae0bd}
+html[data-theme=dark] body.workbench :is(.pending,.hardware-warning,.hardware-error,.audio-stats .warning){color:#f4c27d}
+html[data-theme=dark] body.workbench .workbench-brand>.app-version{color:var(--text-secondary);border-color:var(--border)}
+html[data-theme=dark] body.workbench .feature-backdrop{background:#050b10aa}
+html[data-theme=dark] body.workbench .feature-dialog .icon-button{color:var(--text-primary)}
+html[data-theme=dark] body.workbench #toast{background:#26434c;color:#edf8fa;border:1px solid var(--border)}
+html[data-theme=dark] body.workbench #canvasScroll{background-color:var(--canvas);background-image:radial-gradient(var(--graph-grid) .8px,transparent .8px);border-color:var(--border);scrollbar-color:#486571 transparent}
+html[data-theme=dark] body.workbench :is(#canvasHelp,#routeCount,#routeZoomValue,.canvas-notice,.routing-legend span){color:var(--text-secondary)}
+html[data-theme=dark] body.workbench #routingPanel :is(#canvasHelp,#routeCount,#routeZoomValue){color:var(--text-secondary)}
+html[data-theme=dark] body.workbench .routing-legend .legend-line{background:var(--signal-record)}
+html[data-theme=dark] body.workbench .routing-legend .legend-line.dashed{background:none;border-color:var(--signal-muted)}
+html[data-theme=dark] body.workbench .workbench-canvas .graph-region{fill:#14242c;stroke:#324650}
+html[data-theme=dark] body.workbench .workbench-canvas .graph-node rect{fill:#23332e;stroke:#677d6e}
+html[data-theme=dark] body.workbench .workbench-canvas .graph-node.record rect{fill:#173b34;stroke:#477e6e}
+html[data-theme=dark] body.workbench .workbench-canvas .graph-node.play rect{fill:#3b3123;stroke:#8c754c}
+html[data-theme=dark] body.workbench .workbench-canvas .graph-node.mix rect{fill:#203740;stroke:#597b89}
+html[data-theme=dark] body.workbench .workbench-canvas .graph-node.digital rect{fill:#243441;stroke:#58758b}
+html[data-theme=dark] body.workbench .workbench-canvas .graph-node.power rect{fill:#1d2d35;stroke:#536c78}
+html[data-theme=dark] body.workbench .workbench-canvas .graph-node.debug rect{fill:#2b293c;stroke:#82729d}
+html[data-theme=dark] body.workbench .workbench-canvas .graph-node.off rect{fill:#1b2932;stroke:#607883}
+html[data-theme=dark] body.workbench .workbench-canvas .graph-node.enabled-node rect{fill:#372e4c;stroke:#b89ae4}
+html[data-theme=dark] body.workbench .workbench-canvas .graph-node.enabled-node :is(.node-title,.node-subtitle){fill:var(--graph-title)}
+html[data-theme=dark] body.workbench .workbench-canvas .graph-node:is(.selected,:hover,:focus-visible) rect{stroke:#8be4cf;stroke-width:3;filter:none}
+html[data-theme=dark] body.workbench .workbench-canvas :is(.edge-halo,.edge-caption,.graph-tap text){stroke:var(--canvas)}
+html[data-theme=dark] body.workbench .workbench-canvas :is(.graph-tap circle,.routing-junction){stroke:var(--canvas)}
+html[data-theme=dark] body.workbench .workbench-canvas .graph-tap circle.active{fill:var(--accent)}
+html[data-theme=dark] body.workbench .workbench-canvas .graph-tap.selected circle{stroke:var(--accent);fill:var(--surface)}
+html[data-theme=dark] body.workbench .workbench-canvas .graph-warning{fill:#edbd77}
+html[data-theme=dark] #settingsWindow svg :is(text,.plot-label){fill:var(--text-secondary)}
+html[data-theme=dark] #settingsWindow svg .plot-grid{stroke:#3a4e59}
+html[data-theme=dark] #settingsWindow svg .plot-zero{stroke:#68808c}
+html[data-theme=dark] #settingsWindow svg [stroke="#234b52"]{stroke:#e5f2f2}
+html[data-theme=dark] #settingsWindow svg :is([stroke="#0b8b88"],[stroke="#168b88"]){stroke:#7bd8c4}
+html[data-theme=dark] #settingsWindow svg [stroke="#6086a3"]{stroke:#91c0ef}
+html[data-theme=dark] #settingsWindow svg :is([stroke="#8fb6ba"],[stroke="#6b9a9f"]){stroke:#a5ccd1}
+html[data-theme=dark] #settingsWindow svg [fill="#dff0ec"]{fill:#234b42}
+html[data-theme=dark] #settingsWindow svg [fill="#e9e8f5"]{fill:#3c3353}
+html[data-theme=dark] #settingsWindow svg [data-point="0"] text{fill:var(--band1)}
+html[data-theme=dark] #settingsWindow svg [data-point="1"] text{fill:var(--band2)}
+html[data-theme=dark] #settingsWindow svg [data-point="2"] text{fill:var(--band3)}
+html[data-theme=dark] #settingsWindow :is(.panel-heading p,.inset-note,.detail-identity p,.detail-reference p,.detail-reference b,.detail-reference .eyebrow,.mix-input label:nth-child(2),.route-state-note,.form-grid label,.route-select,.route-range,.band-control>div,.band-card>summary>span:nth-child(2),.band-card>summary:after,.technical>summary,.technical>summary:after,.technical>summary #hwPlanCount,.chart-caption,.chart-caption b,.pre-gain>span,.panel-footnote,.muted,.hardware-device-info,.hardware-clock-note,.hardware-progress span,.hardware-log-table td:last-child,.settings-action>p,.settings-heading .eyebrow,.icon-button){color:var(--text-secondary)}
+html[data-theme=dark] #settingsWindow :is(.settings-heading,.settings-action,.panel,.band-card){background:var(--surface);border-color:var(--border)}
+html[data-theme=dark] #settingsWindow :is(.inset-note,.tiny-tag,.detail-reference,.clock-metric,.clock-formula,.audio-banner,.ab-toggle){background:var(--surface-raised);border-color:var(--border)}
+html[data-theme=dark] #settingsWindow :is(input,select,.btn,.icon-button){color:var(--text-primary);background:var(--surface);border-color:var(--border)}
+html[data-theme=dark] #settingsWindow .btn.primary{background:#22796f;border-color:#3ea591;color:#ffffff}
+html[data-theme=dark] #settingsWindow :is(.route-state-note[data-enabled=true],.stable){color:#8ae0bd}
+html[data-theme=dark] #settingsWindow :is(.switch-label,.switch-label.band-enable,[data-value],.clock-metric span,.clock-formula,th,td,.stale-register,.register-select,.ab-toggle button,.ab-toggle button span,.audio-plots .eyebrow){color:var(--text-secondary)}
+html[data-theme=dark] #settingsWindow #hwStatus{color:var(--text-primary)}
+html[data-theme=dark] #settingsWindow #frameChart text{fill:var(--text-secondary)}
+html[data-theme=dark] #settingsWindow .audio-plots svg{background:var(--surface);border-color:var(--border)}
+html[data-theme=dark] #settingsWindow .ab-toggle button{background:var(--surface);border-color:var(--border)}
+html[data-theme=dark] #settingsWindow .ab-toggle button.active{background:var(--surface-soft)}
+@media(max-width:639px){.workbench-header .theme-switch{width:30px;height:32px;font-size:20px}.workbench-header .workbench-tools{gap:5px}.workbench-header .connection-pill{max-width:calc(100vw - 340px)}}
+
+/* Fork color follows the actual route state in both themes. */
+body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-color)}

@@ -1,0 +1,20 @@
+{
+  "name": "ac10x-audio-lab",
+  "version": "0.8.5-rc.1",
+  "private": true,
+  "license": "UNLICENSED",
+  "description": "Local AC101S/AC102 audio register workbench with explicit verified hardware transactions",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "node qa/build.cjs",
+    "test": "node qa/run.cjs"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "2.6.2",
+    "axe-core": "4.14.0",
+    "fast-check": "4.10.2",
+    "jsdom": "26.1.0"
+  }
+}

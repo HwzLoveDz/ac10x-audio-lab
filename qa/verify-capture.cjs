@@ -1,0 +1,35 @@
+const assert=require('node:assert/strict'),vm=require('node:vm');
+const {Recorder,workletSource}=require('../capture.js');
+let count=0;async function test(n,f){await f();count++;console.log('PASS '+n);}
+let latest;
+function track(){return{stopped:0,events:{},stop(){this.stopped++;},addEventListener(n,f){this.events[n]=f;},getSettings(){return{sampleRate:44100,echoCancellation:false,noiseSuppression:false,autoGainControl:false,deviceId:'PRIVATE'};}};}
+function stream(){const t=track();return{track:t,getTracks:()=>[t],getAudioTracks:()=>[t]};}
+class Context{
+ constructor(){latest=this;this.sampleRate=48000;this.state='running';this.nodes=[];}
+ async resume(){}async close(){this.state='closed';}
+ node(){const n={disconnected:false,connect(){},disconnect(){this.disconnected=true;}};this.nodes.push(n);return n;}
+ createMediaStreamSource(){return this.node();}createGain(){const n=this.node();n.gain={value:99};return n;}createScriptProcessor(){this.processor=this.node();return this.processor;}
+ emit(channels){this.processor.onaudioprocess?.({inputBuffer:{numberOfChannels:channels.length,getChannelData:i=>channels[i]}});}
+}
+function setup(){const s=stream(),requests=[],results=[],errors=[];const media={async getUserMedia(q){requests.push(q);return s;},async enumerateDevices(){return[{kind:'audioinput',deviceId:'id-1',label:'USB Codec'},{kind:'audiooutput',deviceId:'out'},{kind:'audioinput',deviceId:'default'}];}};const r=new Recorder({media,Context,onDone:x=>results.push(x),onError:e=>errors.push(e.message)});return{r,s,requests,results,errors};}
+(async()=>{
+await test('device discovery is explicit, filters output/default aliases and immediately releases its permission probe',async()=>{const x=setup();assert.equal(x.requests.length,0);assert.deepEqual(await x.r.list(),[{id:'id-1',label:'USB Codec'}]);assert.ok(x.s.track.stopped);assert.equal(x.r.state,'idle');x.r.close();});
+await test('capture requests exact selected input and disables requested browser speech processing',async()=>{const x=setup();await x.r.start('id-1',1);const a=x.requests[0].audio;assert.deepEqual(a.deviceId,{exact:'id-1'});for(const k of ['echoCancellation','noiseSuppression','autoGainControl'])assert.equal(a[k],false);assert.equal(x.r.silent.gain.value,0);x.r.close();});
+await test('sample-count bound stops at exact duration, preserves stereo PCM and strips device IDs from results',async()=>{const x=setup();await x.r.start('id-1',1);latest.emit([new Float32Array(49000).fill(.25),new Float32Array(49000).fill(-.5)]);assert.equal(x.results.length,1);assert.equal(x.results[0].seconds,1);assert.equal(x.results[0].channels[0].length,48000);assert.equal(x.results[0].channels[1][47999],-.5);assert.equal(x.results[0].settings.deviceId,undefined);assert.equal(x.r.state,'idle');assert.equal(latest.state,'closed');x.r.close();});
+await test('manual stop retains only acquired samples and disconnects every owned node',async()=>{const x=setup();await x.r.start('id-1',30);const ctx=latest;ctx.emit([Float32Array.from([.1,.2,.3])]);x.r.stop();assert.equal(x.results[0].channels[0].length,3);assert.equal(ctx.state,'closed');assert.ok(ctx.nodes.every(n=>n.disconnected));assert.equal(x.r.timer,null);x.r.close();});
+await test('cancel while permission is pending never opens a context and stops the late stream',async()=>{let resolve;const s=stream(),results=[];const r=new Recorder({media:{getUserMedia:()=>new Promise(r=>resolve=r)},Context,onDone:x=>results.push(x)});const start=r.start('id',5);r.stop(false);resolve(s);await start;assert.ok(s.track.stopped);assert.equal(results.length,0);assert.equal(r.state,'idle');r.close();});
+await test('cancel discovery after permission also ignores a late device enumeration',async()=>{let resolve;const s=stream(),r=new Recorder({media:{getUserMedia:async()=>s,enumerateDevices:()=>new Promise(r=>resolve=r)},Context});const pending=r.list();await Promise.resolve();r.stop(false);resolve([{kind:'audioinput',deviceId:'late'}]);assert.equal(await pending,null);r.close();});
+await test('device removal discards partial PCM, reports interruption and releases the input',async()=>{const x=setup();await x.r.start('id',5);latest.emit([new Float32Array(20)]);x.s.track.events.ended();assert.equal(x.results.length,0);assert.match(x.errors[0],/断开/);assert.equal(x.r.state,'idle');x.r.close();});
+await test('duplicate starts, missing input and invalid durations cannot acquire another stream',async()=>{const x=setup();for(const [id,t]of [['',5],['id',0],['id',31],['id',NaN]])await assert.rejects(x.r.start(id,t));assert.equal(x.requests.length,0);await x.r.start('id',5);await assert.rejects(x.r.start('id',5));assert.equal(x.requests.length,1);x.r.close();assert.equal(x.results.length,0);});
+await test('permission refusal returns recorder to idle without saving data',async()=>{const r=new Recorder({media:{getUserMedia:async()=>{throw Error('denied');}},Context});await assert.rejects(r.start('id',1),/denied/);assert.equal(r.state,'idle');r.close();});
+await test('AudioWorklet copies PCM, outputs silence, cleans up processor failure and cancels late module loading',async()=>{let Type;class Processor{constructor(){this.messages=[];this.port={postMessage:x=>this.messages.push(x)};}}vm.runInNewContext(workletSource,{AudioWorkletProcessor:Processor,registerProcessor:(name,t)=>Type=t,Float32Array});const p=new Type(),input=[Float32Array.from([.25,.5]),Float32Array.from([-.25,-.5])],output=[[new Float32Array(2).fill(1)]];assert.equal(p.process([input],output),true);input[0][0]=99;assert.equal(p.messages[0][0][0],.25);assert.deepEqual(Array.from(output[0][0]),[0,0]);
+ const prior=globalThis.AudioWorkletNode;globalThis.AudioWorkletNode=class{constructor(ctx){Object.assign(this,ctx.node());this.port={};}};
+ try{
+  class WorkletContext extends Context{constructor(){super();this.audioWorklet={addModule:async()=>{}};}}
+  const x=setup();x.r.Context=WorkletContext;await x.r.start('id',1);assert.equal(x.r.engine,'AudioWorklet');x.r.processor.onprocessorerror();assert.match(x.errors[0],/工作线程/);assert.equal(x.results.length,0);assert.equal(latest.state,'closed');x.r.close();
+  let resolve;class PendingContext extends Context{constructor(){super();this.audioWorklet={addModule:()=>new Promise(r=>resolve=r)};}}
+  const y=setup();y.r.Context=PendingContext;const pending=y.r.start('id',1);await Promise.resolve();await Promise.resolve();y.r.close();resolve();await pending;assert.equal(y.results.length,0);assert.ok(y.s.track.stopped);assert.equal(latest.state,'closed');
+ }finally{if(prior===undefined)delete globalThis.AudioWorkletNode;else globalThis.AudioWorkletNode=prior;}
+ });
+console.log('Capture lifecycle: '+count+' offline checks; no microphone opened');
+})().catch(e=>{console.error(e);process.exitCode=1;});

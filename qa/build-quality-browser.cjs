@@ -1,0 +1,6 @@
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
+const root=path.resolve(__dirname,'..'),read=f=>fs.readFileSync(path.join(root,f),'utf8'),source=read('AC10x-Audio-Lab.html');
+const fake=read('qa/fake-hid.cjs').replace("const C=require('../codec.js'),R=require('../routing.js');",'const C=AudioCodec,R=AudioRouting;').replace('module.exports={FakeHID,config,memory};','window.QualityFake={FakeHID,config,memory};');
+const script=s=>'<script>'+s.replace(/<\/script/gi,'<\\/script')+'</script>';
+const result=source.replace('<head>','<head>'+script(read('qa/quality-preload.js'))+script('QualityQA.productSHA256='+JSON.stringify(crypto.createHash('sha256').update(source).digest('hex'))+';')).replace('</body>',script(fs.readFileSync(require.resolve('axe-core/axe.min.js'),'utf8'))+script('(()=>{'+fake+'})();')+script(read('qa/rendered-contrast.js'))+script(read('qa/quality-panel.js'))+'</body>');
+fs.writeFileSync(path.join(root,'quality-isolated.html'),result);console.log(JSON.stringify({sourceSHA256:crypto.createHash('sha256').update(source).digest('hex'),qualitySHA256:crypto.createHash('sha256').update(result).digest('hex'),axe:require('axe-core/package.json').version}));

@@ -1,0 +1,10 @@
+const assert=require('node:assert/strict'),R=require('../routing.js'),C=require('../codec.js'),{config,memory}=require('./fake-hid.cjs');
+let count=0;function test(name,fn){fn();count++;console.log('PASS '+name);}
+// Independently transcribed from AC102 User Manual, register 0x26 table.
+const single=[0,0,0,-3,-6,-9,-12,-15,-18,-21,-24,-27,-30,-33,-36,-39];
+const differential=[0,-3,-6,-9,-12,-15,-18,-21,-24,-27,-30,-33,-36,-39,-42,-45];
+test('readback follows both vendor attenuation tables, including repeated single-ended zero codes',()=>{for(let code=0;code<16;code++){assert.equal(R.lineGainDb(code,false),single[code]);assert.equal(R.lineGainDb(code,true),differential[code]);}});
+test('a quieter request increases attenuation code and rejects unrepresentable single-ended attenuation',()=>{for(const diff of [false,true]){const table=diff?differential:single;for(let db=0;db>=(diff?-45:-39);db-=3)assert.equal(table[R.lineGainCode(db,diff)],db);}assert.throws(()=>R.lineGainCode(-45,false),/单端/);assert.throws(()=>R.lineGainCode(3,true));});
+test('a real output plan uses fresh hardware mode and never writes the mode bit',()=>{for(const diff of [false,true]){const c=config(),s=memory();s[38]=0x20|(diff?0x10:0);c.routing.lineGain=-18;c.routing.lineDifferential=!diff;const plan=C.makePlan(c,s,{groups:['routing'],scope:'lineamp'});const p=plan.steps.find(p=>p.address===38);assert.equal(p.mask,0x2f);assert.equal(p.after&0x10,s[38]&0x10);assert.equal(p.after&15,diff?6:8);}});
+test('decode imports actual mode and attenuation; other module edits ignore an unrelated lineout draft',()=>{const c=config(),s=memory();s[38]=0x28;const d=C.decode(s,c,{mclkHz:12288000});assert.equal(d.config.routing.lineGain,-18);assert.equal(d.config.routing.lineDifferential,false);c.routing.lineGain=-45;c.pga=20;assert.doesNotThrow(()=>C.makePlan(c,s,{groups:['routing'],scope:'pga'}));assert.throws(()=>C.makePlan(c,s,{groups:['routing'],scope:'lineamp'}),/单端/);});
+console.log(count+' lineout checks passed; simulated, no hardware I/O');
