@@ -23,11 +23,15 @@
   function progress(e){$('#hwProgress').max=Math.max(1,e.total);$('#hwProgress').value=e.completed;$('#hwProgressLabel').textContent=({read:'读回',plan:'差异',write:'写入并核验'}[e.phase]||e.phase)+' '+e.completed+' / '+e.total+(e.address!==undefined?' · '+hex(e.address):'');renderOperation();}
   function renderOperation(){
     const focusedCancel=['hwCancel','quickStartCancel'].includes(document.activeElement?.id);
-    $('#quickStart').disabled=busy||!fresh();
-    $('#quickStart').textContent=quickState.phase==='applying'?'Quick Start · 写入中…':'Quick Start · 写入';
+    $('#quickStart').disabled=busy;
+    $('#quickStart').textContent=quickState.phase==='applying'?'正在写入快捷方案…':'Quick Start';
     $('#quickStartCancel').hidden=!activeRun;$('#quickStartCancel').disabled=!activeRun||activeRun.cancelled;
     $('#quickStartCancel').textContent=activeRun?.cancelled?'正在取消…':'取消操作';
-    $('#quickStartStatus').textContent=busy?lastMessage+' · '+$('#hwProgressLabel').textContent:failure||quickState.message||(fresh()?'Quick Start 将写入：麦克风录音 + I²S 播放，DAC −30 dB、Line Out −18 dB；监听与回环关闭。':'连接 USB 后，Quick Start 一键写入独立录音与播放配置；低音量输出，不开启本地监听。');
+    $('#quickStartStatus').textContent=busy?lastMessage+' · '+$('#hwProgressLabel').textContent:failure||quickState.message||(fresh()?'Quick Start：默认声卡、播放、录音和数字排查；选择方案后明确写入并核验。':'可先打开 Quick Start 浏览方案；连接 USB 并完整读回后可写入。');
+    $('#quickStartReady').textContent=fresh()?'设备已就绪；点击任一方案的“写入并核验”。':'可先浏览方案；连接 USB 并完整读回后可写入。';
+    $('#quickStartConnect').hidden=fresh();$('#quickStartConnect').disabled=busy;
+    for(const button of $$('[data-quick-apply]'))button.disabled=busy||!fresh();
+    if(!$('#quickStartPicker').hidden&&document.activeElement?.matches('[data-quick-apply]:disabled'))$('#closeQuickStart').focus();
     if(!activeRun&&focusedCancel){const target=$('#settingsWindow').hidden?$('#canvasScroll'):$('#inspectorTitle');target.tabIndex=-1;target.focus({preventScroll:true});}
   }
   function assertAdapterFormat(config,opt){C.assertAdapterClock(config,opt,bridge?.device);}
@@ -139,25 +143,33 @@
   window.addEventListener('pagehide',()=>{++generation;stopMonitor();if(logPaint!==null)clearTimeout(logPaint);logPaint=null;session?.cancel();bridge?.close().catch(()=>{});});
   function cancel(){const fromButton=['hwCancel','quickStartCancel'].includes(document.activeElement?.id);if(activeRun)activeRun.cancelled=true;session?.cancel();$('#hwProgressLabel').textContent='等待当前通信结束，然后取消并尝试恢复…';renderOperation();if(fromButton){const target=$('#settingsWindow').hidden?$('#canvasScroll'):$('#inspectorTitle');target.tabIndex=-1;target.focus({preventScroll:true});}}
   const cloneState=x=>x?JSON.parse(JSON.stringify(x)):null;
-  function quickStart(){return run(async request=>{
-    setStatus('正在应用 Quick Start','写入独立录音与低音量播放，随后完整读回。');
+  function quickStart(exampleId='default'){return run(async request=>{
+    setStatus('正在应用 Quick Start：'+request.meta.name,'正在写入所选方案，并逐项核验。');
     const result=await session.apply(request.config,request.opt);
     const unchanged=request.generation===generation&&request.revision===A.getDraftRevision();
-    if(unchanged)A.importHardwareConfig(request.config);
-    quickState={phase:'verified',message:unchanged?'Quick Start 已写入并完整核验；点击图上模块继续调整。':'Quick Start 提交时配置已核验；保留你随后修改的草稿，图中显示设备读回。',writes:result.writes};
+    if(unchanged)A.importHardwareConfig(request.config,{presetId:request.meta.presetId});
+    quickState={phase:'verified',exampleId:request.meta.id,name:request.meta.name,message:unchanged?'已写入并核验：'+request.meta.name+'；点击图上模块继续调整。':'Quick Start 提交时配置已核验；保留你随后修改的草稿，图中显示设备读回。',writes:result.writes};
     setStatus('Quick Start 已核验',quickState.message);A.toast(quickState.message);return cloneState(quickState);
   },()=>{
     quickState={phase:'applying',message:'Quick Start 正在检查并写入配置。'};
     if(!fresh())throw Error('请先连接并完整读回设备');
-    const profile=T.adapterProfile(bridge.device),base=A.getConfig();
-    const config=A.validateConfig(AudioExamples.quickStart(base,{fixedAudio:Boolean(profile?.fixedAudio),lineDifferential:Boolean(session.snapshot[0x26]&16)}));
-    const opt={groups:['routing','eq','dynamics','clock'],scope:null,label:'Quick Start',mclkHz:profile?.fixedAudio?12288000:A.getReferenceMclk(),profile:base.profile};
+    const profile=T.adapterProfile(bridge.device),base=A.getConfig(),meta=AudioExamples.quickExamples.find(x=>x.id===exampleId);
+    if(!meta)throw Error('未知 Quick Start 方案');
+    const config=A.validateConfig(AudioExamples.quickExample(exampleId,base,{fixedAudio:Boolean(profile?.fixedAudio),lineDifferential:Boolean(session.snapshot[0x26]&16)}));
+    const opt={groups:['routing','eq','dynamics','clock'],scope:null,label:meta.name,mclkHz:profile?.fixedAudio?12288000:A.getReferenceMclk(),profile:base.profile};
     assertAdapterFormat(config,opt);C.makePlan(config,session.snapshot,opt);
     if(profile?.fixedAudio)A.setReferenceMclk(12288000);
     quickState={phase:'applying',message:'Quick Start 正在写入并核验；请等待完成。'};
-    return{config,opt,generation,revision:A.getDraftRevision()};
+    return{config,opt,meta:{...meta},generation,revision:A.getDraftRevision()};
   });}
-  $('#quickStart').addEventListener('click',quickStart);
+  const picker=$('#quickStartPicker');let pickerReturn=null,pickerInert=[];
+  function closeQuickStart(restore=true){picker.hidden=true;$('#quickStart').setAttribute('aria-expanded','false');for(const [el,previous]of pickerInert)el.inert=previous;pickerInert=[];if(restore&&pickerReturn?.isConnected&&!pickerReturn.disabled)pickerReturn.focus();}
+  function openQuickStart(){if(busy)return;if(!picker.hidden){closeQuickStart();return;}pickerReturn=document.activeElement;picker.hidden=false;$('#quickStart').setAttribute('aria-expanded','true');pickerInert=[...document.body.children].filter(el=>el!==picker&&!['SCRIPT','STYLE','LINK'].includes(el.tagName)).map(el=>[el,el.inert]);for(const [el]of pickerInert)el.inert=true;renderOperation();AudioI18n.refresh();$('#closeQuickStart').focus();}
+  for(const meta of AudioExamples.quickExamples){const card=document.createElement('article');card.className='quick-start-card';card.innerHTML='<div class="quick-start-card-heading"><h3>'+escape(meta.name)+'</h3><span>'+escape(meta.tag)+'</span></div><p>'+escape(meta.note)+'</p><p class="quick-start-path">'+escape(meta.path)+'</p><p class="quick-start-effect">'+escape(meta.effect)+'</p><button type="button" class="btn primary" data-quick-apply="'+escape(meta.id)+'" aria-label="'+escape(meta.name+' · 写入并核验')+'">写入并核验</button>';$('#quickStartCards').append(card);card.querySelector('button').addEventListener('click',()=>{if(busy||!fresh())return;closeQuickStart(false);const target=$('#settingsWindow').hidden?$('#canvasScroll'):$('#inspectorTitle');target.tabIndex=-1;target.focus({preventScroll:true});quickStart(meta.id);});}
+  $('#quickStart').addEventListener('click',openQuickStart);$('#closeQuickStart').addEventListener('click',()=>closeQuickStart());
+  $('#quickStartConnect').addEventListener('click',()=>{closeQuickStart(false);$('#usbConnect').click();});
+  picker.addEventListener('click',event=>{if(event.target===picker)closeQuickStart();});
+  document.addEventListener('keydown',event=>{if(picker.hidden||event.isComposing)return;if(event.key==='Escape'){event.preventDefault();event.stopImmediatePropagation();closeQuickStart();}else if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='k'){event.preventDefault();event.stopImmediatePropagation();}else if(event.key==='Tab'){const controls=[...picker.querySelectorAll('button')].filter(el=>!el.disabled&&!el.hidden&&!el.closest('[hidden]'));const index=controls.indexOf(document.activeElement);if(event.shiftKey&&index<=0){event.preventDefault();controls.at(-1)?.focus();}else if(!event.shiftKey&&index===controls.length-1){event.preventDefault();controls[0]?.focus();}}},true);
   $('#quickStartCancel').addEventListener('click',cancel);
   window.AudioHardwareUI={getState(){return{connected:available(),fresh:fresh(),busy,generation,profile:$('#hwProfile').value,referenceMclk:A.getReferenceMclk(),snapshot:cloneState(session?.snapshot),readAt:session?.readAt||null,adapter:D.adapterInfo(bridge?.device),failure,message:lastMessage,detail:lastDetail,quickStart:cloneState(quickState)};},connect,read:readAll,quickStart,cancel};
   if(!navigator.hid){$('#hwCapability').textContent='WEBHID 不可用';$('#hwBrowserNote').textContent='请用支持 WebHID 的桌面 Chrome / Edge 打开。';}

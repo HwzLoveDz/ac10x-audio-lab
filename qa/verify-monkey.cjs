@@ -89,7 +89,7 @@ function make(){
       case'nav':nav(a.view);break;
       case'node':w.AudioLab.openNode(a.node);break;
       case'language':$('#languageSwitch').value=a.language;$('#languageSwitch').dispatchEvent(new w.Event('change',{bubbles:true}));break;
-      case'quick-start':{const before=JSON.stringify(w.AudioLab.getConfig());assert.equal($('#quickStart').disabled,true);$('#quickStart').click();invariant(JSON.stringify(w.AudioLab.getConfig())===before,'offline-quick-start','Disconnected quick start changed the model');break;}
+      case'quick-start':{const before=JSON.stringify(w.AudioLab.getConfig());assert.equal($('#quickStart').disabled,false);$('#quickStart').click();assert.equal($('#quickStartPicker').hidden,false);assert.ok([...d.querySelectorAll('[data-quick-apply]')].every(b=>b.disabled));$('#closeQuickStart').click();invariant(JSON.stringify(w.AudioLab.getConfig())===before,'offline-quick-start','Disconnected quick start changed the model');break;}
       case'fit':nav('overview');click($('#routeFit'));break;
       case'zoom':nav('overview');click($('#routeZoomIn'));break;
       case'pan':nav('overview');$('#canvasScroll').focus();key($('#canvasScroll'),'ArrowRight');break;

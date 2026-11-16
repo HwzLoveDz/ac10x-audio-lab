@@ -1,0 +1,17 @@
+
+'use strict';
+const assert=require('node:assert/strict'),C=require('../codec.js'),T=require('../transport.js'),S=require('../session.js'),{FakeHID,config,memory}=require('./fake-hid.cjs');
+let count=0;async function check(name,fn){await fn();count++;console.log('PASS '+name);}
+function bypass(){const c=config();c.eq.enabled=c.hpf.enabled=c.agc.enabled=false;return c;}
+function final(snapshot,plan){const m={...snapshot};for(const p of C.sequence(plan,snapshot))m[p.address]=C.patchValue(m[p.address],p);return m;}
+(async()=>{
+ await check('independent duplex Quick Start keeps both serial processing clocks even with all effects bypassed',()=>{const c=bypass(),m=memory();const p=C.makePlan(c,m,{groups:['routing','eq','dynamics','clock'],mclkHz:12288000});const after=final(m,p);assert.equal(after[6]&63,63);assert.equal(after[79]&1,0);assert.equal(after[49]&24,0);});
+ await check('EQ-only bypass uses the active hardware DAC rather than a disabled unapplied draft',()=>{const c=bypass(),m=memory();c.dac.enabled=false;m[6]=63;m[27]=1;const after=final(m,C.makePlan(c,m,{groups:['eq']}));assert.equal(after[6]&8,8);assert.equal(after[27]&1,1);});
+ await check('HPF and AGC-only bypass use the active hardware ADC rather than a disabled unapplied draft',()=>{for(const scope of ['hpf','agc']){const c=bypass(),m=memory();c.adc.enabled=false;m[49]=1;m[25]=1;const after=final(m,C.makePlan(c,m,{groups:['dynamics'],scope}));assert.equal(after[6]&2,2);assert.equal(after[25]&1,1);}});
+ await check('enabling ADC from a fully gated state starts both ADC and AGC/HPF pipeline clocks within ADC ownership',()=>{const c=bypass(),m=memory();m[25]&=~1;m[6]&=~3;const p=C.makePlan(c,m,{groups:['routing'],scope:'adc'});const after=final(m,p);assert.equal(after[6]&3,3);assert.equal(after[6]&~3,m[6]&~3);assert.ok(after[25]&1);});
+ await check('enabling DAC from a fully gated state starts both DAC and EQ pipeline clocks within DAC ownership',()=>{const c=bypass(),m=memory();m[27]&=~1;m[6]&=~12;const after=final(m,C.makePlan(c,m,{groups:['routing'],scope:'dac'}));assert.equal(after[6]&12,12);assert.equal(after[6]&~12,m[6]&~12);assert.ok(after[27]&1);});
+ await check('input aliases preserve the capture pipeline clock requirement',()=>{for(const scope of ['input','source','dmic','dmicport']){const c=bypass(),m=memory();m[25]&=~1;m[6]&=~3;const after=final(m,C.makePlan(c,m,{groups:['routing'],scope}));assert.equal(after[6]&3,3);assert.ok(after[25]&1);}});
+ await check('a deliberately disabled core with bypassed effects can gate its own pipeline without touching the other core',()=>{for(const [scope,mask]of [['adc',3],['dac',12]]){const c=bypass(),m=memory();c[scope].enabled=false;const after=final(m,C.makePlan(c,m,{groups:['routing'],scope}));assert.equal(after[6]&mask,0);assert.equal(after[6]&~mask,m[6]&~mask);}});
+ await check('a verified EQ bypass transaction never stops either active data pipeline and preserves mute/audio ownership',async()=>{const d=new FakeHID(),b=new T.HidBridge(d),session=new S.RegisterSession(b);await b.open();try{const c=bypass();c.dac.enabled=false;c.adc.enabled=false;const core=[d.mem[25],d.mem[27]],initialDAC=d.mem[28];await session.apply(c,{groups:['eq']});assert.equal(d.mem[6]&10,10);assert.deepEqual([d.mem[25],d.mem[27]],core);assert.equal(d.mem[28],initialDAC);assert.equal(d.maxActive,1);}finally{await b.close();}});
+ console.log(count+' pipeline-clock regressions; physical expectations derived from the recorded S31/AC101S clock A/B');
+})().catch(e=>{console.error(e);process.exitCode=1;});

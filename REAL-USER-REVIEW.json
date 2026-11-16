@@ -1,0 +1,130 @@
+{
+  "version": "0.8.12-rc.1",
+  "status": "PASSED",
+  "hardwareAccessed": true,
+  "firmwareFlashed": false,
+  "scope": "Real WebHID user workflows on 0.8.11-rc.2 found and isolated loopback processing dependency; corrected 0.8.12 generator verified through eight real S31 transactions. Real webpage A/B audio and three-frequency speaker response detected by MiniMIC after Windows target unmute.",
+  "nativeReleaseExamples": 8,
+  "nativeCleanup": {
+    "closed": true,
+    "writes": 301,
+    "commands": 3089
+  },
+  "browserOriginalVersion": "0.8.11-rc.2",
+  "browserSimulated": false,
+  "defaultRestored": true,
+  "WindowsTargetVolumePercent": 76,
+  "WindowsTargetMuted": false,
+  "otherEndpointLevelsChanged": false,
+  "s3Validated": false,
+  "microphoneNoiseFineTuning": false,
+  "calibratedAcousticQuality": false,
+  "rawRecordingsIncluded": false,
+  "digitalReturn": [
+    {
+      "channel": 1,
+      "tone997DbFS": -37.62420214899918
+    },
+    {
+      "channel": 2,
+      "tone997DbFS": -34.16407319584635
+    }
+  ],
+  "webAudioDetection": [
+    {
+      "mode": "A",
+      "channels": [
+        {
+          "channel": 1,
+          "tone997DbFS": -18.089985044945795,
+          "background997DbFS": -77.14997447500915,
+          "riseDb": 59.059989430063354
+        },
+        {
+          "channel": 2,
+          "tone997DbFS": -112.0719414733033,
+          "background997DbFS": -117.80201960961706,
+          "riseDb": 5.7300781363137645
+        }
+      ]
+    },
+    {
+      "mode": "B",
+      "channels": [
+        {
+          "channel": 1,
+          "tone997DbFS": -21.556805887711036,
+          "background997DbFS": -77.14997447500915,
+          "riseDb": 55.59316858729811
+        },
+        {
+          "channel": 2,
+          "tone997DbFS": -120.73862644523857,
+          "background997DbFS": -117.80201960961706,
+          "riseDb": -2.936606835621504
+        }
+      ]
+    }
+  ],
+  "speakerDetection": [
+    {
+      "phase": "tone-523",
+      "hz": 523.25,
+      "channels": [
+        {
+          "channel": 1,
+          "toneDbFS": -28.77014562433743,
+          "backgroundDbFS": -71.54074605664414,
+          "riseDb": 42.77060043230671
+        },
+        {
+          "channel": 2,
+          "toneDbFS": -122.2688302566221,
+          "backgroundDbFS": -128.97550074213947,
+          "riseDb": 6.706670485517378
+        }
+      ]
+    },
+    {
+      "phase": "tone-997",
+      "hz": 997,
+      "channels": [
+        {
+          "channel": 1,
+          "toneDbFS": -12.173768400540467,
+          "backgroundDbFS": -87.50436299561458,
+          "riseDb": 75.33059459507412
+        },
+        {
+          "channel": 2,
+          "toneDbFS": -105.9212678108643,
+          "backgroundDbFS": -124.85039139638437,
+          "riseDb": 18.929123585520074
+        }
+      ]
+    },
+    {
+      "phase": "tone-2500",
+      "hz": 2500,
+      "channels": [
+        {
+          "channel": 1,
+          "toneDbFS": -11.770687027565963,
+          "backgroundDbFS": -92.2568290661283,
+          "riseDb": 80.48614203856235
+        },
+        {
+          "channel": 2,
+          "toneDbFS": -94.51616763657086,
+          "backgroundDbFS": -114.7733688552187,
+          "riseDb": 20.25720121864785
+        }
+      ]
+    }
+  ],
+  "caveats": [
+    "Register-only original acceptance did not prove audio capture.",
+    "Early native-reference detection without DC removal was invalid and is superseded; raw data retained locally.",
+    "Record enable and clock bits were tested as a known-working group; individual necessity of each bit is not separately claimed."
+  ]
+}

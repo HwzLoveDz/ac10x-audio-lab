@@ -1,0 +1,10 @@
+'use strict';
+const assert=require('node:assert/strict'),E=require('../examples.js'),C=require('../codec.js');
+const seed=require('../DEFAULT-FIRMWARE.json').config,c=E.quickExample('playback-loopback',seed,{fixedAudio:true});
+const patch=Object.fromEntries(C.encode(c,{profile:'AC101S',mclkHz:12288000,manualBase:{38:0}}).patches.map(p=>[p.address,p]));
+assert.equal(patch[3].value&16,16);assert.equal(patch[6].value&3,3);assert.equal(patch[25].value&1,1);
+console.log('PASS digital playback capture retains record function, ADC processing and both record clocks required by real S31 audio');
+assert.equal(c.routing.mbias,false);assert.equal(c.adc.mute,true);assert.equal(c.routing.txL.rec,false);assert.equal(c.routing.txR.rec,false);assert.equal(c.routing.txL.play,true);assert.equal(c.routing.txR.rx,true);assert.equal(c.routing.dac.rec,false);
+console.log('PASS retained capture processing does not select microphone data, enable bias or create a speaker monitor loop');
+assert.deepEqual(E.defaultFirmware(seed,{fixedAudio:true}),seed);
+console.log('PASS default voice configuration stays identical while only digital loopback processing is corrected');

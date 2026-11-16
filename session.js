@@ -24,7 +24,7 @@
     }
     accept(snapshot){this.snapshot=snapshot;this.readAt=new Date().toISOString();this.stale=false;}
     async readAll(){return this.own(async()=>{try{const next=await this.readFresh();this.accept(next);return next;}catch(e){this.stale=true;throw e;}});}
-    async recover(backup,live,clock){
+    async recover(backup,live,clock,eqPhysicalBypass=false){
       const restored=[],restoreFailed=[],conflicts=[],addresses=[...backup.keys()];
       if(!addresses.length)return{restored,restoreFailed};
       if(!this.bridge.connected||this.bridge.fault)return{restored,restoreFailed:addresses.map(address=>({address,message:'连接不可用，未重放恢复写入'}))};
@@ -43,7 +43,7 @@
         const recoveryExpected={...current};
         const steps=addresses.map(address=>{const p=backup.get(address);return{address,mask:p.mask,value:p.value,groups:clock?['clock']:['manual']};}).filter(p=>(current[p.address]&p.mask)!==(p.value&p.mask));
         // Use the same mute / GEN / EQ / dynamics ordering for recovery as for commit.
-        const sequence=C.sequence({steps},current);
+        const sequence=C.sequence({steps,eqPhysicalBypass},current);
         for(const p of sequence){
           const before=await this.bridge.readRegister(p.address),mask=backup.get(p.address)?.mask??p.mask;
           if((before&mask)!==(recoveryExpected[p.address]&mask)){
@@ -88,14 +88,14 @@
         for(const p of plan.expected||plan.steps)if((final[p.address]&p.mask)!==(p.after&p.mask))throw new SessionError('VERIFY','最终读回不匹配',{address:p.address,expected:p.after,actual:final[p.address]});
         this.accept(final);
         if(written.length){
-          const transaction={kind,startedAt,completedAt:new Date().toISOString(),clock,
+          const transaction={kind,startedAt,completedAt:new Date().toISOString(),clock,eqPhysicalBypass:Boolean(plan.eqPhysicalBypass),
             fields:[...backup].map(([address,p])=>({address,mask:p.mask,before:p.value,after:final[address]})),writes:written.length};
           this.history.push(copy(transaction));if(this.history.length>20)this.history.shift();
           this.lastTransaction=kind==='undo'?null:transaction;
         }else if(kind==='undo')this.lastTransaction=null;
         return{snapshot:final,plan,writes:written.length,verified:true};
       }catch(e){
-        const recovery=await this.recover(backup,live,clock);this.stale=true;
+        const recovery=await this.recover(backup,live,clock,Boolean(plan.eqPhysicalBypass));this.stale=true;
         this.history.push({kind,status:'failed',startedAt,completedAt:new Date().toISOString(),errorCode:e.code||'ERROR',attempted:[...backup.keys()],written,...recovery});if(this.history.length>20)this.history.shift();
         e.details={...(e.details||{}),attempted:[...backup.keys()],written,...recovery};throw e;
       }
@@ -122,7 +122,7 @@
         const t=copy(this.lastTransaction),live=await this.readFresh();
         for(const p of t.fields)if((live[p.address]&p.mask)!==(p.after&p.mask))throw new SessionError('CONCURRENT_CHANGE','设备已偏离上次事务结果，未执行恢复',{address:p.address});
         const steps=t.fields.map(p=>({...p,value:p.before,after:C.patchValue(live[p.address],{mask:p.mask,value:p.before}),groups:t.clock?['clock']:['manual']}));
-        return await this.commit({steps,notes:['仅恢复上次写入拥有的位；保留其他位']},live,{kind:'undo',clock:t.clock});
+        return await this.commit({steps,eqPhysicalBypass:Boolean(t.eqPhysicalBypass),notes:['仅恢复上次写入拥有的位；保留其他位']},live,{kind:'undo',clock:t.clock});
       }catch(e){this.stale=true;throw e;}
     });}
     async readOne(address){return this.own(async()=>{try{this.check();const value=await this.bridge.readRegister(address);if(this.snapshot)this.snapshot[address]=value;return value;}catch(e){this.stale=true;throw e;}});}

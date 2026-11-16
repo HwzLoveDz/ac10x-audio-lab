@@ -30,15 +30,39 @@
   function quickStart(config,{fixedAudio=false,lineDifferential=config.routing?.lineDifferential}={}){
     const c=C.normalize(copy(config)),r=R.defaults();
     if(fixedAudio)c.clock={fs:48000,format:'I2S',bits:16,slot:32,slots:2,role:'slave'};
-    Object.assign(r,{input:'analog',mbias:true,rxEnabled:true,txEnabled:true,sdoEnabled:true,lineOut:true,lineGain:-18,lineDifferential:Boolean(lineDifferential)});
+    Object.assign(r,{input:'analog',mbias:true,rxEnabled:true,txEnabled:true,sdoEnabled:true,lineOut:true,lineGain:0,lineDifferential:Boolean(lineDifferential)});
     r.rx={left:true,right:true,leftHalf:true,rightHalf:true};
     r.dac={rx:true,rec:false,rxHalf:false,recHalf:false};
     r.txL={rec:true,play:false,recHalf:false,playHalf:false};
     r.txR={rec:true,rx:false,recHalf:false,rxHalf:false};
-    c.routing=r;c.pga=12;c.adc={enabled:true,gain:0,mute:false};c.dac={enabled:true,gain:-30,mute:false};
-    c.eq=eq('flat',c.clock.fs);c.eq.enabled=false;c.hpf={enabled:false,freq:80};
+    c.routing=r;c.pga=12;c.adc={enabled:true,gain:0,mute:false};c.dac={enabled:true,gain:0,mute:false};
+    c.eq=eq('voice',c.clock.fs);c.hpf={enabled:false,freq:80};
     c.agc={enabled:false,target:-18,threshold:-70,maxGain:12,attack:1,release:120,debounce:1.3,noiseDebounce:170.6667,noiseDetect:false};
     c.raw={};return c;
   }
-  const api={eqPresets,eq,quickStart};if(common)module.exports=api;else root.AudioExamples=api;
+  const quickExamples=[
+    {id:'default',name:'默认固件 · USB 声卡',tag:'日常使用',note:'USB 播放与麦克风独立录音，人声清晰 EQ；恢复正常播放电平。',path:'USB → 人声清晰 → 扬声器；MIC → USB',effect:'DAC 0 dB · Line Out 0 dB · 监听关闭',presetId:'voice'},
+    {id:'flat-playback',name:'纯净播放',tag:'播放',note:'EQ 真正旁路，保留原始音色；关闭芯片麦克风采集。',path:'USB → EQ 旁路 → 扬声器',effect:'正常播放电平 · 麦克风采集关闭',presetId:'voice'},
+    {id:'warm-music',name:'温暖音乐',tag:'播放',note:'增加少量低频厚度，缓和高频；麦克风仍独立录音。',path:'USB → 温暖柔和 EQ → 扬声器',effect:'正常播放电平 · 不开录音监听',presetId:'warm'},
+    {id:'record-only',name:'独立录音',tag:'录音',note:'模拟麦克风经 80 Hz 高通送到 USB；AGC 关闭，扬声器静音。',path:'MIC → PGA 12 dB → HPF 80 Hz → USB',effect:'DAC 与 Line Out 关闭 · 不会自动开始录音',presetId:'voice'},
+    {id:'playback-loopback',name:'播放数字回采',tag:'数字排查',note:'USB 录音左路接处理后播放数据，右路接输入混音，便于比较；不采集咪头。',path:'USB → EQ → 扬声器；PLAY / RXM → USB',effect:'录音左路为处理后数据，右路为 EQ 前数据',presetId:'voice'},
+    {id:'left-channel',name:'仅左声道播放',tag:'声道排查',note:'只把电脑的左声道送到扬声器；用于排查声道选择和接线。',path:'USB 左声道 → 人声清晰 → 扬声器',effect:'右播放声道不混入 · 麦克风独立录音',presetId:'voice'},
+    {id:'right-channel',name:'仅右声道播放',tag:'声道排查',note:'只把电脑的右声道送到扬声器；用于排查声道选择和接线。',path:'USB 右声道 → 人声清晰 → 扬声器',effect:'左播放声道不混入 · 麦克风独立录音',presetId:'voice'},
+    {id:'mute',name:'静音待机',tag:'暂停音频',note:'关闭芯片录放和模拟输出；USB 控制保持可用，可再写入任一方案。',path:'播放关闭 · 录音关闭 · USB 控制保留',effect:'不休眠 MCU、不刷固件、不改电脑音量',presetId:'voice'}
+  ];
+  function quickExample(id,config,options={}){
+    const meta=quickExamples.find(x=>x.id===id);if(!meta)throw new Error('未知 Quick Start 方案');
+    const c=quickStart(config,options),r=c.routing;
+    if(id==='warm-music')c.eq=eq('warm',c.clock.fs);
+    // Real S31 capture requires the record digital channel even for PLAY/RXM sources.
+    if(['flat-playback','mute'].includes(id))c.adc.enabled=false;
+    if(['flat-playback','playback-loopback','mute'].includes(id)){c.adc.mute=true;r.mbias=false;}
+    if(id==='flat-playback'){c.eq.enabled=false;r.txEnabled=false;r.sdoEnabled=false;}
+    if(id==='record-only'){c.dac.enabled=false;c.dac.mute=true;r.lineOut=false;r.rxEnabled=false;c.eq.enabled=false;c.hpf.enabled=true;c.hpf.freq=80;}
+    if(id==='playback-loopback'){r.txL={rec:false,play:true,recHalf:false,playHalf:false};r.txR={rec:false,rx:true,recHalf:false,rxHalf:false};}
+    if(id==='left-channel'||id==='right-channel')r.rx={left:id==='left-channel',right:id==='right-channel',leftHalf:false,rightHalf:false};
+    if(id==='mute'){c.dac.enabled=false;c.dac.mute=true;r.lineOut=false;r.rxEnabled=false;r.txEnabled=false;r.sdoEnabled=false;c.eq.enabled=false;}
+    return c;
+  }
+  const api={eqPresets,eq,quickStart,defaultFirmware:quickStart,quickExamples,quickExample};if(common)module.exports=api;else root.AudioExamples=api;
 })(typeof globalThis!=='undefined'?globalThis:this);

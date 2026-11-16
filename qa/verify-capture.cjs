@@ -31,5 +31,7 @@ await test('AudioWorklet copies PCM, outputs silence, cleans up processor failur
   const y=setup();y.r.Context=PendingContext;const pending=y.r.start('id',1);await Promise.resolve();await Promise.resolve();y.r.close();resolve();await pending;assert.equal(y.results.length,0);assert.ok(y.s.track.stopped);assert.equal(latest.state,'closed');
  }finally{if(prior===undefined)delete globalThis.AudioWorkletNode;else globalThis.AudioWorkletNode=prior;}
  });
+await test('reported speech processing refuses measurement capture and releases its late resources',async()=>{const x=setup();x.s.track.getSettings=()=>({sampleRate:48000,noiseSuppression:true});await assert.rejects(x.r.start('id',1),/语音处理/);assert.equal(x.r.state,'idle');assert.ok(x.s.track.stopped);assert.equal(x.results.length,0);assert.equal(latest.state,'closed');x.r.close();});
+await test('a muted input cannot become a successful recording with missing samples',async()=>{const x=setup();await x.r.start('id',5);latest.emit([new Float32Array(200)]);x.s.track.events.mute();assert.equal(x.results.length,0);assert.equal(x.errors.length,1);assert.match(x.errors[0],/暂停/);assert.equal(x.r.state,'idle');assert.ok(x.s.track.stopped);x.r.close();});
 console.log('Capture lifecycle: '+count+' offline checks; no microphone opened');
 })().catch(e=>{console.error(e);process.exitCode=1;});

@@ -138,7 +138,7 @@ function visible(element){
   w.AudioI18n.setLanguage('zh-CN');w.AudioLab.navigate('clock');await tick();
   assert.equal($('#routeViewSelect'),null);assert.equal($('#routeResetView'),null);assert.equal($('#view-route'),null);assert.equal($('#routeExamplesOpen'),null);assert.equal($('#guideWorkspace'),null);
   const original=JSON.stringify(w.AudioLab.getConfig());for(const page of ['clock','eq','hardware','registers','audio']){w.AudioLab.navigate(page);assert.equal(d.body.dataset.activeRoute,'all');assert.ok($('#routingSVG [data-node="eq"]'));assert.ok($('#routingSVG [data-node="adc"]'));assert.ok($('#routingSVG [data-node="dacmix"]'));assert.equal(JSON.stringify(w.AudioLab.getConfig()),original);}
-  assert.equal($('#quickStart').disabled,true);$('#quickStart').click();assert.equal(JSON.stringify(w.AudioLab.getConfig()),original);pass('one full graph persists across every editor; disconnected Quick Start cannot write or mutate draft');
+  assert.equal($('#quickStart').disabled,false);$('#quickStart').click();assert.equal($('#quickStartPicker').hidden,false);assert.ok([...d.querySelectorAll('[data-quick-apply]')].every(b=>b.disabled));$('#closeQuickStart').click();assert.equal(JSON.stringify(w.AudioLab.getConfig()),original);pass('one full graph persists across every editor; disconnected Quick Start cannot write or mutate draft');
 
   assert.deepEqual(calls,{hid:0,audio:0,media:0});assert.deepEqual(errors,[]);
   pass('all review regression flows complete without native HID, audio, microphone or device enumeration');

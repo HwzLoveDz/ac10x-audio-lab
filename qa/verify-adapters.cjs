@@ -37,9 +37,9 @@ await test('S3 masked apply/undo and diagnostics preserve model ownership and ca
  const diagnostics=D.diagnose(d.mem,{stale:false,adapter:D.adapterInfo(d)});assert.ok(diagnostics.some(x=>x.id==='s3-format'&&x.severity==='ok'));assert.ok(diagnostics.some(x=>x.id==='s3-validation'&&x.evidence==='support-status'));assert.ok(!diagnostics.some(x=>x.id==='s31-format'));await b.close();
 });
 const fixtures=require('./fixtures/legacy-adapter-parity.json');
-for(const f of fixtures.cases)await test(f.kind+' request bytes and final state match 0.7.4-rc.2 across snapshot, write, restore, full apply and clock gate',async()=>{
+for(const f of fixtures.cases)await test(f.kind+' legacy request bytes and final state match, with the documented S31 register-6 pipeline-clock correction',async()=>{
  const d=device(f.kind,{mem:f.initial}),b=new T.HidBridge(d),s=new S.RegisterSession(b);await b.open();await s.readAll();if(f.kind==='S31')await b.getStatus();await s.writeOne(32,0x71);await s.restoreLast();
- const r=await s.apply(f.draft,{profile:f.kind==='S31'?'AC101S':'AC102',mclkHz:12288000,groups:['routing','eq','dynamics','clock']});if(r.writes)await s.restoreLast();await b.setMclk(false);await b.setMclk(true);await b.close();assert.deepEqual(d.sent.map(r=>({id:r.id,payload:r.payload})),f.reports);assert.deepEqual(d.mem,f.final);
+ const r=await s.apply(f.draft,{profile:f.kind==='S31'?'AC101S':'AC102',mclkHz:12288000,groups:['routing','eq','dynamics','clock']});if(r.writes)await s.restoreLast();await b.setMclk(false);await b.setMclk(true);await b.close();const actual=d.sent.map(r=>({id:r.id,payload:r.payload}));if(f.kind==='S31'){const withoutSystemClock=reports=>reports.filter(r=>!([0,1].includes(r.payload[0])&&r.payload[3]===0&&r.payload[4]===6));assert.deepEqual(withoutSystemClock(actual),withoutSystemClock(f.reports));assert.ok(d.sent.filter(r=>r.command===0&&r.address===6).every(r=>(r.value&10)===10),'active ADC/DAC pipeline clocks cannot be cleared');}else assert.deepEqual(actual,f.reports);assert.deepEqual(d.mem,f.final);
 });
 console.log(count+' adapter matrix/parity checks; simulated only, no hardware I/O');
 })().catch(e=>{console.error(e);process.exitCode=1;});

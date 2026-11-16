@@ -10,7 +10,7 @@ class Recorder{
  async list(){
   if(this.closed||this.state!=='idle')throw Error('录音操作尚未结束');if(!this.media?.getUserMedia||!this.media?.enumerateDevices)throw Error('此浏览器不支持录音设备选择');
   const epoch=++this.epoch;this.stateTo('listing');let probe;
-  try{probe=await this.media.getUserMedia({audio:true,video:false});for(const t of probe.getTracks())t.stop();if(epoch!==this.epoch||this.closed)return null;const devices=await this.media.enumerateDevices();if(epoch!==this.epoch||this.closed)return null;return devices.filter(x=>x.kind==='audioinput'&&x.deviceId&&x.deviceId!=='default'&&x.deviceId!=='communications').map((x,i)=>({id:x.deviceId,label:x.label||'录音输入 '+(i+1)}));}
+  try{probe=await this.media.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false},video:false});for(const t of probe.getTracks())t.stop();if(epoch!==this.epoch||this.closed)return null;const devices=await this.media.enumerateDevices();if(epoch!==this.epoch||this.closed)return null;return devices.filter(x=>x.kind==='audioinput'&&x.deviceId&&x.deviceId!=='default'&&x.deviceId!=='communications').map((x,i)=>({id:x.deviceId,label:x.label||'录音输入 '+(i+1)}));}
   finally{if(probe)for(const t of probe.getTracks())t.stop();if(epoch===this.epoch&&!this.closed)this.stateTo('idle');}
  }
  async start(deviceId,seconds){
@@ -21,6 +21,7 @@ class Recorder{
    if(epoch!==this.epoch||this.closed){stream.getTracks().forEach(t=>t.stop());return;}
    this.stream=stream;ctx=new this.Context({sampleRate:48000});this.ctx=ctx;await ctx.resume();if(epoch!==this.epoch||this.closed)return;
    this.chunks=[];this.frames=0;this.channelCount=0;this.limit=Math.floor(ctx.sampleRate*seconds);this.settings=stream.getAudioTracks()[0]?.getSettings?.()||{};
+   if(['echoCancellation','noiseSuppression','autoGainControl'].some(k=>this.settings[k]===true))throw Error('浏览器仍启用了语音处理，已停止测量录音；请关闭回声消除、降噪和自动增益后重试');
    this.source=ctx.createMediaStreamSource(stream);this.silent=ctx.createGain();this.silent.gain.value=0;this.silent.connect(ctx.destination);
    const receive=data=>{if(epoch!==this.epoch||this.state!=='recording')return;try{this.append(data);}catch(e){this.stop(false);this.onError(e);}};
    if(ctx.audioWorklet&&root.AudioWorkletNode){
@@ -33,6 +34,7 @@ class Recorder{
    }
    this.source.connect(this.processor);this.processor.connect(this.silent);this.stateTo('recording');
    for(const track of stream.getTracks())track.addEventListener?.('ended',()=>{if(epoch===this.epoch){this.stop(false);this.onError(Error('录音设备已断开，未完整的录音已丢弃'));}},{once:true});
+   for(const track of stream.getTracks())track.addEventListener?.('mute',()=>{if(epoch===this.epoch&&this.state==='recording'){this.stop(false);this.onError(Error('录音输入被暂停，未完整的录音已丢弃；请检查系统音效和设备状态'));}},{once:true});
    this.timer=setTimeout(()=>{if(epoch===this.epoch){this.stop(false);this.onError(Error('录音未按期收到足够样本，未完整的录音已丢弃'));}},(seconds+3)*1000);
   }catch(e){if(epoch===this.epoch){this.stop(false);throw e;}}
   finally{if(epoch!==this.epoch){stream?.getTracks().forEach(t=>t.stop());if(ctx&&ctx.state!=='closed')await ctx.close().catch(()=>{});}}

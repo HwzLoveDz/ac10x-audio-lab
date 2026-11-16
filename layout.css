@@ -213,6 +213,30 @@ body.workbench .workbench-canvas .graph-warning{fill:#875217}
 .quick-start{border-color:#1b7e6c;color:#14675d;background:#e9f5ef;white-space:normal;flex-shrink:0}
 .quick-start-status{display:flex;align-items:center;gap:12px;padding:0 28px 12px;color:#526b60;font-size:13px;line-height:1.7}
 .quick-start-status p{margin:0;overflow-wrap:anywhere;min-width:0}.quick-start-status .btn{flex-shrink:0}
+.quick-start-picker{padding:24px 16px;align-items:center}
+.quick-start-picker[hidden]{display:none}
+.quick-start-dialog{width:min(1020px,100%);max-height:calc(100dvh - 48px);padding:22px}
+.quick-start-dialog>header{align-items:flex-start;flex-shrink:0}
+.quick-start-dialog h2{margin:0 0 6px;font-size:21px}
+.quick-start-dialog>header p{margin:0;font-size:13px;line-height:1.7;color:#526b60;max-width:760px}
+.quick-start-readiness{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-shrink:0;border-block:1px solid #dce8e1;padding:12px 0;margin:14px 0}
+.quick-start-readiness p{font-size:13px;line-height:1.6;margin:0}
+.quick-start-readiness .btn{flex-shrink:0}
+.quick-start-grid{overflow:auto;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:2px 4px 3px 2px;overscroll-behavior:contain}
+.quick-start-card{display:flex;flex-direction:column;gap:8px;min-width:0;padding:16px;border:1px solid #cbded2;border-radius:10px;background:#f8fbf9}
+.quick-start-card-heading{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+.quick-start-card h3{font-size:16px;line-height:1.45;margin:0;color:#254d3f;overflow-wrap:anywhere}
+.quick-start-card-heading span{font-size:11px;line-height:1.5;padding:3px 6px;background:#e6f2ec;border-radius:5px;color:#366451;flex-shrink:0}
+.quick-start-card p{font-size:13px;line-height:1.7;margin:0;overflow-wrap:anywhere;color:#526b60}
+.quick-start-card .quick-start-path{padding:8px 10px;border-left:3px solid #2b8f76;background:#eaf4ef;color:#254d3f;border-radius:0 5px 5px 0}
+.quick-start-card .quick-start-effect{font-size:12px;color:#647a70;margin-bottom:4px}
+.quick-start-card>.btn{margin-top:auto;align-self:flex-start;min-height:40px}
+html[data-theme=dark] body.workbench .quick-start-card{background:var(--surface-soft);border-color:var(--border)}
+html[data-theme=dark] body.workbench .quick-start-card h3{color:var(--text-primary)}
+html[data-theme=dark] body.workbench :is(.quick-start-card p,.quick-start-dialog>header p){color:var(--text-secondary)}
+html[data-theme=dark] body.workbench :is(.quick-start-card-heading span,.quick-start-card .quick-start-path){color:#d4eee4;background:#203c38}
+html[data-theme=dark] body.workbench .quick-start-readiness{border-color:var(--border)}
+@media(max-width:650px){.quick-start-picker{padding:10px}.quick-start-dialog{padding:14px;max-height:calc(100dvh - 20px)}.quick-start-grid{grid-template-columns:1fr}.quick-start-card{padding:14px}.quick-start-readiness{align-items:flex-start}.quick-start-card-heading{flex-wrap:wrap}}
 @media(max-width:759px){.quick-start-status{padding:0 14px 10px;align-items:flex-start}.workbench-header .quick-start{font-size:12px;padding:8px 10px}}
 
 /* One graph, aligned signal lanes, and a presentation-only theme. */
@@ -324,3 +348,7 @@ html[data-theme=dark] #settingsWindow .ab-toggle button.active{background:var(--
 
 /* Fork color follows the actual route state in both themes. */
 body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-color)}
+
+/* Attribution stays with the product name, without adding another control. */
+.workbench-brand .brand-name{display:grid;gap:2px;line-height:1.1;min-width:0}
+.workbench-brand .brand-credit{font:500 10px/1.2 var(--sans, "Segoe UI", "Microsoft YaHei", sans-serif);letter-spacing:.035em;color:var(--text-secondary);white-space:nowrap}

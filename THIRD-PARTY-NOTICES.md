@@ -8,6 +8,6 @@
 
 离线开发测试使用 jsdom 26.1.0（MIT）及其传递依赖，通过 pnpm-lock.yaml 固定；这些依赖不打进单文件 HTML。安装开发依赖时，原始许可随各包保留。
 
-可选原生硬件验收后端使用当前机器已安装的 Python hidapi 模块，未把 Python、hidapi DLL 或其他第三方程序打进候选包。S31 固件及其 ESP-IDF/TinyUSB 许可不由本 UI 包重新分发或变更。
+可选原生硬件验收后端使用当前机器已安装的 Python hidapi 模块，未把 Python、hidapi DLL 或其他第三方程序打进候选包。firmware/包含S31默认固件镜像及对应源码包；源码包保留TinyUSB许可。ESP-IDF、编译器与其他完整SDK不随仓库分发，各上游依赖的许可不作变更。
 
 本版开发测试另外使用@resvg/resvg-js 2.6.2（MPL-2.0）及对应平台的原生渲染模块，仅把本项目生成的SVG转换成布局审阅PNG；不打进单文件运行入口，不用于浏览器观测。开发依赖固定在pnpm-lock.yaml，node_modules不随候选包分发。

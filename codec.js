@@ -10,9 +10,9 @@
   const masks={2:4,3:0x37,4:15,5:15,6:63,7:0xd7,8:63,9:0x13,10:255,11:0x37,12:0x77,13:0xef,14:15,15:15,17:15,19:255,22:255,24:15,25:0xbf,26:255,27:0x4f,28:255,29:15,31:63,32:0xf9,33:0xff,34:255,35:255,36:255,37:0xfc,38:0x2f,39:0xfe,40:0xff,49:31,50:255,51:63,52:255,53:7,54:255,55:255,56:255,57:255,58:255,59:255,60:255,61:31,62:7,63:255,64:255,65:255,66:7,67:255,68:255,69:255,70:31,79:1};
   for(const base of [0x50,0x60,0x70])for(let i=0;i<15;i++)masks[base+i]=i%3===0?7:255;
   // A clicked module owns only these bits. Other draft modules cannot leak into its write.
-  const NODE_MASKS={bias:{2:4},input:{25:0x81,3:0x10,32:1},pga:{32:0xf8},adc:{3:0x10,25:1,32:1},
+  const NODE_MASKS={bias:{2:4},input:{25:0x81,3:0x10,32:1,6:3},pga:{32:0xf8},adc:{3:0x10,25:1,32:1,6:3},
     hpf:{3:4,6:2,49:8,66:7,67:255,68:255,69:255},agc:{3:4,6:2,49:0x14,50:255,51:63,52:255,57:255,58:255,59:255,60:255,61:31},
-    adcvol:{26:255},dacvol:{28:255},rec:{19:5,29:2},rxm:{29:1,19:8,25:0x30},play:{19:2},rxmix:{24:15},dacmix:{29:15},txl:{19:0x33},txr:{19:0xcc},rxmap:{22:255},txmap:{17:15},rx:{7:3},tx:{7:0x15},dac:{3:0x21,27:1},lineamp:{38:0x2f},adcdebug:{25:0x30},dacdebug:{27:6}};
+    adcvol:{26:255},dacvol:{28:255},rec:{19:5,29:2},rxm:{29:1,19:8,25:0x30},play:{19:2},rxmix:{24:15},dacmix:{29:15},txl:{19:0x33},txr:{19:0xcc},rxmap:{22:255},txmap:{17:15},rx:{7:3},tx:{7:0x15},dac:{3:0x21,27:1,6:12},lineamp:{38:0x2f},adcdebug:{25:0x30},dacdebug:{27:6}};
   for(const id of ['source','dmic','dmicport'])NODE_MASKS[id]=NODE_MASKS.input;
   NODE_MASKS.output=NODE_MASKS.lineamp;
   function clone(x){return JSON.parse(JSON.stringify(x));}
@@ -33,14 +33,19 @@
     const fixed={4:[15,1],5:[15,1],7:[0xc0,0],8:[15,3],9:[3,0],10:[255,31],11:[0x34,0x14],12:[0x77,0x73],13:[0xef,0],14:[15,5]};
     const p=fixed[address];if(p&&(value&p[0])!==p[1])throw new Error(adapter.kind==='S3'?'此寄存器值不符合S3固定音频格式；使用时钟模块查看受支持配置':'此寄存器值不符合S31固定音频格式；使用时钟模块查看受支持配置');
   }
-  function encode(config,{groups=['routing','eq','dynamics','clock'],mclkHz=config.clock.fs*256,checkStability=true,manualBase={},profile='AC102',scope=null}={}){
+  function encode(config,{groups=['routing','eq','dynamics','clock'],mclkHz=config.clock.fs*256,checkStability=true,manualBase={},profile=(config.profile==='AC101S'?'AC101S':'AC102'),scope=null}={}){
     const c=normalize(clone(config)),r=c.routing,map=new Map(),notes=[],chosen=new Set(groups);
+    // Real S31/AC101S A/B: bypassing EQ or AGC/HPF does not bypass its serial processing clock.
+    // For an isolated effect edit, core enable comes from fresh hardware, not an unapplied draft.
+    const adcOwned=chosen.has('routing')&&(!scope||Boolean(NODE_MASKS[scope]?.[25]&1)),dacOwned=chosen.has('routing')&&(!scope||Boolean(NODE_MASKS[scope]?.[27]&1));
+    const adcActive=adcOwned?c.adc.enabled:Number.isInteger(manualBase[25])?Boolean(manualBase[25]&1):c.adc.enabled;
+    const dacActive=dacOwned?c.dac.enabled:Number.isInteger(manualBase[27])?Boolean(manualBase[27]&1):c.dac.enabled;
     const add=(address,mask,value,group,label)=>{if(!Number.isInteger(value))throw new Error(label+'不是整数编码');const old=map.get(address);if(old){old.value=(old.value&~mask)|(value&mask);old.mask|=mask;old.groups.push(group);}else map.set(address,{address,mask,value:value&mask,groups:[group],label});};
     if(chosen.has('manual'))for(const [key,value]of Object.entries(c.raw)){const a=Number(key);if(value===manualBase[a])continue;if(!masks[a]){notes.push('跳过复位 / 供电电压 / 只读 / 保留地址 0x'+a.toString(16));continue;}add(a,masks[a],value,'manual','手动镜像');}
     if(chosen.has('routing')){
       add(2,4,r.mbias?4:0,'routing','麦克风偏置');
       add(3,0x31,(c.adc.enabled?16:0)|(c.dac.enabled?33:0),'routing','录音 / 播放与 DAC 模拟输出');
-      add(6,0x3f,32|((c.adc.enabled?1:0))|((c.hpf.enabled||c.agc.enabled)?2:0)|(c.dac.enabled?4:0)|(c.eq.enabled?8:0)|((r.txEnabled||r.rxEnabled)?16:0),'routing','模块时钟');
+      add(6,0x3f,32|((c.adc.enabled?1:0))|((adcActive||c.hpf.enabled||c.agc.enabled)?2:0)|(c.dac.enabled?4:0)|(dacActive||c.eq.enabled?8:0)|((r.txEnabled||r.rxEnabled)?16:0),'routing','模块时钟');
       add(7,0x17,(r.sdoEnabled?16:0)|(r.txEnabled?4:0)|(r.rxEnabled?2:0)|1,'routing','I²S 收发');
       add(15,15,(1<<c.clock.slots)-1,'routing','TX 通道使能');
       add(17,15,r.txMap.reduce((v,x,i)=>v|(x<<i),0),'routing','TX 通道映射');
@@ -55,10 +60,15 @@
       add(32,0xf9,(c.pga<<3)|Number(c.adc.enabled&&r.input==='analog'),'routing','PGA');
       if(!scope||scope==='lineamp'||scope==='output'){const differential=Number.isInteger(manualBase[38])?Boolean(manualBase[38]&16):Boolean(r.lineDifferential);add(38,0x2f,(r.lineOut?32:0)|R.lineGainCode(r.lineGain,differential),'routing','Line Out 使能与音量');}
     }
-    if(chosen.has('eq')){add(0x4f,1,Number(c.eq.enabled),'eq','EQ 使能');eqCoefficients(c,{checkStability}).forEach((b,i)=>b.fixed.forEach((v,j)=>{const a=0x50+i*16+j*3;add(a,7,(v>>16)&7,'eq','EQ 系数');add(a+1,255,(v>>8)&255,'eq','EQ 系数');add(a+2,255,v&255,'eq','EQ 系数');}));add(6,8,c.eq.enabled?8:0,'eq','EQ 时钟');}
+    if(chosen.has('eq')){add(0x4f,1,Number(c.eq.enabled),'eq','EQ 使能');
+      // Actual S31/AC101S: clearing EQ_EN alone retained the previous response.
+      // Program exact unity (including zero pre-gain) for Off, keeping the user's preset in the draft.
+      const bypass=profile==='AC101S'&&!c.eq.enabled;
+      const applied=bypass?Array.from({length:3},()=>({fixed:[65536,0,0,0,0]})):eqCoefficients(c,{checkStability});
+      applied.forEach((b,i)=>b.fixed.forEach((v,j)=>{const a=0x50+i*16+j*3;add(a,7,(v>>16)&7,'eq','EQ 系数');add(a+1,255,(v>>8)&255,'eq','EQ 系数');add(a+2,255,v&255,'eq','EQ 系数');}));add(6,8,dacActive||c.eq.enabled?8:0,'eq','EQ 时钟');}
     if(chosen.has('dynamics')){
       const fs=c.clock.fs,sd=debounce(c.agc.debounce,fs),nd=debounce(c.agc.noiseDebounce,fs),decay=ticks(c.agc.release,fs,'AGC 恢复时间'),attack=ticks(c.agc.attack,fs,'AGC 启动时间');
-      if(c.agc.enabled||c.hpf.enabled)add(3,4,4,'dynamics','AGC / HPF 全局使能');add(6,2,c.hpf.enabled||c.agc.enabled?2:0,'dynamics','AGC / HPF 时钟');
+      if(c.agc.enabled||c.hpf.enabled)add(3,4,4,'dynamics','AGC / HPF 全局使能');add(6,2,adcActive||c.hpf.enabled||c.agc.enabled?2:0,'dynamics','AGC / HPF 时钟');
       add(0x31,0x1c,(c.agc.enabled?16:0)|(c.hpf.enabled?8:0)|(c.agc.noiseDetect?4:0),'dynamics','AGC / HPF 开关');
       add(0x32,255,(nd.value<<4)|sd.value,'dynamics','AGC 消抖');add(0x33,63,Math.round(c.agc.target)&63,'dynamics','AGC 目标电平');add(0x34,255,Math.round(c.agc.maxGain*2),'dynamics','AGC 最大增益');
       add(0x39,255,decay>>8,'dynamics','AGC 恢复时间 H');add(0x3a,255,decay&255,'dynamics','AGC 恢复时间 L');add(0x3b,255,attack>>8,'dynamics','AGC 启动时间 H');add(0x3c,255,attack&255,'dynamics','AGC 启动时间 L');
@@ -78,12 +88,16 @@
     return{patches:Array.from(map.values()).sort((a,b)=>a.address-b.address),notes};
   }
   function inferFs(snapshot,mclkHz){const a=ADC_DIV[(snapshot[4]||0)&15],b=ADC_DIV[(snapshot[5]||0)&15];if(!a||a!==b)return null;const fs=mclkHz/a/128;return FS.find(x=>Math.abs(fs-x)<.01)||null;}
-  function makePlan(config,snapshot,options={}){let effective=config;if(options.scope==='hpf'||options.scope==='agc'){effective=clone(config);if(options.scope==='hpf')effective.agc.enabled=Boolean(snapshot[0x31]&16);else effective.hpf.enabled=Boolean(snapshot[0x31]&8);}const encoded=encode(effective,{...options,manualBase:snapshot});let patches=encoded.patches;if(options.scope){const owned=NODE_MASKS[options.scope];if(!owned)throw new Error('未知模块写入范围：'+options.scope);patches=patches.map(p=>({...p,mask:p.mask&(owned[p.address]||0)})).filter(p=>p.mask);}const expected=patches.map(p=>{if(!Number.isInteger(snapshot[p.address]))throw new Error('缺少寄存器 0x'+p.address.toString(16)+' 的新鲜读回，禁止猜测后写入');return{...p,before:snapshot[p.address],after:patchValue(snapshot[p.address],p)};});const steps=expected.filter(p=>p.before!==p.after);return{steps,expected,notes:encoded.notes};}
+  function makePlan(config,snapshot,options={}){let effective=config;if(options.scope==='hpf'||options.scope==='agc'){effective=clone(config);if(options.scope==='hpf')effective.agc.enabled=Boolean(snapshot[0x31]&16);else effective.hpf.enabled=Boolean(snapshot[0x31]&8);}const encoded=encode(effective,{...options,manualBase:snapshot});let patches=encoded.patches;if(options.scope){const owned=NODE_MASKS[options.scope];if(!owned)throw new Error('未知模块写入范围：'+options.scope);patches=patches.map(p=>({...p,mask:p.mask&(owned[p.address]||0)})).filter(p=>p.mask);}const expected=patches.map(p=>{if(!Number.isInteger(snapshot[p.address]))throw new Error('缺少寄存器 0x'+p.address.toString(16)+' 的新鲜读回，禁止猜测后写入');return{...p,before:snapshot[p.address],after:patchValue(snapshot[p.address],p)};});const steps=expected.filter(p=>p.before!==p.after);return{steps,expected,notes:encoded.notes,eqPhysicalBypass:(options.profile||config.profile)==='AC101S'};}
   function sequence(plan,snapshot){const changed=new Map(plan.steps.map(p=>[p.address,p]));if(!changed.size)return[];const stages=[],state={...snapshot};
     const stage=(address,mask,value,label)=>{const before=state[address];if(!Number.isInteger(before))throw new Error('缺少临时门控寄存器读回');const after=patchValue(before,{mask,value});if(before!==after){stages.push({address,mask,value,after,label});state[address]=after;}};
     const eq=plan.steps.some(s=>s.address>=0x50),dyn=plan.steps.some(s=>s.address>=0x32&&s.address<=0x45),clock=plan.steps.some(s=>s.groups.includes('clock')),play=eq||clock||plan.steps.some(s=>[3,0x1b,0x1c,0x1d,0x26].includes(s.address));
-    if(play)stage(0x1c,255,0,'暂时静音 DAC');if(clock)stage(7,1,0,'暂停串行接口');if(eq)stage(0x4f,1,0,'暂时旁路 EQ');if(dyn)stage(0x31,0x18,0,'暂时旁路 AGC / HPF');
+    if(play)stage(0x1c,255,0,'暂时静音 DAC');if(clock)stage(7,1,0,'暂停串行接口');if(eq)stage(0x4f,1,0,'暂停 EQ 系数更新');if(dyn)stage(0x31,0x18,0,'暂时旁路 AGC / HPF');
     const delayed=new Set([7,0x1c,0x31,0x4f]);for(const p of plan.steps)if(!delayed.has(p.address))stage(p.address,p.mask,p.value,p.label);
+    // Latch unity while muted before returning EQ_EN to Off. Derive from target
+    // registers so apply, undo and failure recovery obey the same physical contract.
+    const targetEQ=changed.has(0x4f)?changed.get(0x4f).value:snapshot[0x4f];
+    if(plan.eqPhysicalBypass&&eq&&!(targetEQ&1)&&decodeEq(state)?.every(b=>b.every((v,i)=>v===(i===0?1:0))))stage(0x4f,1,1,'载入平直 EQ 系数');
     for(const a of [0x31,0x4f,7,0x1c]){const p=changed.get(a);if(p){const temporaryMask=a===0x31&&dyn?0x18:a===7&&clock?1:0,extra=temporaryMask&~p.mask;stage(a,p.mask|extra,p.value|(snapshot[a]&extra),p.label);}else if((a===0x31&&dyn)||(a===0x4f&&eq)||(a===7&&clock)||(a===0x1c&&play))stage(a,a===0x31?0x18:a===7||a===0x4f?1:255,snapshot[a],'恢复原先门控 / 音量');}
     return stages;
   }

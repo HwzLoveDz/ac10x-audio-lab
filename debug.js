@@ -4,7 +4,7 @@
   const common=typeof module!=='undefined'&&module.exports;
   const C=common?require('./codec.js'):root.AudioCodec,R=common?require('./routing.js'):root.AudioRouting,D=common?require('./dsp.js'):root.AudioDSP;
   const T=common?require('./transport.js'):root.AudioHardwareTransport;
-  const VERSION='0.8.5-rc.1',profiles=['AC102-reference','AC101S','AC102'];
+  const VERSION='0.8.12-rc.1',profiles=['AC102-reference','AC101S','AC102'];
   const clone=x=>JSON.parse(JSON.stringify(x));
   function safeObject(value,depth=0){
     if(depth>12)throw new Error('配置嵌套过深');

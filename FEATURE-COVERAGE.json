@@ -1,5 +1,5 @@
 {
-  "version": "0.8.5-rc.1",
+  "version": "0.8.12-rc.1",
   "fullGraphs": 1,
   "quickStartActions": 1,
   "removed": [
@@ -12,8 +12,20 @@
   "eqPresets": 16,
   "workspaceEntries": 7,
   "searchEntries": 33,
-  "evidence": {
-    "version": "0.8.5-rc.1",
+  "knownLimits": [
+    "QA wrapper uses FakeHID with native device/audio APIs blocked before boot",
+    "Not physical audio, firmware or electrical validation",
+    "Windows IME and screen readers not certified",
+    "axe color-contrast missed known negative control; independent rendered contrast used"
+  ],
+  "deliveryPending": false,
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "themePreferenceIndependent": true,
+  "inheritedHistoricalEvidence": {
+    "note": "Older inherited audit values; identify by entrySHA256. Not current-version validation.",
     "entrySHA256": "0fc98a4489c18e026f7ca10e2e9ead3e4ddd2ebc7e56c8db06d6ba549c7801ff",
     "offlineChecks": 287,
     "suites": 34,
@@ -31,16 +43,17 @@
     "flashed": false,
     "limits": "No current 360-step random run; counts are separate evidence categories."
   },
-  "knownLimits": [
-    "QA wrapper uses FakeHID with native device/audio APIs blocked before boot",
-    "Not physical audio, firmware or electrical validation",
-    "Windows IME and screen readers not certified",
-    "axe color-contrast missed known negative control; independent rendered contrast used"
-  ],
-  "deliveryPending": false,
-  "themes": [
-    "light",
-    "dark"
-  ],
-  "themePreferenceIndependent": true
+  "historicalEvidence": {
+    "version": "0.8.11-rc.2",
+    "scope": "Original real-browser workflows; processing bug discovered, not audio success of old loopback"
+  },
+  "evidence": {
+    "version": "0.8.12-rc.1",
+    "checks": 327,
+    "suites": 39,
+    "report": "REAL-USER-REVIEW.json"
+  },
+  "quickStartEntries": 1,
+  "quickStartExamples": 8,
+  "authorCredit": "By mondraker"
 }

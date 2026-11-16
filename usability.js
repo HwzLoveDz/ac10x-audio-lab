@@ -16,7 +16,7 @@
   function locate(view,target){A.navigate(view);const el=$(target);if(!el)return;for(let p=el.parentElement;p;p=p.parentElement)if(p.tagName==='DETAILS')p.open=true;if(el.tagName==='DETAILS')el.open=true;el.scrollIntoView?.({block:'center',behavior:'auto'});if(el.matches('button,input,select')&&!el.disabled)el.focus();else{const focus=el.disabled?(el.closest('article,details')||el.parentElement):el;focus.tabIndex=-1;focus.focus();}}
   const entries=[
     {id:'overview',label:'信号图',en:'Signal graph',run:()=>A.openOverview()},
-    {id:'quick-start',label:'定位 Quick Start 写入按钮',en:'Locate Quick Start write button',keywords:'setup baseline initialize',run:()=>{A.openOverview();const button=$('#quickStart');if(button.disabled){$('#quickStartStatus').tabIndex=-1;$('#quickStartStatus').focus();}else button.focus();}},
+    {id:'quick-start',label:'打开 Quick Start 快捷方案',en:'Open Quick Start setups',keywords:'默认固件 恢复 声卡 人声清晰 setup baseline restore default firmware soundcard voice quick start',run:()=>{A.openOverview();const button=$('#quickStart');if(button.disabled){$('#quickStartStatus').tabIndex=-1;$('#quickStartStatus').focus();}else button.focus();}},
     {id:'eq',label:'EQ 与预设',en:'EQ and presets',keywords:'equalizer bass treble filter',run:()=>A.navigate('eq')},
     {id:'pga',label:'麦克风输入增益',en:'Microphone input gain',keywords:'pga mic analog',run:()=>A.openNode('pga')},
     {id:'input',label:'输入与麦克风选择',en:'Input and microphone selection',keywords:'AMIC DMIC ECM',run:()=>A.openNode('input')},

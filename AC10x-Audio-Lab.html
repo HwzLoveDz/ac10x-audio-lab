@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>AC10x Audio Lab v0.8.5-rc.1 · 音频调试工作台</title><style>@charset "UTF-8";
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>AC10x Audio Lab v0.8.12-rc.1 · 音频调试工作台</title><style>@charset "UTF-8";
 :root{--ink:#19292f;--muted:#75838a;--accent:#087f83;--accent-soft:#e8f5f3;--nav:#172c34;--paper:#fff;--line:#e2e8e9;--bg:#f3f6f6;--band1:#bd7a35;--band2:#0b8b88;--band3:#7371bc;--mono:Consolas,"SFMono-Regular",monospace}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Segoe UI","Microsoft YaHei",sans-serif;font-size:14px;line-height:1.5}button,input,select{font:inherit}button,a,input,select{-webkit-tap-highlight-color:transparent}button{cursor:pointer}button:disabled{cursor:default;opacity:.5}button,input,select{accent-color:var(--accent)}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:3px solid #77bfbe;outline-offset:3px}button{transition:background .15s,border-color .15s}button:hover{filter:brightness(.97)}a{color:inherit;text-decoration:none}h1,h2,p{margin:0}h2{font-size:16px;font-weight:650;letter-spacing:-.3px}small{font-weight:400}svg{display:block;width:100%;overflow:visible}select,input[type=number],input[type=search]{border:1px solid #d8e1e2;border-radius:6px;background:white;color:var(--ink);padding:9px 10px;min-width:0}select{padding-right:25px}input[type=range]{width:100%;cursor:pointer;height:22px}input[type=checkbox]{width:15px;height:15px;cursor:pointer}input[type=number]{font-family:var(--mono)}.sidebar{position:fixed;inset:0 auto 0 0;width:218px;background:var(--nav);color:#a4b7be;display:flex;flex-direction:column;padding:33px 18px 20px;z-index:10}.brand{display:flex;align-items:center;gap:12px;color:#fff;font-size:23px;font-weight:650;letter-spacing:-.8px;padding:0 8px}.brand small{display:block;font-family:var(--mono);font-size:8px;letter-spacing:1.6px;margin-top:4px;color:#99b3bd}.brand-icon{display:flex;gap:3px;align-items:center;height:31px}.brand-icon i{display:block;width:3px;height:11px;border-radius:2px;background:#70c5bf}.brand-icon i:nth-child(2),.brand-icon i:nth-child(4){height:22px}.brand-icon i:nth-child(3){height:32px}.workspace-label{font-size:10px;letter-spacing:1.4px;margin:48px 13px 14px;color:#78949e;display:flex;justify-content:space-between}.workspace-label span{font-family:var(--mono);font-size:10px}nav{display:grid;gap:6px}.nav{border:0;color:#a9bfc6;background:none;border-radius:6px;display:flex;align-items:center;gap:12px;width:100%;padding:13px;font-size:13px;text-align:left}.nav.active{background:#27464d;color:#e1fffa;box-shadow:inset 3px 0 #61beb4}.nav:hover{background:#213c45}.nav-icon{font-size:19px;line-height:18px;width:20px;text-align:center}.nav-number{margin-left:auto;color:#65848e;font-family:var(--mono);font-size:10px}.nav.active .nav-number{color:#8ec9c5}.sidebar-device{margin-top:auto;border:1px solid #344a52;border-radius:8px;padding:16px 13px}.eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:1.7px;color:var(--accent);font-weight:500}.sidebar-device .eyebrow{color:#70949f;font-size:8px;letter-spacing:1.4px}.sidebar-device strong{font-family:var(--mono);font-size:23px;color:#e7f5f3;display:block;margin-top:8px;font-weight:500}.sidebar-device>span{display:block;font-size:10px;color:#91aab2;margin-top:3px}.device-line{display:flex;align-items:center;gap:7px;font-size:11px;color:#c5d4d8;margin:16px 0}.dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#ab9a7e;flex:none}.subtle-dark{border:1px solid #425e66;border-radius:4px;background:none;color:#c3d8db;font-size:11px;padding:9px;width:100%;display:flex;justify-content:space-between}.sidebar-device p{font-size:9px;line-height:1.6;color:#7f9aa5;margin-top:12px;overflow-wrap:anywhere}.sidebar-bottom{margin-top:24px;font-family:var(--mono);font-size:8px;display:flex;gap:5px;align-items:center;color:#6c8d97;letter-spacing:.5px}.sidebar-bottom>span:last-child{margin-left:auto}.live-dot{width:4px;height:4px;border-radius:50%;background:#6faaa4}main{margin-left:218px}.topbar{height:74px;display:flex;align-items:center;justify-content:space-between;padding:0 38px;background:#fff;border-bottom:1px solid var(--line);gap:20px}.breadcrumb{font-size:12px;color:#8a979c;white-space:nowrap}.breadcrumb span{padding:0 14px;color:#bcc6ca}.breadcrumb b{font-weight:500;color:#324950}.top-actions{display:flex;gap:10px;align-items:center}.offline{display:flex;align-items:center;gap:7px;font-size:11px;color:#7e898f;margin-right:9px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:16px;padding:9px 13px;font-size:12px;font-weight:500;line-height:1.6;border:1px solid #d4dddf;border-radius:6px;background:white;color:#3e545c;white-space:nowrap}.btn.primary{background:var(--accent);color:white;border-color:var(--accent)}.btn.quiet{border-color:transparent;background:transparent}.btn span{font-size:14px}.page{max-width:1510px;margin:0 auto;padding:35px 38px 20px}.page-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px;gap:18px}h1{font-size:29px;letter-spacing:-1px;font-weight:650;margin:8px 0}.page-heading p{font-size:12px;color:var(--muted)}.heading-meta{text-align:right;display:grid;gap:9px}.model-badge{border:1px solid #d4dfe0;color:#4e676f;background:#edf2f2;font-family:var(--mono);font-size:10px;border-radius:4px;padding:5px 9px}.heading-meta small{font-size:10px;color:#8b989e}.configuration-strip{display:flex;background:white;border:1px solid var(--line);border-radius:8px;align-items:center;padding:17px 20px;margin-bottom:23px;gap:28px}.strip-item{min-width:120px;border-right:1px solid var(--line);padding-right:25px}.strip-item>span{display:block;font-size:10px;color:#8a979c;margin-bottom:3px}.strip-item b{font-size:17px;font-family:var(--mono);font-weight:500;color:#28434b}.strip-item small{font-size:10px;color:#6e848b}.strip-item.model-status{border:0;min-width:85px;margin-left:auto;padding-right:0}.model-status b{font-family:inherit;font-size:11px;color:var(--accent)}.model-status b.dirty{color:#b77a29}.view{display:none}.view.active{display:block}.panel{background:var(--paper);border:1px solid var(--line);border-radius:9px;min-width:0;margin-bottom:22px}.panel-heading{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:22px 24px 18px}.panel-heading p{font-size:11px;color:#8a979d;margin-top:5px}.tiny-tag{font-family:var(--mono);font-size:9px;letter-spacing:.7px;white-space:nowrap;background:#f1f5f5;color:#799097;border-radius:3px;padding:4px 6px}.path-layout{display:grid;grid-template-columns:minmax(0,1fr) 278px;gap:22px}.route-diagram{padding:0 22px 8px;min-height:277px}.route-section{padding:14px 0}.route-title{display:flex;align-items:center;gap:9px;margin-bottom:19px;font-size:11px;color:#536d76}.route-title .route-number{font-family:var(--mono);font-size:9px;color:#a9b9bd}.route-title .route-end{margin-left:auto;font-family:var(--mono);font-size:9px;color:#8da2aa}.route-track{display:flex;align-items:center;position:relative;isolation:isolate}.route-track:before{content:"";height:1px;background:#a8c9c8;position:absolute;left:20px;right:20px;top:50%;z-index:-1}.route-node{position:relative;flex:1;min-width:0;border:1px solid #dce6e7;border-radius:7px;background:white;padding:13px 3px 10px;margin-right:15px;color:#5f737c;text-align:center;height:74px}.route-node:after{content:'›';position:absolute;right:-12px;top:23px;font-size:16px;color:#7aaca9}.route-node:last-child{margin-right:0}.route-node:last-child:after{display:none}.route-node.selected{border-color:#269b98;background:#edf8f6;box-shadow:0 0 0 2px #e0f3ef}.route-node.bypassed{border-style:dashed;background:#f7f9f9;color:#a4b0b5}.route-node strong{font-family:var(--mono);font-size:13px;font-weight:550;display:block;color:#36575e}.route-node.selected strong{color:var(--accent)}.route-node small{display:block;font-size:9px;margin-top:7px;color:#8a9da3}.route-divider{height:1px;background:#eef2f2;margin:8px 0}.diagram-legend{display:flex;align-items:center;gap:15px;font-size:9px;color:#8f9fa5;padding:13px 24px;border-top:1px solid #eef1f2}.diagram-legend>span{display:flex;align-items:center;gap:6px}.diagram-legend>span:last-child{margin-left:auto}.legend-line{width:15px;height:2px;background:var(--accent);display:inline-block}.legend-line.dashed{background:none;border-top:1px dashed #aab9bd}.inspector .panel-heading{padding-bottom:0}.inspector h3{font-family:var(--mono);font-size:24px;font-weight:500;letter-spacing:-.6px;margin:18px 0 5px}.inspector-desc{font-size:11px;line-height:1.8;color:#7c9098;margin-bottom:16px}.inspector-content{padding:0 24px 22px}.metric-big{font-family:var(--mono);font-size:34px;margin:12px 0 5px;letter-spacing:-1.5px;display:block}.metric-big small{font-size:13px;letter-spacing:0;color:#8b9ca2}.range-labels{font-family:var(--mono);font-size:9px;color:#9caaaf;display:flex;justify-content:space-between}.inspector-info{display:flex;justify-content:space-between;border-top:1px solid #edf1f1;padding-top:13px;margin-top:19px;font-size:10px;color:#8c9da4}.inspector-info b{color:#45616a;font-weight:500}.text-btn{border:0;background:none;padding:0;color:var(--accent);font-size:11px}.bottom-grid{display:grid;grid-template-columns:minmax(0,1fr) 278px;gap:22px}.mini-chart{padding:0 20px;max-height:200px}.band-summary{display:flex;border-top:1px solid #edf1f2;margin-top:14px;padding:14px 24px;gap:26px}.band-pill{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9px;color:#6a7f87}.band-dot{width:6px;height:6px;border-radius:50%;display:inline-block}.workflow{padding:25px 24px}.workflow h2{font-size:18px;margin:15px 0 12px}.workflow p{font-size:11px;color:#84969d;line-height:1.9}.workflow .btn{margin-top:18px;width:100%;justify-content:space-between}.workflow-note{display:flex;gap:9px;font-size:9px;color:#94a3a9;line-height:1.7;margin-top:20px}.status-check{color:#459e93}.footer{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:9px;color:#99a7ac;padding-top:4px}.footer b{font-weight:400;margin-left:9px;color:#afb9be}.footer .text-btn{font-size:9px}.inline-controls{display:flex;align-items:center;gap:18px}.inline-controls select{font-size:11px}.switch-label{display:inline-flex;align-items:center;gap:7px;font-size:11px;color:#56717a;white-space:nowrap}.eq-chart-wrap{padding:0 24px 12px}.eq-chart-wrap svg{touch-action:none}.chart-caption{display:flex;justify-content:space-between;color:#92a1a8;font-family:var(--mono);font-size:9px;padding-top:5px}.pre-gain{border-top:1px solid #edf1f2;padding:16px 24px;display:flex;align-items:center;gap:25px}.pre-gain label{display:flex;align-items:center;gap:15px;font-size:11px;white-space:nowrap}.pre-gain input{width:150px}.pre-gain output{font-family:var(--mono);min-width:56px}.pre-gain>span{margin-left:auto;font-size:10px;color:#8a989d}.eq-bands{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.band-card{padding:20px 22px;border-top:3px solid var(--band)}.band-card .band-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}.band-title h2{font-family:var(--mono);font-size:13px;color:var(--band)}.band-title input{accent-color:var(--band)}.band-card select{width:100%;font-size:11px}.band-control{margin-top:15px}.band-control>div{display:flex;align-items:center;justify-content:space-between;font-size:10px;color:#82959d}.band-control input[type=number]{width:85px;font-size:12px;text-align:right;padding:4px 6px}.band-control input[type=range]{accent-color:var(--band);margin-top:10px}.coefficient-panel .panel-heading{padding-bottom:12px}.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;text-align:left;font-size:10px}th{font-weight:500;color:#95a3aa;background:#f7f9f9;font-size:9px;letter-spacing:.4px}th,td{padding:12px 19px;border-top:1px solid #edf1f2;white-space:nowrap}td{font-family:var(--mono);color:#526b75}.panel-footnote{font-size:9px;color:#93a4ab;padding:14px 24px;border-top:1px solid #edf1f2;line-height:1.8}.stable{color:#168881}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:22px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px 24px;padding:4px 24px 24px}.form-grid label{font-size:11px;color:#758b94;display:flex;flex-direction:column;gap:9px}.form-grid label span{font-family:var(--mono);font-size:13px;color:#31565d}.inset-note{background:#f5f8f8;border:1px solid #edf2f2;border-radius:5px;margin:0 24px 24px;padding:12px 15px;font-size:10px;line-height:1.8;color:#879ba3}.medium-chart{padding:0 20px 12px}.hpf-panel{display:grid;grid-template-columns:1fr 1fr;align-items:center}.hpf-panel .field-label{margin:0 24px;display:flex;align-items:center;gap:20px;font-size:11px;color:#7c919a}.field-label input{width:110px}.hpf-panel .muted{padding:14px 24px}.hpf-panel svg{padding:20px 24px}.muted{font-size:10px;color:#8a9ba3;line-height:1.8}.clock-metrics{padding:0 25px;display:grid;gap:16px}.clock-metric{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #eef2f3;padding:8px 0 15px;color:#79919a;font-size:11px}.clock-metric b{font-family:var(--mono);font-size:25px;font-weight:400;color:#2d5962}.clock-metric small{font-size:11px;margin-left:6px}.clock-formula{font-family:var(--mono);font-size:10px;color:#91a2a9;line-height:2;padding:18px 24px 24px}.frame-chart{padding:0 24px 20px}.register-toolbar{display:flex;gap:20px;align-items:center;padding:0 24px 20px}.register-toolbar input[type=search]{width:350px;font-size:11px}.register-toolbar .muted{margin-left:auto}.register-layout{display:grid;grid-template-columns:minmax(0,1fr) 280px;border-top:1px solid var(--line)}.register-table{max-height:490px;overflow:auto}.register-table thead{position:sticky;top:0;z-index:1}.register-table tr{cursor:pointer}.register-table tr:hover td{background:#f2f8f7}.register-table tr.selected td{background:#eaf6f3}.register-table td{padding-top:9px;padding-bottom:9px}.pending{color:#b37625}.register-inspector{padding:25px;border-left:1px solid var(--line)}.register-inspector h3{font-size:13px;font-family:var(--mono);overflow-wrap:anywhere;margin:8px 0 18px}.reg-hex{font-size:32px!important;width:100%;margin-bottom:18px}.bit-buttons{display:flex;gap:4px}.bit-button{border:1px solid #d7e2e3;background:#f8faf9;border-radius:4px;min-width:0;flex:1;padding:9px 0;color:#769199;font-family:var(--mono);font-size:11px}.bit-button.on{border-color:#4baba2;background:#e3f3ef;color:#147f76}.bit-index{display:flex;justify-content:space-around;font-family:var(--mono);font-size:8px;color:#9cadb3;margin:6px 0 22px}.register-inspector .btn{margin-top:16px;width:100%}.audio-banner{display:flex;align-items:center;background:#e5f1ef;border:1px solid #d2e5e1;border-radius:8px;padding:19px 24px;margin-bottom:22px;gap:18px}.audio-banner h2{font-size:18px}.audio-banner p{font-size:10px;color:#6b8a90;margin-top:6px}.audio-banner .tiny-tag{margin-left:auto;background:#d7e9e5;color:#50877f}.audio-symbol{font-size:34px;color:#358d86}.audio-controls{padding:0 24px 18px;display:flex;gap:20px}.ab-toggle{display:flex;border:1px solid #dbe5e5;border-radius:7px;margin:0 24px 22px;overflow:hidden}.ab-toggle button{flex:1;border:0;background:#fafbfb;color:#9caaaf;padding:12px;font-family:var(--mono);font-size:14px}.ab-toggle button+button{border-left:1px solid #dbe5e5}.ab-toggle button span{font-family:"Segoe UI","Microsoft YaHei",sans-serif;font-size:11px;margin-left:8px}.ab-toggle button.active{color:#177d78;background:#e8f5f0}.transport{display:flex;align-items:center;gap:12px;padding:0 24px 24px}.play-btn{width:39px;height:39px;border:0;border-radius:50%;background:var(--accent);color:white;font-size:13px}.transport>div{display:grid;gap:3px}.transport strong{font-size:11px;font-weight:500}.transport span{font-size:9px;color:#8b9da5;font-family:var(--mono)}.transport .btn:last-child{margin-left:auto}.monitor-volume{display:flex;align-items:center;gap:15px;padding:0 24px;font-size:10px;color:#82979e}.monitor-volume input{flex:1}.monitor-volume output{font-family:var(--mono);width:50px}.panel>p.muted{padding:18px 24px}.audio-plots{display:grid;grid-template-columns:1fr 1fr;gap:26px;padding:0 24px 22px}.audio-plots .eyebrow{color:#8b9da4;font-size:9px;margin:0 0 12px}.audio-plots svg{background:#fbfcfc;border:1px solid #edf2f2;border-radius:5px}.audio-stats{display:flex;gap:22px;font-family:var(--mono);font-size:10px;color:#7a939b}.audio-stats b{font-weight:500;color:#375e66}.audio-stats .warning{color:#c17d2f}.plot-grid{stroke:#e8eeee;stroke-width:1}.plot-label{fill:#9aa9af;font-family:var(--mono);font-size:9px}.plot-zero{stroke:#c8d8d9;stroke-width:1}.curve{fill:none;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}.eq-point{cursor:grab;stroke:white;stroke-width:3}.eq-point:active{cursor:grabbing}#toast{position:fixed;bottom:25px;left:calc(50% + 100px);transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;max-width:650px;background:#213c43;color:#e3f4f1;padding:13px 22px;border-radius:7px;font-size:12px;box-shadow:0 6px 25px #17313c22;transition:opacity .2s,transform .2s;z-index:99}#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 @media(min-width:1650px){.route-diagram{padding:8px 30px 15px}.route-node{height:85px;padding-top:17px;margin-right:24px}.route-node:after{right:-17px;top:29px}.route-section{padding:18px 0}.route-node strong{font-size:14px}.route-node small{font-size:10px}.page{padding-top:40px}.page-heading{margin-bottom:30px}.mini-chart{max-height:228px}}
@@ -309,6 +309,30 @@ body.workbench .workbench-canvas .graph-warning{fill:#875217}
 .quick-start{border-color:#1b7e6c;color:#14675d;background:#e9f5ef;white-space:normal;flex-shrink:0}
 .quick-start-status{display:flex;align-items:center;gap:12px;padding:0 28px 12px;color:#526b60;font-size:13px;line-height:1.7}
 .quick-start-status p{margin:0;overflow-wrap:anywhere;min-width:0}.quick-start-status .btn{flex-shrink:0}
+.quick-start-picker{padding:24px 16px;align-items:center}
+.quick-start-picker[hidden]{display:none}
+.quick-start-dialog{width:min(1020px,100%);max-height:calc(100dvh - 48px);padding:22px}
+.quick-start-dialog>header{align-items:flex-start;flex-shrink:0}
+.quick-start-dialog h2{margin:0 0 6px;font-size:21px}
+.quick-start-dialog>header p{margin:0;font-size:13px;line-height:1.7;color:#526b60;max-width:760px}
+.quick-start-readiness{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-shrink:0;border-block:1px solid #dce8e1;padding:12px 0;margin:14px 0}
+.quick-start-readiness p{font-size:13px;line-height:1.6;margin:0}
+.quick-start-readiness .btn{flex-shrink:0}
+.quick-start-grid{overflow:auto;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:2px 4px 3px 2px;overscroll-behavior:contain}
+.quick-start-card{display:flex;flex-direction:column;gap:8px;min-width:0;padding:16px;border:1px solid #cbded2;border-radius:10px;background:#f8fbf9}
+.quick-start-card-heading{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+.quick-start-card h3{font-size:16px;line-height:1.45;margin:0;color:#254d3f;overflow-wrap:anywhere}
+.quick-start-card-heading span{font-size:11px;line-height:1.5;padding:3px 6px;background:#e6f2ec;border-radius:5px;color:#366451;flex-shrink:0}
+.quick-start-card p{font-size:13px;line-height:1.7;margin:0;overflow-wrap:anywhere;color:#526b60}
+.quick-start-card .quick-start-path{padding:8px 10px;border-left:3px solid #2b8f76;background:#eaf4ef;color:#254d3f;border-radius:0 5px 5px 0}
+.quick-start-card .quick-start-effect{font-size:12px;color:#647a70;margin-bottom:4px}
+.quick-start-card>.btn{margin-top:auto;align-self:flex-start;min-height:40px}
+html[data-theme=dark] body.workbench .quick-start-card{background:var(--surface-soft);border-color:var(--border)}
+html[data-theme=dark] body.workbench .quick-start-card h3{color:var(--text-primary)}
+html[data-theme=dark] body.workbench :is(.quick-start-card p,.quick-start-dialog>header p){color:var(--text-secondary)}
+html[data-theme=dark] body.workbench :is(.quick-start-card-heading span,.quick-start-card .quick-start-path){color:#d4eee4;background:#203c38}
+html[data-theme=dark] body.workbench .quick-start-readiness{border-color:var(--border)}
+@media(max-width:650px){.quick-start-picker{padding:10px}.quick-start-dialog{padding:14px;max-height:calc(100dvh - 20px)}.quick-start-grid{grid-template-columns:1fr}.quick-start-card{padding:14px}.quick-start-readiness{align-items:flex-start}.quick-start-card-heading{flex-wrap:wrap}}
 @media(max-width:759px){.quick-start-status{padding:0 14px 10px;align-items:flex-start}.workbench-header .quick-start{font-size:12px;padding:8px 10px}}
 
 /* One graph, aligned signal lanes, and a presentation-only theme. */
@@ -420,15 +444,19 @@ html[data-theme=dark] #settingsWindow .ab-toggle button.active{background:var(--
 
 /* Fork color follows the actual route state in both themes. */
 body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-color)}
+
+/* Attribution stays with the product name, without adding another control. */
+.workbench-brand .brand-name{display:grid;gap:2px;line-height:1.1;min-width:0}
+.workbench-brand .brand-credit{font:500 10px/1.2 var(--sans, "Segoe UI", "Microsoft YaHei", sans-serif);letter-spacing:.035em;color:var(--text-secondary);white-space:nowrap}
 </style></head>
 <body class="workbench" data-inspector-open="false">
-<header class="workbench-header"><a class="workbench-brand" href="#path" aria-label="Audio Lab 信号图"><span class="brand-icon"><i></i><i></i><i></i><i></i><i></i></span><strong>Audio Lab</strong><span class="app-version" title="页面版本 0.8.5-rc.1 · 支持 TI、S31 与 S3 USB 控制">v0.8.5-rc.1</span></a><button id="quickStart" class="btn quick-start" aria-describedby="quickStartStatus" disabled>Quick Start · 写入</button>
+<header class="workbench-header"><a class="workbench-brand" href="#path" aria-label="Audio Lab 信号图"><span class="brand-icon"><i></i><i></i><i></i><i></i><i></i></span><span class="brand-name"><strong>Audio Lab</strong><span class="brand-credit" data-no-i18n>By mondraker</span></span><span class="app-version" title="页面版本 0.8.12-rc.1 · 支持 TI、S31 与 S3 USB 控制">v0.8.12-rc.1</span></a><button id="quickStart" class="btn quick-start" aria-describedby="quickStartStatus" aria-haspopup="dialog" aria-expanded="false">Quick Start</button>
 <div class="workbench-metrics"><div class="metric-button" title="顶部参数来自草稿；设备实际配置见设备诊断"><span class="metric-draft-label">草稿</span><span id="summaryFs">48 kHz</span><small id="summaryFormat">I²S / 24 bit</small></div><div class="metric-button"><span>EQ</span><small id="summaryEQ">3 段启用</small></div></div>
 <div class="workbench-tools"><button id="themeSwitch" class="theme-switch" type="button" aria-label="暗色主题" aria-pressed="false" title="切换浅色／暗色主题"><span aria-hidden="true">◐</span></button><select id="languageSwitch" class="language-switch" aria-label="界面语言"><option value="zh-CN" data-no-i18n>中文</option><option value="en" data-no-i18n>English</option></select><span id="connectionLabel" class="connection-pill">未连接设备</span><button id="usbConnect" class="btn primary">连接 USB</button><details class="tools-menu"><summary>文件与工具 ⋯</summary><div><button id="importConfig">导入草稿</button><button id="exportConfig">导出草稿</button><button id="importLegacyPreset">导入旧 EQ / AGC</button><button id="resetConfig">恢复默认草稿</button></div></details></div></header>
 <nav id="workspaceNav" class="workspace-nav" aria-label="工作区导航"><div class="workspace-tabs"><button data-workspace="overview">信号图</button><button data-workspace="eq">EQ</button><button data-workspace="dynamics">AGC / HPF</button><button data-workspace="clock">时钟</button><button data-workspace="hardware">设备诊断</button><button data-workspace="registers">寄存器</button><button data-workspace="audio">试听 / 录音</button></div><button id="openFeatureFinder" class="feature-trigger" aria-keyshortcuts="Control+k Meta+k">找功能 <kbd>Ctrl K</kbd></button></nav>
 <main class="workbench-canvas"><article id="routingPanel" class="routing-v2">
 <div class="canvas-heading"><div class="eyebrow">信号路径 · 草稿</div><h1>音频路径工作台</h1><p>点击模块，在左侧设置并写入设备。</p></div>
-<div class="quick-start-status"><p id="quickStartStatus" role="status">连接 USB 后，Quick Start 一键写入独立录音与播放配置；低音量输出，不开启本地监听。</p><button id="quickStartCancel" class="btn" hidden>取消写入</button></div>
+<div class="quick-start-status"><p id="quickStartStatus" role="status">Quick Start 提供可直接写入的常用方案；默认固件保留 USB 声卡播放、人声清晰和独立录音。</p><button id="quickStartCancel" class="btn" hidden>取消写入</button></div>
 <div class="route-scroll" id="canvasScroll" tabindex="0" role="region" aria-label="可平移缩放的音频信号图" aria-describedby="canvasHelp canvasKeyboardHelp" aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown = - 0"><div id="routeDiagram" class="route-diagram"></div></div>
 <p id="canvasKeyboardHelp" class="sr-only">聚焦信号图后，方向键平移，Shift 加方向键加速；+ 或 = 放大，- 缩小，0 适合窗口。用 Tab 选择模块，Enter 或空格打开设置。</p>
 <div class="canvas-bottom"><div class="routing-legend"><span title="流动表示设备读回中的启用方向，不代表实测音频活动；离线与旧快照不流动"><i class="legend-line flowing"></i>启用 / 流向</span><span><i class="legend-line dashed"></i>未启用 / 灰虚线</span><span>交叉无圆点不连接</span></div><div class="route-toolbar"><span id="canvasHelp">右拖 · 滚轮 · 方向键 ± 0</span><span id="routeCount"></span><button class="btn" id="routeZoomOut" aria-label="缩小信号图">−</button><span id="routeZoomValue">100%</span><button class="btn" id="routeZoomIn" aria-label="放大信号图">+</button><button class="btn" id="routeFit">适合窗口</button></div></div>
@@ -449,7 +477,7 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
     </section>
 <section id="view-registers" class="view"><details class="technical" id="legacyTools"><summary>旧文件迁移与主控导出</summary><article class="panel"><div class="panel-heading"><div><h2>旧文件迁移与主控导出</h2><p>旧寄存器表仅比较，不会写入设备或替换草稿。</p></div></div><div class="hardware-actions"><button id="legacyLoadRegisters" class="btn">比较旧寄存器表</button><button id="legacyClearRegisters" class="btn">清除参考表</button><button id="exportMaskedRegisters" class="btn">导出带掩码寄存器 .h</button></div><input id="legacyRegisterFile" type="file" accept=".txt,.csv,text/plain,text/csv" hidden><fieldset><legend>主控导出范围（来自草稿）</legend><label><input type="checkbox" data-export-group="routing" checked>路径与音量</label><label><input type="checkbox" data-export-group="eq" checked>EQ</label><label><input type="checkbox" data-export-group="dynamics" checked>AGC / HPF</label><label><input type="checkbox" data-export-group="clock">时钟</label><label>MCLK参考 / Hz<input id="legacyExportMclk" type="number" value="12288000" min="1000000" max="50000000" readonly aria-label="与时钟页共用的MCLK参考"></label></fieldset><button class="btn" data-find-feature="reference-clock">设置共用参考时钟</button><p id="legacyPresetInfo" class="inset-note">通过“文件与工具”导入原厂 EQ / AGC .AC102；按当前草稿Fs重算，不会自动写入。</p><p id="legacyRegisterInfo" class="inset-note">接受原工具导出的0x地址,0x值文本、两列CSV；XLS请先在表格软件中只导出Address和Value两列。复位、电源设置和旧桥格式不可直接套用。</p><div class="table-wrap"><table><thead><tr><th>地址</th><th>参考值</th><th>设备读回</th><th>可写掩码</th><th>比较</th></tr></thead><tbody id="legacyRegisterRows"><tr><td colspan="5">尚未载入旧寄存器参考表。</td></tr></tbody></table></div></article></details><article class="panel"><div class="panel-heading"><div><h2>设备寄存器</h2><p>只显示实际读回，选择一行进行调试。</p></div><span id="registerCount" class="tiny-tag"></span></div><div class="register-toolbar"><input id="registerSearch" type="search" placeholder="搜索名称 / 地址" aria-label="搜索寄存器"></div><div class="table-wrap register-table"><table><thead><tr><th>地址</th><th>寄存器</th><th>实际读回</th></tr></thead><tbody id="registerRows"></tbody></table></div></article>
 <article class="panel"><div class="panel-heading"><h2 id="selectedRegisterName">单寄存器调试</h2></div><div class="form-grid"><label>地址 / Hex<input id="hwRegAddress" type="text" value="0x20" maxlength="4"></label><label>写入值 / Hex<input id="hwRegValue" type="text" value="0x60" maxlength="4"></label></div><div class="hardware-actions"><button id="hwReadOne" class="btn" disabled>读取此地址</button><button id="hwWriteOne" class="btn" disabled>写入并读回</button></div><p id="hwSingleResult" class="inset-note">复位、LDO 电压、只读及保留地址不开放写入。</p></article></section>
-<section id="view-audio" class="view"><article class="panel"><div class="panel-heading"><div><h2>声卡录音</h2><p>选择声卡输入，录成PCM后在下方查看波形、FFT和A/B；不自动监听。</p></div></div><div class="form-grid"><label>录音输入<select id="captureDevice"><option value="">先列出设备，再选择USB声卡输入</option></select></label><label>最长录音 / s<input id="captureSeconds" type="number" min="1" max="30" value="5"></label></div><div class="hardware-actions"><button id="captureList" class="btn">列出录音设备</button><button id="captureStart" class="btn" disabled>开始录音</button><button id="captureStop" class="btn" disabled>停止并保留</button></div><p id="captureStatus" class="inset-note" role="status">首次列出设备需允许浏览器录音权限；HID连接和声卡输入需分别选择。录音仅在本地内存中，导出WAV前不会写入文件。</p></article><div class="audition-action"><span>试听模型：<b id="draftStatus">已更新试听</b></span><button class="btn" id="applyModel">更新浏览器试听</button></div>
+<section id="view-audio" class="view"><article class="panel"><div class="panel-heading"><div><h2>声卡录音</h2><p>选择声卡输入，录成PCM后在下方查看波形、FFT和A/B；不自动监听。</p></div></div><div class="form-grid"><label>录音输入<select id="captureDevice"><option value="">先列出设备，再选择USB声卡输入</option></select></label><label>最长录音 / s<input id="captureSeconds" type="number" min="1" max="30" value="5"></label></div><div class="hardware-actions"><button id="captureList" class="btn">列出录音设备</button><button id="captureStart" class="btn" disabled>开始录音</button><button id="captureStop" class="btn" disabled>停止并保留</button></div><p id="captureStatus" class="inset-note" role="status">首次列出设备需允许浏览器录音权限；HID连接和声卡输入需分别选择。录音仅在本地内存中，导出WAV前不会写入文件。</p><p class="inset-note">测量录音请关闭该输入的系统音频增强（如 Voice Clarity）；浏览器降噪关闭不代表系统处理已旁路。</p></article><div class="audition-action"><span>试听模型：<b id="draftStatus">已更新试听</b></span><button class="btn" id="applyModel">更新浏览器试听</button></div>
       <div class="audio-banner"><span class="audio-symbol">♪</span><div><h2>浏览器 A/B 试听</h2><p>A/B 为浏览器软件 EQ；播放使用系统音频输出。测试实际 Codec 时选择 USB 音频输出，并注意芯片 EQ 与软件 EQ 的叠加。</p></div><span class="tiny-tag">WEB AUDIO</span></div>
       <div class="two-col"><article class="panel"><div class="panel-heading"><div><h2>音频源</h2><p id="audioSourceName">内置测试信号</p></div><button class="btn" id="chooseAudio">导入音频</button><input hidden type="file" id="audioFile" accept="audio/*"></div><div class="form-grid"><label>信号<select id="signalType"><option value="sine">正弦波</option><option value="sweep">对数扫频</option><option value="multitone">多音（250 / 1k / 4k）</option></select></label><label>频率 / Hz<input id="signalFrequency" type="number" min="20" max="20000" value="1000"></label><label>电平 / dBFS<input id="signalLevel" type="number" min="-60" max="-6" value="-18"></label><label>时长 / s<input id="signalDuration" type="number" min="1" max="10" value="3"></label></div><div class="audio-controls"><button class="btn" id="generateAudio">生成测试信号</button><button class="text-btn" id="returnSignal">恢复测试信号</button></div><div class="inset-note">导入的音频仅在本地处理，最长预览 30 秒。播放电平默认衰减 18 dB。</div></article><article class="panel"><div class="panel-heading"><div><h2>A / B 对比</h2><p>使用已更新的浏览器试听 EQ 配置</p></div><span class="tiny-tag" id="audioFsTag">48 kHz</span></div><div class="ab-toggle"><button class="active" id="audioDry">A <span>原始信号</span></button><button id="audioWet">B <span>EQ 处理后</span></button></div><div class="transport"><button class="play-btn" id="playAudio" aria-label="播放音频">▶</button><button class="btn" id="stopAudio">停止</button><div><strong id="playStatus">准备就绪</strong><span id="audioLength">3.00 s · MONO</span></div><button class="btn" id="exportWav">导出 WAV ↓</button></div><label class="monitor-volume">监听音量<input id="monitorVolume" type="range" min="-48" max="-6" value="-18"><output id="monitorValue">−18 dB</output></label><p id="audioModelNote" class="muted"></p></article></div>
       <article class="panel"><div class="panel-heading"><div><h2>波形与频谱</h2><p id="plotSource">生成信号 · 计算结果</p></div><div id="audioStats" class="audio-stats"></div></div><div class="audio-plots"><div><div class="eyebrow">WAVEFORM · FIRST 20 ms</div><svg id="waveChart" viewBox="0 0 520 200" role="img" aria-label="音频前20毫秒波形"></svg></div><div><div class="eyebrow">SPECTRUM · 2048 POINT HANN</div><svg id="spectrumChart" viewBox="0 0 520 200" role="img" aria-label="所选音频起始2048点频谱"></svg></div></div></article>
@@ -477,12 +505,13 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
 <label><input type="checkbox" data-hw-group="routing" checked>路径与音量</label><label><input type="checkbox" data-hw-group="eq" checked>三段 EQ</label><label><input type="checkbox" data-hw-group="dynamics" checked>AGC / HPF</label><label><input type="checkbox" data-hw-group="clock">时钟与接口</label></div></fieldset><p class="inset-note">仅在此连接窗口使用批量范围；点击框图模块时只写该模块。</p></details>
 <details class="technical"><summary>适配器 MCLK 输出</summary><p class="hardware-clock-note">只控制适配器输出开关，不设置或测量频率。板端由其他主控供时钟时保持原连接。</p><div class="hardware-actions"><button id="hwMclkOn" class="btn" disabled>开启 MCLK</button><button id="hwMclkOff" class="btn" disabled>关闭 MCLK</button></div><p id="hwMclkResult" class="inset-note">未发送 MCLK 命令。</p></details>
 <details class="technical"><summary>通信记录</summary><div class="hardware-actions"><button id="hwLogExport" class="btn">导出通信记录</button></div><div class="table-wrap hardware-log-table"><table><thead><tr><th>时间</th><th>方向</th><th>命令</th><th>地址</th><th>报文</th></tr></thead><tbody id="hwLogRows"></tbody></table></div></details>
-<details class="technical" id="releaseInfo"><summary>版本与支持范围</summary><p class="inset-note">当前页面 <b data-app-version>v0.8.5-rc.1</b>；TI / S31 / S3 控制。S3 仅为软件候选，尚未实机验证。协议版本不等于固件版本。</p></details>
+<details class="technical" id="releaseInfo"><summary>版本与支持范围</summary><p class="inset-note">当前页面 <b data-app-version>v0.8.12-rc.1</b>；TI / S31 / S3 控制。S3 仅为软件候选，尚未实机验证。协议版本不等于固件版本。</p></details>
 </section>
 <details class="technical" id="planDetails"><summary>本模块待写差异 <span id="hwPlanCount">未就绪</span></summary><p id="hwPlanError" class="hardware-error" hidden></p><div class="table-wrap hardware-plan-table"><table><thead><tr><th>地址</th><th>参数</th><th>当前</th><th>目标</th><th>掩码</th></tr></thead><tbody id="hwPlanRows"></tbody></table></div><p id="hwPlanNotes" class="inset-note">写入前重新读取设备，按掩码保留其他位，写后逐项核验。</p></details></div>
 <footer class="settings-action" id="settingsAction"><div id="hwStatus" class="device-action-status" role="status">未连接设备</div><p id="hwStatusDetail">请先连接右上角 USB 设备。</p><div class="hardware-progress"><progress id="hwProgress" value="0" max="1" aria-labelledby="hwProgressLabel"></progress><span id="hwProgressLabel">等待操作</span></div><div class="action-row"><button id="hwApply" class="btn primary" disabled>请先连接设备</button><button id="hwCancel" class="btn" disabled hidden>取消后续操作</button><button id="hwRefresh" class="icon-button" title="重新读取设备" aria-label="重新读取设备">↻</button></div></footer></aside>
 <div class="canvas-notice" id="canvasNotice">完整路径 · 点击任意模块开始调试</div>
 <div id="featureFinder" class="feature-backdrop" hidden><section role="dialog" aria-modal="true" aria-labelledby="featureFinderTitle" class="feature-dialog"><header role="none"><h2 id="featureFinderTitle">找功能</h2><button id="closeFeatureFinder" class="icon-button" aria-label="关闭功能搜索">×</button></header><input id="featureQuery" type="search" placeholder="搜索功能、模块或操作 / Ctrl K" aria-label="搜索功能" aria-controls="featureResults" aria-describedby="featureSearchHelp featureResultCount"><p id="featureSearchHelp" class="feature-hint">支持中英文名称；这里只打开或定位功能，不自动操作设备。</p><p id="featureResultCount" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p><div id="featureResults" class="feature-results"></div></section></div>
+<div id="quickStartPicker" class="feature-backdrop quick-start-picker" hidden><section role="dialog" aria-modal="true" aria-labelledby="quickStartTitle" aria-describedby="quickStartIntro" class="feature-dialog quick-start-dialog"><header role="none"><div><h2 id="quickStartTitle">Quick Start · 快捷方案</h2><p id="quickStartIntro">选择用途，点击“写入并核验”即可应用。这里只恢复芯片配置，不刷写固件，也不会自动播放或录音。</p></div><button id="closeQuickStart" class="icon-button" aria-label="关闭快捷方案">×</button></header><div class="quick-start-readiness"><p id="quickStartReady" role="status"></p><button id="quickStartConnect" class="btn">连接 USB</button></div><div id="quickStartCards" class="quick-start-grid"></div></section></div>
 <input id="legacyPresetFile" type="file" accept=".AC102,.ac102,.txt,text/plain" hidden><input id="configFile" type="file" accept="application/json,.json" hidden><div id="toast" role="status" aria-live="polite"></div>
 <script>/* AC10x Audio Lab — browser-independent signal calculations. */
 (function (root) {
@@ -889,9 +918,9 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
   const masks={2:4,3:0x37,4:15,5:15,6:63,7:0xd7,8:63,9:0x13,10:255,11:0x37,12:0x77,13:0xef,14:15,15:15,17:15,19:255,22:255,24:15,25:0xbf,26:255,27:0x4f,28:255,29:15,31:63,32:0xf9,33:0xff,34:255,35:255,36:255,37:0xfc,38:0x2f,39:0xfe,40:0xff,49:31,50:255,51:63,52:255,53:7,54:255,55:255,56:255,57:255,58:255,59:255,60:255,61:31,62:7,63:255,64:255,65:255,66:7,67:255,68:255,69:255,70:31,79:1};
   for(const base of [0x50,0x60,0x70])for(let i=0;i<15;i++)masks[base+i]=i%3===0?7:255;
   // A clicked module owns only these bits. Other draft modules cannot leak into its write.
-  const NODE_MASKS={bias:{2:4},input:{25:0x81,3:0x10,32:1},pga:{32:0xf8},adc:{3:0x10,25:1,32:1},
+  const NODE_MASKS={bias:{2:4},input:{25:0x81,3:0x10,32:1,6:3},pga:{32:0xf8},adc:{3:0x10,25:1,32:1,6:3},
     hpf:{3:4,6:2,49:8,66:7,67:255,68:255,69:255},agc:{3:4,6:2,49:0x14,50:255,51:63,52:255,57:255,58:255,59:255,60:255,61:31},
-    adcvol:{26:255},dacvol:{28:255},rec:{19:5,29:2},rxm:{29:1,19:8,25:0x30},play:{19:2},rxmix:{24:15},dacmix:{29:15},txl:{19:0x33},txr:{19:0xcc},rxmap:{22:255},txmap:{17:15},rx:{7:3},tx:{7:0x15},dac:{3:0x21,27:1},lineamp:{38:0x2f},adcdebug:{25:0x30},dacdebug:{27:6}};
+    adcvol:{26:255},dacvol:{28:255},rec:{19:5,29:2},rxm:{29:1,19:8,25:0x30},play:{19:2},rxmix:{24:15},dacmix:{29:15},txl:{19:0x33},txr:{19:0xcc},rxmap:{22:255},txmap:{17:15},rx:{7:3},tx:{7:0x15},dac:{3:0x21,27:1,6:12},lineamp:{38:0x2f},adcdebug:{25:0x30},dacdebug:{27:6}};
   for(const id of ['source','dmic','dmicport'])NODE_MASKS[id]=NODE_MASKS.input;
   NODE_MASKS.output=NODE_MASKS.lineamp;
   function clone(x){return JSON.parse(JSON.stringify(x));}
@@ -912,14 +941,19 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
     const fixed={4:[15,1],5:[15,1],7:[0xc0,0],8:[15,3],9:[3,0],10:[255,31],11:[0x34,0x14],12:[0x77,0x73],13:[0xef,0],14:[15,5]};
     const p=fixed[address];if(p&&(value&p[0])!==p[1])throw new Error(adapter.kind==='S3'?'此寄存器值不符合S3固定音频格式；使用时钟模块查看受支持配置':'此寄存器值不符合S31固定音频格式；使用时钟模块查看受支持配置');
   }
-  function encode(config,{groups=['routing','eq','dynamics','clock'],mclkHz=config.clock.fs*256,checkStability=true,manualBase={},profile='AC102',scope=null}={}){
+  function encode(config,{groups=['routing','eq','dynamics','clock'],mclkHz=config.clock.fs*256,checkStability=true,manualBase={},profile=(config.profile==='AC101S'?'AC101S':'AC102'),scope=null}={}){
     const c=normalize(clone(config)),r=c.routing,map=new Map(),notes=[],chosen=new Set(groups);
+    // Real S31/AC101S A/B: bypassing EQ or AGC/HPF does not bypass its serial processing clock.
+    // For an isolated effect edit, core enable comes from fresh hardware, not an unapplied draft.
+    const adcOwned=chosen.has('routing')&&(!scope||Boolean(NODE_MASKS[scope]?.[25]&1)),dacOwned=chosen.has('routing')&&(!scope||Boolean(NODE_MASKS[scope]?.[27]&1));
+    const adcActive=adcOwned?c.adc.enabled:Number.isInteger(manualBase[25])?Boolean(manualBase[25]&1):c.adc.enabled;
+    const dacActive=dacOwned?c.dac.enabled:Number.isInteger(manualBase[27])?Boolean(manualBase[27]&1):c.dac.enabled;
     const add=(address,mask,value,group,label)=>{if(!Number.isInteger(value))throw new Error(label+'不是整数编码');const old=map.get(address);if(old){old.value=(old.value&~mask)|(value&mask);old.mask|=mask;old.groups.push(group);}else map.set(address,{address,mask,value:value&mask,groups:[group],label});};
     if(chosen.has('manual'))for(const [key,value]of Object.entries(c.raw)){const a=Number(key);if(value===manualBase[a])continue;if(!masks[a]){notes.push('跳过复位 / 供电电压 / 只读 / 保留地址 0x'+a.toString(16));continue;}add(a,masks[a],value,'manual','手动镜像');}
     if(chosen.has('routing')){
       add(2,4,r.mbias?4:0,'routing','麦克风偏置');
       add(3,0x31,(c.adc.enabled?16:0)|(c.dac.enabled?33:0),'routing','录音 / 播放与 DAC 模拟输出');
-      add(6,0x3f,32|((c.adc.enabled?1:0))|((c.hpf.enabled||c.agc.enabled)?2:0)|(c.dac.enabled?4:0)|(c.eq.enabled?8:0)|((r.txEnabled||r.rxEnabled)?16:0),'routing','模块时钟');
+      add(6,0x3f,32|((c.adc.enabled?1:0))|((adcActive||c.hpf.enabled||c.agc.enabled)?2:0)|(c.dac.enabled?4:0)|(dacActive||c.eq.enabled?8:0)|((r.txEnabled||r.rxEnabled)?16:0),'routing','模块时钟');
       add(7,0x17,(r.sdoEnabled?16:0)|(r.txEnabled?4:0)|(r.rxEnabled?2:0)|1,'routing','I²S 收发');
       add(15,15,(1<<c.clock.slots)-1,'routing','TX 通道使能');
       add(17,15,r.txMap.reduce((v,x,i)=>v|(x<<i),0),'routing','TX 通道映射');
@@ -934,10 +968,15 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
       add(32,0xf9,(c.pga<<3)|Number(c.adc.enabled&&r.input==='analog'),'routing','PGA');
       if(!scope||scope==='lineamp'||scope==='output'){const differential=Number.isInteger(manualBase[38])?Boolean(manualBase[38]&16):Boolean(r.lineDifferential);add(38,0x2f,(r.lineOut?32:0)|R.lineGainCode(r.lineGain,differential),'routing','Line Out 使能与音量');}
     }
-    if(chosen.has('eq')){add(0x4f,1,Number(c.eq.enabled),'eq','EQ 使能');eqCoefficients(c,{checkStability}).forEach((b,i)=>b.fixed.forEach((v,j)=>{const a=0x50+i*16+j*3;add(a,7,(v>>16)&7,'eq','EQ 系数');add(a+1,255,(v>>8)&255,'eq','EQ 系数');add(a+2,255,v&255,'eq','EQ 系数');}));add(6,8,c.eq.enabled?8:0,'eq','EQ 时钟');}
+    if(chosen.has('eq')){add(0x4f,1,Number(c.eq.enabled),'eq','EQ 使能');
+      // Actual S31/AC101S: clearing EQ_EN alone retained the previous response.
+      // Program exact unity (including zero pre-gain) for Off, keeping the user's preset in the draft.
+      const bypass=profile==='AC101S'&&!c.eq.enabled;
+      const applied=bypass?Array.from({length:3},()=>({fixed:[65536,0,0,0,0]})):eqCoefficients(c,{checkStability});
+      applied.forEach((b,i)=>b.fixed.forEach((v,j)=>{const a=0x50+i*16+j*3;add(a,7,(v>>16)&7,'eq','EQ 系数');add(a+1,255,(v>>8)&255,'eq','EQ 系数');add(a+2,255,v&255,'eq','EQ 系数');}));add(6,8,dacActive||c.eq.enabled?8:0,'eq','EQ 时钟');}
     if(chosen.has('dynamics')){
       const fs=c.clock.fs,sd=debounce(c.agc.debounce,fs),nd=debounce(c.agc.noiseDebounce,fs),decay=ticks(c.agc.release,fs,'AGC 恢复时间'),attack=ticks(c.agc.attack,fs,'AGC 启动时间');
-      if(c.agc.enabled||c.hpf.enabled)add(3,4,4,'dynamics','AGC / HPF 全局使能');add(6,2,c.hpf.enabled||c.agc.enabled?2:0,'dynamics','AGC / HPF 时钟');
+      if(c.agc.enabled||c.hpf.enabled)add(3,4,4,'dynamics','AGC / HPF 全局使能');add(6,2,adcActive||c.hpf.enabled||c.agc.enabled?2:0,'dynamics','AGC / HPF 时钟');
       add(0x31,0x1c,(c.agc.enabled?16:0)|(c.hpf.enabled?8:0)|(c.agc.noiseDetect?4:0),'dynamics','AGC / HPF 开关');
       add(0x32,255,(nd.value<<4)|sd.value,'dynamics','AGC 消抖');add(0x33,63,Math.round(c.agc.target)&63,'dynamics','AGC 目标电平');add(0x34,255,Math.round(c.agc.maxGain*2),'dynamics','AGC 最大增益');
       add(0x39,255,decay>>8,'dynamics','AGC 恢复时间 H');add(0x3a,255,decay&255,'dynamics','AGC 恢复时间 L');add(0x3b,255,attack>>8,'dynamics','AGC 启动时间 H');add(0x3c,255,attack&255,'dynamics','AGC 启动时间 L');
@@ -957,12 +996,16 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
     return{patches:Array.from(map.values()).sort((a,b)=>a.address-b.address),notes};
   }
   function inferFs(snapshot,mclkHz){const a=ADC_DIV[(snapshot[4]||0)&15],b=ADC_DIV[(snapshot[5]||0)&15];if(!a||a!==b)return null;const fs=mclkHz/a/128;return FS.find(x=>Math.abs(fs-x)<.01)||null;}
-  function makePlan(config,snapshot,options={}){let effective=config;if(options.scope==='hpf'||options.scope==='agc'){effective=clone(config);if(options.scope==='hpf')effective.agc.enabled=Boolean(snapshot[0x31]&16);else effective.hpf.enabled=Boolean(snapshot[0x31]&8);}const encoded=encode(effective,{...options,manualBase:snapshot});let patches=encoded.patches;if(options.scope){const owned=NODE_MASKS[options.scope];if(!owned)throw new Error('未知模块写入范围：'+options.scope);patches=patches.map(p=>({...p,mask:p.mask&(owned[p.address]||0)})).filter(p=>p.mask);}const expected=patches.map(p=>{if(!Number.isInteger(snapshot[p.address]))throw new Error('缺少寄存器 0x'+p.address.toString(16)+' 的新鲜读回，禁止猜测后写入');return{...p,before:snapshot[p.address],after:patchValue(snapshot[p.address],p)};});const steps=expected.filter(p=>p.before!==p.after);return{steps,expected,notes:encoded.notes};}
+  function makePlan(config,snapshot,options={}){let effective=config;if(options.scope==='hpf'||options.scope==='agc'){effective=clone(config);if(options.scope==='hpf')effective.agc.enabled=Boolean(snapshot[0x31]&16);else effective.hpf.enabled=Boolean(snapshot[0x31]&8);}const encoded=encode(effective,{...options,manualBase:snapshot});let patches=encoded.patches;if(options.scope){const owned=NODE_MASKS[options.scope];if(!owned)throw new Error('未知模块写入范围：'+options.scope);patches=patches.map(p=>({...p,mask:p.mask&(owned[p.address]||0)})).filter(p=>p.mask);}const expected=patches.map(p=>{if(!Number.isInteger(snapshot[p.address]))throw new Error('缺少寄存器 0x'+p.address.toString(16)+' 的新鲜读回，禁止猜测后写入');return{...p,before:snapshot[p.address],after:patchValue(snapshot[p.address],p)};});const steps=expected.filter(p=>p.before!==p.after);return{steps,expected,notes:encoded.notes,eqPhysicalBypass:(options.profile||config.profile)==='AC101S'};}
   function sequence(plan,snapshot){const changed=new Map(plan.steps.map(p=>[p.address,p]));if(!changed.size)return[];const stages=[],state={...snapshot};
     const stage=(address,mask,value,label)=>{const before=state[address];if(!Number.isInteger(before))throw new Error('缺少临时门控寄存器读回');const after=patchValue(before,{mask,value});if(before!==after){stages.push({address,mask,value,after,label});state[address]=after;}};
     const eq=plan.steps.some(s=>s.address>=0x50),dyn=plan.steps.some(s=>s.address>=0x32&&s.address<=0x45),clock=plan.steps.some(s=>s.groups.includes('clock')),play=eq||clock||plan.steps.some(s=>[3,0x1b,0x1c,0x1d,0x26].includes(s.address));
-    if(play)stage(0x1c,255,0,'暂时静音 DAC');if(clock)stage(7,1,0,'暂停串行接口');if(eq)stage(0x4f,1,0,'暂时旁路 EQ');if(dyn)stage(0x31,0x18,0,'暂时旁路 AGC / HPF');
+    if(play)stage(0x1c,255,0,'暂时静音 DAC');if(clock)stage(7,1,0,'暂停串行接口');if(eq)stage(0x4f,1,0,'暂停 EQ 系数更新');if(dyn)stage(0x31,0x18,0,'暂时旁路 AGC / HPF');
     const delayed=new Set([7,0x1c,0x31,0x4f]);for(const p of plan.steps)if(!delayed.has(p.address))stage(p.address,p.mask,p.value,p.label);
+    // Latch unity while muted before returning EQ_EN to Off. Derive from target
+    // registers so apply, undo and failure recovery obey the same physical contract.
+    const targetEQ=changed.has(0x4f)?changed.get(0x4f).value:snapshot[0x4f];
+    if(plan.eqPhysicalBypass&&eq&&!(targetEQ&1)&&decodeEq(state)?.every(b=>b.every((v,i)=>v===(i===0?1:0))))stage(0x4f,1,1,'载入平直 EQ 系数');
     for(const a of [0x31,0x4f,7,0x1c]){const p=changed.get(a);if(p){const temporaryMask=a===0x31&&dyn?0x18:a===7&&clock?1:0,extra=temporaryMask&~p.mask;stage(a,p.mask|extra,p.value|(snapshot[a]&extra),p.label);}else if((a===0x31&&dyn)||(a===0x4f&&eq)||(a===7&&clock)||(a===0x1c&&play))stage(a,a===0x31?0x18:a===7||a===0x4f?1:255,snapshot[a],'恢复原先门控 / 音量');}
     return stages;
   }
@@ -996,7 +1039,7 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
   const common=typeof module!=='undefined'&&module.exports;
   const C=common?require('./codec.js'):root.AudioCodec,R=common?require('./routing.js'):root.AudioRouting,D=common?require('./dsp.js'):root.AudioDSP;
   const T=common?require('./transport.js'):root.AudioHardwareTransport;
-  const VERSION='0.8.5-rc.1',profiles=['AC102-reference','AC101S','AC102'];
+  const VERSION='0.8.12-rc.1',profiles=['AC102-reference','AC101S','AC102'];
   const clone=x=>JSON.parse(JSON.stringify(x));
   function safeObject(value,depth=0){
     if(depth>12)throw new Error('配置嵌套过深');
@@ -1130,17 +1173,41 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
   function quickStart(config,{fixedAudio=false,lineDifferential=config.routing?.lineDifferential}={}){
     const c=C.normalize(copy(config)),r=R.defaults();
     if(fixedAudio)c.clock={fs:48000,format:'I2S',bits:16,slot:32,slots:2,role:'slave'};
-    Object.assign(r,{input:'analog',mbias:true,rxEnabled:true,txEnabled:true,sdoEnabled:true,lineOut:true,lineGain:-18,lineDifferential:Boolean(lineDifferential)});
+    Object.assign(r,{input:'analog',mbias:true,rxEnabled:true,txEnabled:true,sdoEnabled:true,lineOut:true,lineGain:0,lineDifferential:Boolean(lineDifferential)});
     r.rx={left:true,right:true,leftHalf:true,rightHalf:true};
     r.dac={rx:true,rec:false,rxHalf:false,recHalf:false};
     r.txL={rec:true,play:false,recHalf:false,playHalf:false};
     r.txR={rec:true,rx:false,recHalf:false,rxHalf:false};
-    c.routing=r;c.pga=12;c.adc={enabled:true,gain:0,mute:false};c.dac={enabled:true,gain:-30,mute:false};
-    c.eq=eq('flat',c.clock.fs);c.eq.enabled=false;c.hpf={enabled:false,freq:80};
+    c.routing=r;c.pga=12;c.adc={enabled:true,gain:0,mute:false};c.dac={enabled:true,gain:0,mute:false};
+    c.eq=eq('voice',c.clock.fs);c.hpf={enabled:false,freq:80};
     c.agc={enabled:false,target:-18,threshold:-70,maxGain:12,attack:1,release:120,debounce:1.3,noiseDebounce:170.6667,noiseDetect:false};
     c.raw={};return c;
   }
-  const api={eqPresets,eq,quickStart};if(common)module.exports=api;else root.AudioExamples=api;
+  const quickExamples=[
+    {id:'default',name:'默认固件 · USB 声卡',tag:'日常使用',note:'USB 播放与麦克风独立录音，人声清晰 EQ；恢复正常播放电平。',path:'USB → 人声清晰 → 扬声器；MIC → USB',effect:'DAC 0 dB · Line Out 0 dB · 监听关闭',presetId:'voice'},
+    {id:'flat-playback',name:'纯净播放',tag:'播放',note:'EQ 真正旁路，保留原始音色；关闭芯片麦克风采集。',path:'USB → EQ 旁路 → 扬声器',effect:'正常播放电平 · 麦克风采集关闭',presetId:'voice'},
+    {id:'warm-music',name:'温暖音乐',tag:'播放',note:'增加少量低频厚度，缓和高频；麦克风仍独立录音。',path:'USB → 温暖柔和 EQ → 扬声器',effect:'正常播放电平 · 不开录音监听',presetId:'warm'},
+    {id:'record-only',name:'独立录音',tag:'录音',note:'模拟麦克风经 80 Hz 高通送到 USB；AGC 关闭，扬声器静音。',path:'MIC → PGA 12 dB → HPF 80 Hz → USB',effect:'DAC 与 Line Out 关闭 · 不会自动开始录音',presetId:'voice'},
+    {id:'playback-loopback',name:'播放数字回采',tag:'数字排查',note:'USB 录音左路接处理后播放数据，右路接输入混音，便于比较；不采集咪头。',path:'USB → EQ → 扬声器；PLAY / RXM → USB',effect:'录音左路为处理后数据，右路为 EQ 前数据',presetId:'voice'},
+    {id:'left-channel',name:'仅左声道播放',tag:'声道排查',note:'只把电脑的左声道送到扬声器；用于排查声道选择和接线。',path:'USB 左声道 → 人声清晰 → 扬声器',effect:'右播放声道不混入 · 麦克风独立录音',presetId:'voice'},
+    {id:'right-channel',name:'仅右声道播放',tag:'声道排查',note:'只把电脑的右声道送到扬声器；用于排查声道选择和接线。',path:'USB 右声道 → 人声清晰 → 扬声器',effect:'左播放声道不混入 · 麦克风独立录音',presetId:'voice'},
+    {id:'mute',name:'静音待机',tag:'暂停音频',note:'关闭芯片录放和模拟输出；USB 控制保持可用，可再写入任一方案。',path:'播放关闭 · 录音关闭 · USB 控制保留',effect:'不休眠 MCU、不刷固件、不改电脑音量',presetId:'voice'}
+  ];
+  function quickExample(id,config,options={}){
+    const meta=quickExamples.find(x=>x.id===id);if(!meta)throw new Error('未知 Quick Start 方案');
+    const c=quickStart(config,options),r=c.routing;
+    if(id==='warm-music')c.eq=eq('warm',c.clock.fs);
+    // Real S31 capture requires the record digital channel even for PLAY/RXM sources.
+    if(['flat-playback','mute'].includes(id))c.adc.enabled=false;
+    if(['flat-playback','playback-loopback','mute'].includes(id)){c.adc.mute=true;r.mbias=false;}
+    if(id==='flat-playback'){c.eq.enabled=false;r.txEnabled=false;r.sdoEnabled=false;}
+    if(id==='record-only'){c.dac.enabled=false;c.dac.mute=true;r.lineOut=false;r.rxEnabled=false;c.eq.enabled=false;c.hpf.enabled=true;c.hpf.freq=80;}
+    if(id==='playback-loopback'){r.txL={rec:false,play:true,recHalf:false,playHalf:false};r.txR={rec:false,rx:true,recHalf:false,rxHalf:false};}
+    if(id==='left-channel'||id==='right-channel')r.rx={left:id==='left-channel',right:id==='right-channel',leftHalf:false,rightHalf:false};
+    if(id==='mute'){c.dac.enabled=false;c.dac.mute=true;r.lineOut=false;r.rxEnabled=false;r.txEnabled=false;r.sdoEnabled=false;c.eq.enabled=false;}
+    return c;
+  }
+  const api={eqPresets,eq,quickStart,defaultFirmware:quickStart,quickExamples,quickExample};if(common)module.exports=api;else root.AudioExamples=api;
 })(typeof globalThis!=='undefined'?globalThis:this);
 </script><script>/* Serialized hardware transactions, guarded recovery, and explicit undo. */
 (function(root){
@@ -1168,7 +1235,7 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
     }
     accept(snapshot){this.snapshot=snapshot;this.readAt=new Date().toISOString();this.stale=false;}
     async readAll(){return this.own(async()=>{try{const next=await this.readFresh();this.accept(next);return next;}catch(e){this.stale=true;throw e;}});}
-    async recover(backup,live,clock){
+    async recover(backup,live,clock,eqPhysicalBypass=false){
       const restored=[],restoreFailed=[],conflicts=[],addresses=[...backup.keys()];
       if(!addresses.length)return{restored,restoreFailed};
       if(!this.bridge.connected||this.bridge.fault)return{restored,restoreFailed:addresses.map(address=>({address,message:'连接不可用，未重放恢复写入'}))};
@@ -1187,7 +1254,7 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
         const recoveryExpected={...current};
         const steps=addresses.map(address=>{const p=backup.get(address);return{address,mask:p.mask,value:p.value,groups:clock?['clock']:['manual']};}).filter(p=>(current[p.address]&p.mask)!==(p.value&p.mask));
         // Use the same mute / GEN / EQ / dynamics ordering for recovery as for commit.
-        const sequence=C.sequence({steps},current);
+        const sequence=C.sequence({steps,eqPhysicalBypass},current);
         for(const p of sequence){
           const before=await this.bridge.readRegister(p.address),mask=backup.get(p.address)?.mask??p.mask;
           if((before&mask)!==(recoveryExpected[p.address]&mask)){
@@ -1232,14 +1299,14 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
         for(const p of plan.expected||plan.steps)if((final[p.address]&p.mask)!==(p.after&p.mask))throw new SessionError('VERIFY','最终读回不匹配',{address:p.address,expected:p.after,actual:final[p.address]});
         this.accept(final);
         if(written.length){
-          const transaction={kind,startedAt,completedAt:new Date().toISOString(),clock,
+          const transaction={kind,startedAt,completedAt:new Date().toISOString(),clock,eqPhysicalBypass:Boolean(plan.eqPhysicalBypass),
             fields:[...backup].map(([address,p])=>({address,mask:p.mask,before:p.value,after:final[address]})),writes:written.length};
           this.history.push(copy(transaction));if(this.history.length>20)this.history.shift();
           this.lastTransaction=kind==='undo'?null:transaction;
         }else if(kind==='undo')this.lastTransaction=null;
         return{snapshot:final,plan,writes:written.length,verified:true};
       }catch(e){
-        const recovery=await this.recover(backup,live,clock);this.stale=true;
+        const recovery=await this.recover(backup,live,clock,Boolean(plan.eqPhysicalBypass));this.stale=true;
         this.history.push({kind,status:'failed',startedAt,completedAt:new Date().toISOString(),errorCode:e.code||'ERROR',attempted:[...backup.keys()],written,...recovery});if(this.history.length>20)this.history.shift();
         e.details={...(e.details||{}),attempted:[...backup.keys()],written,...recovery};throw e;
       }
@@ -1266,7 +1333,7 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
         const t=copy(this.lastTransaction),live=await this.readFresh();
         for(const p of t.fields)if((live[p.address]&p.mask)!==(p.after&p.mask))throw new SessionError('CONCURRENT_CHANGE','设备已偏离上次事务结果，未执行恢复',{address:p.address});
         const steps=t.fields.map(p=>({...p,value:p.before,after:C.patchValue(live[p.address],{mask:p.mask,value:p.before}),groups:t.clock?['clock']:['manual']}));
-        return await this.commit({steps,notes:['仅恢复上次写入拥有的位；保留其他位']},live,{kind:'undo',clock:t.clock});
+        return await this.commit({steps,eqPhysicalBypass:Boolean(t.eqPhysicalBypass),notes:['仅恢复上次写入拥有的位；保留其他位']},live,{kind:'undo',clock:t.clock});
       }catch(e){this.stale=true;throw e;}
     });}
     async readOne(address){return this.own(async()=>{try{this.check();const value=await this.bridge.readRegister(address);if(this.snapshot)this.snapshot[address]=value;return value;}catch(e){this.stale=true;throw e;}});}
@@ -1359,7 +1426,7 @@ class Recorder{
  async list(){
   if(this.closed||this.state!=='idle')throw Error('录音操作尚未结束');if(!this.media?.getUserMedia||!this.media?.enumerateDevices)throw Error('此浏览器不支持录音设备选择');
   const epoch=++this.epoch;this.stateTo('listing');let probe;
-  try{probe=await this.media.getUserMedia({audio:true,video:false});for(const t of probe.getTracks())t.stop();if(epoch!==this.epoch||this.closed)return null;const devices=await this.media.enumerateDevices();if(epoch!==this.epoch||this.closed)return null;return devices.filter(x=>x.kind==='audioinput'&&x.deviceId&&x.deviceId!=='default'&&x.deviceId!=='communications').map((x,i)=>({id:x.deviceId,label:x.label||'录音输入 '+(i+1)}));}
+  try{probe=await this.media.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false},video:false});for(const t of probe.getTracks())t.stop();if(epoch!==this.epoch||this.closed)return null;const devices=await this.media.enumerateDevices();if(epoch!==this.epoch||this.closed)return null;return devices.filter(x=>x.kind==='audioinput'&&x.deviceId&&x.deviceId!=='default'&&x.deviceId!=='communications').map((x,i)=>({id:x.deviceId,label:x.label||'录音输入 '+(i+1)}));}
   finally{if(probe)for(const t of probe.getTracks())t.stop();if(epoch===this.epoch&&!this.closed)this.stateTo('idle');}
  }
  async start(deviceId,seconds){
@@ -1370,6 +1437,7 @@ class Recorder{
    if(epoch!==this.epoch||this.closed){stream.getTracks().forEach(t=>t.stop());return;}
    this.stream=stream;ctx=new this.Context({sampleRate:48000});this.ctx=ctx;await ctx.resume();if(epoch!==this.epoch||this.closed)return;
    this.chunks=[];this.frames=0;this.channelCount=0;this.limit=Math.floor(ctx.sampleRate*seconds);this.settings=stream.getAudioTracks()[0]?.getSettings?.()||{};
+   if(['echoCancellation','noiseSuppression','autoGainControl'].some(k=>this.settings[k]===true))throw Error('浏览器仍启用了语音处理，已停止测量录音；请关闭回声消除、降噪和自动增益后重试');
    this.source=ctx.createMediaStreamSource(stream);this.silent=ctx.createGain();this.silent.gain.value=0;this.silent.connect(ctx.destination);
    const receive=data=>{if(epoch!==this.epoch||this.state!=='recording')return;try{this.append(data);}catch(e){this.stop(false);this.onError(e);}};
    if(ctx.audioWorklet&&root.AudioWorkletNode){
@@ -1382,6 +1450,7 @@ class Recorder{
    }
    this.source.connect(this.processor);this.processor.connect(this.silent);this.stateTo('recording');
    for(const track of stream.getTracks())track.addEventListener?.('ended',()=>{if(epoch===this.epoch){this.stop(false);this.onError(Error('录音设备已断开，未完整的录音已丢弃'));}},{once:true});
+   for(const track of stream.getTracks())track.addEventListener?.('mute',()=>{if(epoch===this.epoch&&this.state==='recording'){this.stop(false);this.onError(Error('录音输入被暂停，未完整的录音已丢弃；请检查系统音效和设备状态'));}},{once:true});
    this.timer=setTimeout(()=>{if(epoch===this.epoch){this.stop(false);this.onError(Error('录音未按期收到足够样本，未完整的录音已丢弃'));}},(seconds+3)*1000);
   }catch(e){if(epoch===this.epoch){this.stop(false);throw e;}}
   finally{if(epoch!==this.epoch){stream?.getTracks().forEach(t=>t.stop());if(ctx&&ctx.state!=='closed')await ctx.close().catch(()=>{});}}
@@ -1459,6 +1528,70 @@ const api={Camera,Canvas,svgPoint};if(typeof module!=='undefined'&&module.export
 })(typeof globalThis!=='undefined'?globalThis:this);
 </script><script>/* English UI catalog. Register addresses, values and machine keys are not localized. */
 (function(root){const catalog={
+"打开 Quick Start 快捷方案":"Open Quick Start setups",
+"Quick Start · 快捷方案":"Quick Start · Ready-to-use setups",
+"选择用途，点击“写入并核验”即可应用。这里只恢复芯片配置，不刷写固件，也不会自动播放或录音。":"Choose a task and click Write & verify to apply. These setups configure the codec; they do not flash firmware or start playback or recording.",
+"关闭快捷方案":"Close Quick Start setups",
+"Quick Start 提供可直接写入的常用方案；默认固件保留 USB 声卡播放、人声清晰和独立录音。":"Quick Start offers ready-to-write setups. The default keeps USB playback, clear vocals and independent recording.",
+"Quick Start：默认声卡、播放、录音和数字排查；选择方案后明确写入并核验。":"Quick Start: default soundcard, playback, recording and digital diagnostics; choose a setup, then write and verify.",
+"可先打开 Quick Start 浏览方案；连接 USB 并完整读回后可写入。":"Browse Quick Start setups offline; connect USB and finish a full readback before writing.",
+"可先浏览方案；连接 USB 并完整读回后可写入。":"Browse setups offline; connect USB and finish a full readback before writing.",
+"设备已就绪；点击任一方案的“写入并核验”。":"Device ready. Click Write & verify on a setup.",
+"正在写入快捷方案…":"Writing Quick Start setup…",
+"正在写入所选方案，并逐项核验。":"Writing the selected setup and verifying each register.",
+"未知 Quick Start 方案":"Unknown Quick Start setup",
+"正在应用 Quick Start：":"Applying Quick Start: ",
+"已写入并核验：":"Written and verified: ",
+"点击图上模块继续调整。":"Click a graph module to continue editing.",
+"默认固件 · USB 声卡":"Default firmware · USB soundcard",
+"日常使用":"Everyday use",
+"USB 播放与麦克风独立录音，人声清晰 EQ；恢复正常播放电平。":"Independent USB playback and microphone capture, with clear-vocal EQ and normal playback levels.",
+"USB → 人声清晰 → 扬声器；MIC → USB":"USB → clear-vocal EQ → speaker; MIC → USB",
+"DAC 0 dB · Line Out 0 dB · 监听关闭":"DAC 0 dB · Line Out 0 dB · monitor off",
+"纯净播放":"Clean playback",
+"EQ 真正旁路，保留原始音色；关闭芯片麦克风采集。":"True EQ bypass preserves the original tone; codec microphone capture is disabled.",
+"USB → EQ 旁路 → 扬声器":"USB → EQ bypass → speaker",
+"正常播放电平 · 麦克风采集关闭":"Normal playback levels · microphone capture off",
+"温暖音乐":"Warm music",
+"增加少量低频厚度，缓和高频；麦克风仍独立录音。":"A little low-frequency warmth and softer highs; microphone recording remains independent.",
+"USB → 温暖柔和 EQ → 扬声器":"USB → warm EQ → speaker",
+"正常播放电平 · 不开录音监听":"Normal playback levels · microphone monitor off",
+"独立录音":"Independent recording",
+"模拟麦克风经 80 Hz 高通送到 USB；AGC 关闭，扬声器静音。":"Analog microphone through an 80 Hz high-pass filter to USB; AGC off and speaker muted.",
+"MIC → PGA 12 dB → HPF 80 Hz → USB":"MIC → PGA 12 dB → HPF 80 Hz → USB",
+"DAC 与 Line Out 关闭 · 不会自动开始录音":"DAC and Line Out off · recording does not start automatically",
+"播放数字回采":"Digital playback loopback",
+"数字排查":"Digital diagnostics",
+"USB 录音左路接处理后播放数据，右路接输入混音，便于比较；不采集咪头。":"USB capture receives processed playback on the left and input mix on the right for comparison; the microphone is not captured.",
+"USB → EQ → 扬声器；PLAY / RXM → USB":"USB → EQ → speaker; PLAY / RXM → USB",
+"录音左路为处理后数据，右路为 EQ 前数据":"Capture: processed playback on left, pre-EQ input on right",
+"仅左声道播放":"Left-channel playback",
+"声道排查":"Channel diagnostics",
+"只把电脑的左声道送到扬声器；用于排查声道选择和接线。":"Send only the computer’s left channel to the speaker to check channel selection and wiring.",
+"USB 左声道 → 人声清晰 → 扬声器":"USB left → clear-vocal EQ → speaker",
+"右播放声道不混入 · 麦克风独立录音":"Right playback channel excluded · independent microphone capture",
+"仅右声道播放":"Right-channel playback",
+"只把电脑的右声道送到扬声器；用于排查声道选择和接线。":"Send only the computer’s right channel to the speaker to check channel selection and wiring.",
+"USB 右声道 → 人声清晰 → 扬声器":"USB right → clear-vocal EQ → speaker",
+"左播放声道不混入 · 麦克风独立录音":"Left playback channel excluded · independent microphone capture",
+"静音待机":"Muted standby",
+"暂停音频":"Pause audio",
+"关闭芯片录放和模拟输出；USB 控制保持可用，可再写入任一方案。":"Disable codec playback, capture and analog output. USB control stays available to apply another setup.",
+"播放关闭 · 录音关闭 · USB 控制保留":"Playback off · capture off · USB control stays available",
+"不休眠 MCU、不刷固件、不改电脑音量":"MCU stays awake · firmware and computer volume unchanged",
+
+"浏览器仍启用了语音处理，已停止测量录音；请关闭回声消除、降噪和自动增益后重试":"Speech processing is still enabled in the browser. Measurement recording stopped; disable echo cancellation, noise suppression and automatic gain, then retry.",
+"录音输入被暂停，未完整的录音已丢弃；请检查系统音效和设备状态":"Recording input was suspended. Incomplete audio was discarded; check system effects and device status.",
+"测量录音请关闭该输入的系统音频增强（如 Voice Clarity）；浏览器降噪关闭不代表系统处理已旁路。":"For measurement recording, turn off system audio enhancements such as Voice Clarity on this input. Disabling browser noise suppression does not verify a system-level bypass.",
+"暂停 EQ 系数更新":"Pause EQ coefficient updates",
+"载入平直 EQ 系数":"Load unity EQ coefficients",
+"定位默认固件恢复按钮":"Locate default firmware restore",
+"默认固件 恢复 声卡 人声清晰 setup baseline restore default firmware soundcard voice quick start":"restore default firmware USB soundcard clear voice setup baseline quick start",
+"正在恢复默认配置…":"Restoring defaults…",
+"Quick Start · 默认固件":"Quick Start \u00b7 Default firmware",
+"连接 USB 后，可一键恢复默认固件配置：USB 声卡播放、人声清晰音效与独立麦克风录音。":"Connect USB to restore the default firmware configuration: USB audio playback, clear vocals, and independent microphone recording.",
+"恢复默认固件的 USB 声卡与人声清晰配置，并核验结果。":"Restore and verify the default firmware USB audio and clear-vocal configuration.",
+
   "暗色主题":"Dark theme",
   "切换浅色／暗色主题":"Switch light / dark theme",
   "个未确认恢复，请核对连接并重新读回":"registers could not be verified as restored. Check the connection and read the device again",
@@ -1479,7 +1612,7 @@ const api={Camera,Canvas,svgPoint};if(typeof module!=='undefined'&&module.export
 "Quick Start · 写入中…":"Quick Start · Writing…",
 "取消写入":"Cancel write",
 "连接 USB 后，Quick Start 一键写入独立录音与播放配置；低音量输出，不开启本地监听。":"Connect USB, then Quick Start writes independent recording and low-volume playback. Local monitoring stays off.",
-"Quick Start 将写入：麦克风录音 + I²S 播放，DAC −30 dB、Line Out −18 dB；监听与回环关闭。":"Quick Start writes: microphone recording + I²S playback, DAC −30 dB, Line Out −18 dB; monitoring and loopback off.",
+"Quick Start 将恢复：USB 声卡播放、人声清晰 EQ、DAC 0 dB、Line Out 0 dB；监听与回环关闭。音量由电脑调节。": "Quick Start restores USB audio playback, clear-vocal EQ, DAC 0 dB and Line Out 0 dB; monitor and loops off. Adjust volume on the computer.",
 "Quick Start 正在检查并写入配置。":"Quick Start is checking and writing the setup.",
 "Quick Start 正在写入并核验；请等待完成。":"Quick Start is writing and verifying; please wait.",
 "Quick Start 已写入并完整核验；点击图上模块继续调整。":"Quick Start written and fully verified. Click a graph module to continue editing.",
@@ -2261,6 +2394,7 @@ const api={Camera,Canvas,svgPoint};if(typeof module!=='undefined'&&module.export
   "选择声卡": "Select sound card",
   "录音已取消。": "Recording cancelled.",
   "录音已载入；可对比并导出WAV": "Recording loaded; compare it or export WAV",
+  "录音已载入，已选择原始信号；可切换B试听，导出当前A/B": "Recording loaded as raw audio; choose B for audition; export follows A/B",
   "本地声卡录音": "Local sound card recording",
   "等待录音权限并读取设备列表…": "Waiting for recording permission and listing inputs…",
   "正在打开所选声卡…": "Opening the selected sound card…",
@@ -2811,11 +2945,11 @@ const api={translate,install,measureText};if(common)module.exports=api;else{root
   const routeUI={focus:'all',zoom:1,fit:true,mode:'professional',associate:false};
   const viewport=new AudioViewport.Canvas($('#canvasScroll'),$('#routeDiagram'),{onChange(state){$('#routingPanel').dataset.canvasSize=state.width<600?'narrow':state.width<900?'medium':'wide';routeUI.zoom=state.scale;routeUI.fit=state.autoFit;$('#routeZoomValue').textContent=Math.round(state.scale*100)+'%';$('#routeFit').setAttribute('aria-pressed',String(state.autoFit));}});
   window.addEventListener('pagehide',()=>viewport.destroy(),{once:true});
-  const defaults=()=>C.normalize({routing:R.defaults(),version:1,profile:'AC101S',pga:12,adc:{enabled:true,gain:0},dac:{enabled:true,gain:0},hpf:{enabled:true,freq:80},agc:{enabled:true,target:-14,threshold:-70,maxGain:20,attack:0.7,release:120,debounce:1.3},eq:E.eq('voice',48000),clock:{fs:48000,format:'I2S',bits:24,slot:32,slots:2,role:'slave'},raw:{}});
+  const defaults=()=>E.defaultFirmware(C.normalize({routing:R.defaults(),version:1,profile:'AC101S',pga:12,adc:{enabled:true,gain:0},dac:{enabled:true,gain:0},hpf:{enabled:true,freq:80},agc:{enabled:true,target:-14,threshold:-70,maxGain:20,attack:0.7,release:120,debounce:1.3},eq:E.eq('voice',48000),clock:{fs:48000,format:'I2S',bits:24,slot:32,slots:2,role:'slave'},raw:{}}),{fixedAudio:true});
   let cfg=defaults(), applied, currentView='path', selectedNode='pga', selectedReg=0x31, preset='voice',hardwareSnapshot=null,hardwareConnected=false,lastRouteExample=null,referenceMclkHz=12288000,draftRevision=0,draftImportRequest=0;
   const draftInputRequests=new WeakMap();
   let viewRevision=0;
-  let toastTimer, dragging=-1, importedName='', audioChannels=[], audioFs=48000, audioWet=false, audioContext=null, playback=null, monitorGain=null, wetCache=null,audioEpoch=0;
+  let toastTimer, dragging=-1, importedName='', audioOrigin='generated', audioChannels=[], audioFs=48000, audioWet=false, audioContext=null, playback=null, monitorGain=null, wetCache=null,audioEpoch=0;
   const names={path:['COMPLETE SIGNAL ROUTING','完整音频路径总览','输入选择、四组混音、监听与数字回环，完整显示连接关系。','音频路径'],eq:['PARAMETRIC EQUALIZER','让每一段频率，各就其位。','三段双二阶滤波器，实时查看频率响应与系数。','三段 EQ'],dynamics:['DYNAMICS & FILTERS','控制动态，保留细节。','编辑自动增益与高通参数，查看本地数学示意。','AGC / HPF'],clock:['CLOCK & SERIAL AUDIO','把时钟和数据，对齐。','从采样率到时隙宽度，一起检查数字音频配置。','时钟与接口'],registers:['REGISTER WORKSPACE','每一个位，都有迹可循。','参数生成与手动编辑分开显示，应用前检查本地差异。','寄存器'],hardware:['HARDWARE CONNECTION','连接真实设备，读回每一次修改。','USB HID 控制适配器 → I²C 音频芯片。下发参数后逐项核验实际寄存器。','设备连接'],audio:['LISTEN & COMPARE','调过的参数，用耳朵确认。','生成或导入音频，在浏览器内对比播放端 EQ。','音频实验']};
   const fmtHz=f=>f>=1000?(f/1000).toFixed(f%1000?1:0)+'k':String(Math.round(f));
   const hex=(n,width=2)=>'0x'+(n>>>0).toString(16).toUpperCase().padStart(width,'0');
@@ -2903,7 +3037,7 @@ const api={translate,install,measureText};if(common)module.exports=api;else{root
     if(path==='clock.slots'&&value===1)cfg.clock.format='PCM';
     if(path==='clock.format'&&value!=='PCM')cfg.clock.slots=2;
     if(path==='clock.fs'){let clamped=false;cfg.eq.bands.forEach(b=>{if(b.freq>=value/2){b.freq=Math.floor(value*.45);clamped=true;}});if(clamped)toast('已将超出新采样率范围的 EQ 频率调低');renderBandCards();}
-    if(path.startsWith('eq.'))preset='custom';
+    if(path.startsWith('eq.')&&path!=='eq.enabled')preset='custom';
     changed();
   });
   function restoreInvalidNumber(event){const el=event.target;if(el.type==='number'&&el.dataset.bind&&(el.value===''||!el.validity.valid)){el.value=get(el.dataset.bind);toast('请输入字段范围内的有效数值');}}
@@ -3054,15 +3188,15 @@ const api={translate,install,measureText};if(common)module.exports=api;else{root
     stopAudio();const fs=applied.clock.fs,type=$('#signalType').value,f=D.clamp(Number($('#signalFrequency').value)||1000,20,Math.min(20000,fs/2-1)),level=D.clamp(Number($('#signalLevel').value)||-18,-60,-6),duration=D.clamp(Number($('#signalDuration').value)||3,1,10),n=Math.round(fs*duration),a=Math.pow(10,level/20),data=new Float32Array(n);
     $('#signalFrequency').value=f;$('#signalLevel').value=level;$('#signalDuration').value=duration;
     for(let i=0;i<n;i++){const t=i/fs;if(type==='sweep'){const lo=20,hi=Math.min(20000,fs*.45),k=Math.log(hi/lo)/duration;data[i]=a*Math.sin(2*Math.PI*lo*(Math.exp(k*t)-1)/k);}else if(type==='multitone'){const freqs=[250,1000,4000].filter(v=>v<fs/2);data[i]=a*freqs.reduce((s,v)=>s+Math.sin(2*Math.PI*v*t),0)/freqs.length;}else data[i]=a*Math.sin(2*Math.PI*f*t);}
-    audioChannels=[data];audioFs=fs;importedName='';wetCache=null;$('#audioSourceName').textContent='内置测试信号 · '+{sine:'正弦波',sweep:'对数扫频',multitone:'多音'}[type];renderAudio();if(notify)toast('测试信号已生成，点击播放试听');
+    audioChannels=[data];audioFs=fs;importedName='';audioOrigin='generated';wetCache=null;$('#audioSourceName').textContent='内置测试信号 · '+{sine:'正弦波',sweep:'对数扫频',multitone:'多音'}[type];renderAudio();if(notify)toast('测试信号已生成，点击播放试听');
   }
   function processedAudio(){if(!wetCache){const bands=applied.eq.bands.map(b=>({...b,freq:Math.min(b.freq,audioFs/2-1)}));wetCache=audioChannels.map(ch=>D.processSamples(ch,bands,audioFs,applied.eq.preGain,applied.eq.enabled));}return wetCache;}
   function activeAudio(){return audioWet?processedAudio():audioChannels;}
   function renderAudio(){
-    if(!audioChannels.length)return;const data=activeAudio()[0],s=D.stats(data);$('#audioFsTag').textContent=Number((audioFs/1000).toFixed(3))+' kHz';$('#audioLength').textContent=(data.length/audioFs).toFixed(2)+' s · '+(audioChannels.length===1?'MONO':'STEREO');$('#audioDry').classList.toggle('active',!audioWet);$('#audioWet').classList.toggle('active',audioWet);
+    if(!audioChannels.length)return;const data=activeAudio()[0],s=D.stats(data);$('#audioFsTag').textContent=Number((audioFs/1000).toFixed(3))+' kHz';$('#audioLength').textContent=(data.length/audioFs).toFixed(2)+' s · '+(audioChannels.length===1?'MONO':'STEREO');$('#audioDry').classList.toggle('active',!audioWet);$('#audioWet').classList.toggle('active',audioWet);$('#audioDry').setAttribute('aria-pressed',String(!audioWet));$('#audioWet').setAttribute('aria-pressed',String(audioWet));
     $('#audioStats').innerHTML='<span>PEAK <b>'+s.peakDb.toFixed(1)+' dBFS</b></span><span>RMS <b>'+s.rmsDb.toFixed(1)+' dBFS</b></span>'+(s.clipped?'<span class="warning">'+s.clipped+' 点超出 0 dBFS</span>':'');
     const dirty=!R.equivalent(cfg.eq,applied.eq);$('#audioModelNote').textContent=(dirty?'有未应用的 EQ 修改，当前试听使用上一次已应用配置。':'已应用 EQ · '+(applied.eq.enabled?'启用':'旁路')+' · 前级 '+signed(applied.eq.preGain)+' dB。')+(audioFs!==applied.clock.fs?' 按音频源采样率计算响应。':'');
-    $('#plotSource').textContent=(importedName?'导入音频':'生成信号')+' · '+(audioWet?'EQ 后':'原始信号')+' · 第 1 通道计算结果';
+    $('#plotSource').textContent=({generated:'生成信号',imported:'导入音频',recording:'声卡录音'}[audioOrigin])+' · '+(audioWet?'EQ 后':'原始信号')+' · 第 1 通道计算结果';
     const w=520,h=200,l=44,r=503,t=18,b=169;let svg='';[-1,-.5,0,.5,1].forEach(v=>{const y=t+(1-v)/2*(b-t);svg+='<line class="plot-grid" x1="'+l+'" y1="'+y+'" x2="'+r+'" y2="'+y+'"/><text class="plot-label" x="'+(l-8)+'" y="'+(y+3)+'" text-anchor="end">'+v+'</text>';});
     let d='';const count=Math.min(Math.round(audioFs*.02),data.length);for(let i=0;i<count;i++)d+=(i?'L':'M')+(l+i/Math.max(1,count-1)*(r-l)).toFixed(2)+','+(t+(1-D.clamp(data[i],-1,1))/2*(b-t)).toFixed(2);svg+='<path class="curve" stroke="#168b88" stroke-width="1.3" d="'+d+'"/><text class="plot-label" x="'+l+'" y="190">0 ms</text><text class="plot-label" x="'+r+'" y="190" text-anchor="end">20 ms</text>';$('#waveChart').innerHTML=svg;
     const fft=D.fftDb(data),p=chartBase(w,h,{minDb:-96,maxDb:0,maxF:Math.min(20000,audioFs/2-1)});let fd='';for(let i=1;i<fft.length;i++){const f=i*audioFs/2048;if(f<20||f>p.maxF)continue;fd+=(fd?'L':'M')+p.x(f).toFixed(2)+','+p.y(D.clamp(fft[i],-96,0)).toFixed(2);}$('#spectrumChart').innerHTML=p.svg+'<path class="curve" stroke="#168b88" stroke-width="1.4" d="'+fd+'"/>';
@@ -3075,15 +3209,15 @@ const api={translate,install,measureText};if(common)module.exports=api;else{root
   $('#stopAudio').addEventListener('click',stopAudio);
   $('#monitorVolume').addEventListener('input',e=>{$('#monitorValue').textContent=e.target.value+' dB';if(monitorGain&&audioContext){const now=audioContext.currentTime;monitorGain.gain.cancelScheduledValues(now);monitorGain.gain.setTargetAtTime(Math.pow(10,Number(e.target.value)/20),now,.02);}});
   $('#chooseAudio').addEventListener('click',()=>$('#audioFile').click());
-  $('#audioFile').addEventListener('change',async event=>{const file=event.target.files[0];if(!file)return;stopAudio();const token=audioEpoch;try{if(file.size>64*1024*1024)throw new Error('请选小于 64 MB 的音频');const ctx=await ensureAudioContext();if(token!==audioEpoch)return;const buffer=await ctx.decodeAudioData(await file.arrayBuffer());if(token!==audioEpoch)return;audioFs=buffer.sampleRate;const n=Math.min(buffer.length,audioFs*30);audioChannels=Array.from({length:Math.min(buffer.numberOfChannels,2)},(_,i)=>buffer.getChannelData(i).slice(0,n));importedName=file.name;const fileLabel=document.createElement('span');fileLabel.dataset.noI18n='';fileLabel.textContent=file.name;$('#audioSourceName').replaceChildren(fileLabel,document.createTextNode(buffer.duration>30?' · 前 30 秒':''));wetCache=null;renderAudio();toast('音频已载入本地，未上传');}catch(e){if(token===audioEpoch)toast('无法载入音频：'+e.message);}finally{if(token===audioEpoch)event.target.value='';}});
-  $('#exportWav').addEventListener('click',()=>{const channels=activeAudio();download('Audio-Lab-'+(audioWet?'EQ':'Dry')+'.wav',D.wav(channels,audioFs),'audio/wav');toast('已导出 16 bit PCM WAV；超出满幅的采样会限幅');});
+  $('#audioFile').addEventListener('change',async event=>{const file=event.target.files[0];if(!file)return;stopAudio();const token=audioEpoch;try{if(file.size>64*1024*1024)throw new Error('请选小于 64 MB 的音频');const ctx=await ensureAudioContext();if(token!==audioEpoch)return;const buffer=await ctx.decodeAudioData(await file.arrayBuffer());if(token!==audioEpoch)return;audioFs=buffer.sampleRate;const n=Math.min(buffer.length,audioFs*30);audioChannels=Array.from({length:Math.min(buffer.numberOfChannels,2)},(_,i)=>buffer.getChannelData(i).slice(0,n));importedName=file.name;audioOrigin='imported';const fileLabel=document.createElement('span');fileLabel.dataset.noI18n='';fileLabel.textContent=file.name;$('#audioSourceName').replaceChildren(fileLabel,document.createTextNode(buffer.duration>30?' · 前 30 秒':''));wetCache=null;renderAudio();toast('音频已载入本地，未上传');}catch(e){if(token===audioEpoch)toast('无法载入音频：'+e.message);}finally{if(token===audioEpoch)event.target.value='';}});
+  $('#exportWav').addEventListener('click',()=>{const channels=activeAudio();download((audioOrigin==='recording'?'Audio-Lab-Recording-'+(audioWet?'EQ':'Raw'):'Audio-Lab-'+(audioWet?'EQ':'Dry'))+'.wav',D.wav(channels,audioFs),'audio/wav');toast('已导出 16 bit PCM WAV；超出满幅的采样会限幅');});
 
   // Hardware UI owns its explicit connection and write actions; local playback stays separate.
   window.addEventListener('pagehide',()=>{stopAudio();if(audioContext)audioContext.close().catch(()=>{});});
 
   const capture=new AudioCapture.Recorder({
     onState(state){const idle=state==='idle';$('#captureList').disabled=!idle;$('#captureDevice').disabled=!idle;$('#captureSeconds').disabled=!idle;$('#captureStart').disabled=!idle||!$('#captureDevice').value;$('#captureStop').disabled=!['starting','recording','listing'].includes(state);if(!idle)$('#captureStatus').textContent={listing:'等待录音权限并读取设备列表…',starting:'正在打开所选声卡…',recording:'录音中，不监听输入；到时自动停止。'}[state]||state;},
-    onDone(result){stopAudio();audioChannels=result.channels;audioFs=result.sampleRate;importedName='声卡录音';wetCache=null;$('#audioSourceName').textContent='本地声卡录音 · '+result.seconds.toFixed(3)+' s';const settings=result.settings,flags=['echoCancellation','noiseSuppression','autoGainControl'].map(k=>k+'='+String(settings[k]??'未报告')).join('，');$('#captureStatus').textContent=result.engine+'；浏览器PCM '+result.sampleRate+' Hz / '+result.channels.length+'通道。'+flags+'。可能经过系统混音或重采样，不能据此声称器件本体THD/SNR。';renderAudio();toast('录音已载入；可对比并导出WAV');},
+    onDone(result){stopAudio();audioChannels=result.channels;audioFs=result.sampleRate;importedName='声卡录音';audioOrigin='recording';audioWet=false;wetCache=null;$('#audioSourceName').textContent='本地声卡录音 · '+result.seconds.toFixed(3)+' s';const settings=result.settings,flags=['echoCancellation','noiseSuppression','autoGainControl'].map(k=>k+'='+String(settings[k]??'未报告')).join('，');$('#captureStatus').textContent=result.engine+'；浏览器PCM '+result.sampleRate+' Hz / '+result.channels.length+'通道。'+flags+'。可能经过系统混音或重采样，不能据此声称器件本体THD/SNR。';renderAudio();toast('录音已载入，已选择原始信号；可切换B试听，导出当前A/B');},
     onError(e){$('#captureStatus').textContent=e.message;toast('录音停止：'+e.message);}
   });
   $('#captureDevice').addEventListener('change',()=>$('#captureStart').disabled=capture.state!=='idle'||!$('#captureDevice').value);
@@ -3096,7 +3230,7 @@ const api={translate,install,measureText};if(common)module.exports=api;else{root
     setTargetProfile(profile){if(!['AC101S','AC102'].includes(profile))throw Error('不支持的寄存器表');cfg.profile=profile;changed();},
     validateConfig:c=>validate(clone(c)),
     setHardwareSnapshot(snapshot,connected){hardwareSnapshot=snapshot?{...snapshot}:null;hardwareConnected=connected;render();},
-    importHardwareConfig(next){const candidate=clone(next);candidate.eq.bands.forEach(b=>b.freq=Math.min(b.freq,candidate.clock.fs*.45));cfg=validate(candidate);preset='custom';renderBandCards();renderInspector();changed();window.dispatchEvent(new CustomEvent('audiolab:configimport',{detail:{profile:cfg.profile}}));},
+    importHardwareConfig(next,options={}){const candidate=clone(next);candidate.eq.bands.forEach(b=>b.freq=Math.min(b.freq,candidate.clock.fs*.45));cfg=validate(candidate);preset='custom';if(options.presetId&&E.eqPresets.some(p=>p.id===options.presetId)&&JSON.stringify({...E.eq(options.presetId,cfg.clock.fs),enabled:cfg.eq.enabled})===JSON.stringify(cfg.eq))preset=options.presetId;renderBandCards();renderInspector();changed();window.dispatchEvent(new CustomEvent('audiolab:configimport',{detail:{profile:cfg.profile}}));},
     getHardwareSnapshot:()=>hardwareSnapshot?{...hardwareSnapshot}:null,getViewport:()=>viewport.camera.snapshot()
   };
   function render(){syncControls();renderLegacyRegisters();renderRoute();if(currentView==='eq')renderEQ();else if(currentView==='dynamics')renderDynamics();else if(currentView==='clock')renderClock();else if(currentView==='registers')renderRegisters();else if(currentView==='audio')renderAudio();}
@@ -3134,11 +3268,15 @@ const api={translate,install,measureText};if(common)module.exports=api;else{root
   function progress(e){$('#hwProgress').max=Math.max(1,e.total);$('#hwProgress').value=e.completed;$('#hwProgressLabel').textContent=({read:'读回',plan:'差异',write:'写入并核验'}[e.phase]||e.phase)+' '+e.completed+' / '+e.total+(e.address!==undefined?' · '+hex(e.address):'');renderOperation();}
   function renderOperation(){
     const focusedCancel=['hwCancel','quickStartCancel'].includes(document.activeElement?.id);
-    $('#quickStart').disabled=busy||!fresh();
-    $('#quickStart').textContent=quickState.phase==='applying'?'Quick Start · 写入中…':'Quick Start · 写入';
+    $('#quickStart').disabled=busy;
+    $('#quickStart').textContent=quickState.phase==='applying'?'正在写入快捷方案…':'Quick Start';
     $('#quickStartCancel').hidden=!activeRun;$('#quickStartCancel').disabled=!activeRun||activeRun.cancelled;
     $('#quickStartCancel').textContent=activeRun?.cancelled?'正在取消…':'取消操作';
-    $('#quickStartStatus').textContent=busy?lastMessage+' · '+$('#hwProgressLabel').textContent:failure||quickState.message||(fresh()?'Quick Start 将写入：麦克风录音 + I²S 播放，DAC −30 dB、Line Out −18 dB；监听与回环关闭。':'连接 USB 后，Quick Start 一键写入独立录音与播放配置；低音量输出，不开启本地监听。');
+    $('#quickStartStatus').textContent=busy?lastMessage+' · '+$('#hwProgressLabel').textContent:failure||quickState.message||(fresh()?'Quick Start：默认声卡、播放、录音和数字排查；选择方案后明确写入并核验。':'可先打开 Quick Start 浏览方案；连接 USB 并完整读回后可写入。');
+    $('#quickStartReady').textContent=fresh()?'设备已就绪；点击任一方案的“写入并核验”。':'可先浏览方案；连接 USB 并完整读回后可写入。';
+    $('#quickStartConnect').hidden=fresh();$('#quickStartConnect').disabled=busy;
+    for(const button of $$('[data-quick-apply]'))button.disabled=busy||!fresh();
+    if(!$('#quickStartPicker').hidden&&document.activeElement?.matches('[data-quick-apply]:disabled'))$('#closeQuickStart').focus();
     if(!activeRun&&focusedCancel){const target=$('#settingsWindow').hidden?$('#canvasScroll'):$('#inspectorTitle');target.tabIndex=-1;target.focus({preventScroll:true});}
   }
   function assertAdapterFormat(config,opt){C.assertAdapterClock(config,opt,bridge?.device);}
@@ -3250,25 +3388,33 @@ const api={translate,install,measureText};if(common)module.exports=api;else{root
   window.addEventListener('pagehide',()=>{++generation;stopMonitor();if(logPaint!==null)clearTimeout(logPaint);logPaint=null;session?.cancel();bridge?.close().catch(()=>{});});
   function cancel(){const fromButton=['hwCancel','quickStartCancel'].includes(document.activeElement?.id);if(activeRun)activeRun.cancelled=true;session?.cancel();$('#hwProgressLabel').textContent='等待当前通信结束，然后取消并尝试恢复…';renderOperation();if(fromButton){const target=$('#settingsWindow').hidden?$('#canvasScroll'):$('#inspectorTitle');target.tabIndex=-1;target.focus({preventScroll:true});}}
   const cloneState=x=>x?JSON.parse(JSON.stringify(x)):null;
-  function quickStart(){return run(async request=>{
-    setStatus('正在应用 Quick Start','写入独立录音与低音量播放，随后完整读回。');
+  function quickStart(exampleId='default'){return run(async request=>{
+    setStatus('正在应用 Quick Start：'+request.meta.name,'正在写入所选方案，并逐项核验。');
     const result=await session.apply(request.config,request.opt);
     const unchanged=request.generation===generation&&request.revision===A.getDraftRevision();
-    if(unchanged)A.importHardwareConfig(request.config);
-    quickState={phase:'verified',message:unchanged?'Quick Start 已写入并完整核验；点击图上模块继续调整。':'Quick Start 提交时配置已核验；保留你随后修改的草稿，图中显示设备读回。',writes:result.writes};
+    if(unchanged)A.importHardwareConfig(request.config,{presetId:request.meta.presetId});
+    quickState={phase:'verified',exampleId:request.meta.id,name:request.meta.name,message:unchanged?'已写入并核验：'+request.meta.name+'；点击图上模块继续调整。':'Quick Start 提交时配置已核验；保留你随后修改的草稿，图中显示设备读回。',writes:result.writes};
     setStatus('Quick Start 已核验',quickState.message);A.toast(quickState.message);return cloneState(quickState);
   },()=>{
     quickState={phase:'applying',message:'Quick Start 正在检查并写入配置。'};
     if(!fresh())throw Error('请先连接并完整读回设备');
-    const profile=T.adapterProfile(bridge.device),base=A.getConfig();
-    const config=A.validateConfig(AudioExamples.quickStart(base,{fixedAudio:Boolean(profile?.fixedAudio),lineDifferential:Boolean(session.snapshot[0x26]&16)}));
-    const opt={groups:['routing','eq','dynamics','clock'],scope:null,label:'Quick Start',mclkHz:profile?.fixedAudio?12288000:A.getReferenceMclk(),profile:base.profile};
+    const profile=T.adapterProfile(bridge.device),base=A.getConfig(),meta=AudioExamples.quickExamples.find(x=>x.id===exampleId);
+    if(!meta)throw Error('未知 Quick Start 方案');
+    const config=A.validateConfig(AudioExamples.quickExample(exampleId,base,{fixedAudio:Boolean(profile?.fixedAudio),lineDifferential:Boolean(session.snapshot[0x26]&16)}));
+    const opt={groups:['routing','eq','dynamics','clock'],scope:null,label:meta.name,mclkHz:profile?.fixedAudio?12288000:A.getReferenceMclk(),profile:base.profile};
     assertAdapterFormat(config,opt);C.makePlan(config,session.snapshot,opt);
     if(profile?.fixedAudio)A.setReferenceMclk(12288000);
     quickState={phase:'applying',message:'Quick Start 正在写入并核验；请等待完成。'};
-    return{config,opt,generation,revision:A.getDraftRevision()};
+    return{config,opt,meta:{...meta},generation,revision:A.getDraftRevision()};
   });}
-  $('#quickStart').addEventListener('click',quickStart);
+  const picker=$('#quickStartPicker');let pickerReturn=null,pickerInert=[];
+  function closeQuickStart(restore=true){picker.hidden=true;$('#quickStart').setAttribute('aria-expanded','false');for(const [el,previous]of pickerInert)el.inert=previous;pickerInert=[];if(restore&&pickerReturn?.isConnected&&!pickerReturn.disabled)pickerReturn.focus();}
+  function openQuickStart(){if(busy)return;if(!picker.hidden){closeQuickStart();return;}pickerReturn=document.activeElement;picker.hidden=false;$('#quickStart').setAttribute('aria-expanded','true');pickerInert=[...document.body.children].filter(el=>el!==picker&&!['SCRIPT','STYLE','LINK'].includes(el.tagName)).map(el=>[el,el.inert]);for(const [el]of pickerInert)el.inert=true;renderOperation();AudioI18n.refresh();$('#closeQuickStart').focus();}
+  for(const meta of AudioExamples.quickExamples){const card=document.createElement('article');card.className='quick-start-card';card.innerHTML='<div class="quick-start-card-heading"><h3>'+escape(meta.name)+'</h3><span>'+escape(meta.tag)+'</span></div><p>'+escape(meta.note)+'</p><p class="quick-start-path">'+escape(meta.path)+'</p><p class="quick-start-effect">'+escape(meta.effect)+'</p><button type="button" class="btn primary" data-quick-apply="'+escape(meta.id)+'" aria-label="'+escape(meta.name+' · 写入并核验')+'">写入并核验</button>';$('#quickStartCards').append(card);card.querySelector('button').addEventListener('click',()=>{if(busy||!fresh())return;closeQuickStart(false);const target=$('#settingsWindow').hidden?$('#canvasScroll'):$('#inspectorTitle');target.tabIndex=-1;target.focus({preventScroll:true});quickStart(meta.id);});}
+  $('#quickStart').addEventListener('click',openQuickStart);$('#closeQuickStart').addEventListener('click',()=>closeQuickStart());
+  $('#quickStartConnect').addEventListener('click',()=>{closeQuickStart(false);$('#usbConnect').click();});
+  picker.addEventListener('click',event=>{if(event.target===picker)closeQuickStart();});
+  document.addEventListener('keydown',event=>{if(picker.hidden||event.isComposing)return;if(event.key==='Escape'){event.preventDefault();event.stopImmediatePropagation();closeQuickStart();}else if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='k'){event.preventDefault();event.stopImmediatePropagation();}else if(event.key==='Tab'){const controls=[...picker.querySelectorAll('button')].filter(el=>!el.disabled&&!el.hidden&&!el.closest('[hidden]'));const index=controls.indexOf(document.activeElement);if(event.shiftKey&&index<=0){event.preventDefault();controls.at(-1)?.focus();}else if(!event.shiftKey&&index===controls.length-1){event.preventDefault();controls[0]?.focus();}}},true);
   $('#quickStartCancel').addEventListener('click',cancel);
   window.AudioHardwareUI={getState(){return{connected:available(),fresh:fresh(),busy,generation,profile:$('#hwProfile').value,referenceMclk:A.getReferenceMclk(),snapshot:cloneState(session?.snapshot),readAt:session?.readAt||null,adapter:D.adapterInfo(bridge?.device),failure,message:lastMessage,detail:lastDetail,quickStart:cloneState(quickState)};},connect,read:readAll,quickStart,cancel};
   if(!navigator.hid){$('#hwCapability').textContent='WEBHID 不可用';$('#hwBrowserNote').textContent='请用支持 WebHID 的桌面 Chrome / Edge 打开。';}
@@ -3292,7 +3438,7 @@ const api={translate,install,measureText};if(common)module.exports=api;else{root
   function locate(view,target){A.navigate(view);const el=$(target);if(!el)return;for(let p=el.parentElement;p;p=p.parentElement)if(p.tagName==='DETAILS')p.open=true;if(el.tagName==='DETAILS')el.open=true;el.scrollIntoView?.({block:'center',behavior:'auto'});if(el.matches('button,input,select')&&!el.disabled)el.focus();else{const focus=el.disabled?(el.closest('article,details')||el.parentElement):el;focus.tabIndex=-1;focus.focus();}}
   const entries=[
     {id:'overview',label:'信号图',en:'Signal graph',run:()=>A.openOverview()},
-    {id:'quick-start',label:'定位 Quick Start 写入按钮',en:'Locate Quick Start write button',keywords:'setup baseline initialize',run:()=>{A.openOverview();const button=$('#quickStart');if(button.disabled){$('#quickStartStatus').tabIndex=-1;$('#quickStartStatus').focus();}else button.focus();}},
+    {id:'quick-start',label:'打开 Quick Start 快捷方案',en:'Open Quick Start setups',keywords:'默认固件 恢复 声卡 人声清晰 setup baseline restore default firmware soundcard voice quick start',run:()=>{A.openOverview();const button=$('#quickStart');if(button.disabled){$('#quickStartStatus').tabIndex=-1;$('#quickStartStatus').focus();}else button.focus();}},
     {id:'eq',label:'EQ 与预设',en:'EQ and presets',keywords:'equalizer bass treble filter',run:()=>A.navigate('eq')},
     {id:'pga',label:'麦克风输入增益',en:'Microphone input gain',keywords:'pga mic analog',run:()=>A.openNode('pga')},
     {id:'input',label:'输入与麦克风选择',en:'Input and microphone selection',keywords:'AMIC DMIC ECM',run:()=>A.openNode('input')},
@@ -3355,5 +3501,6 @@ const api={translate,install,measureText};if(common)module.exports=api;else{root
 })();
 </script>
 </body></html>
+
 
 
