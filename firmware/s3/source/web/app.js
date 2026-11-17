@@ -80,7 +80,7 @@
   });
   $('armed').onchange = controls;
   $('export').onclick = () => {
-    const blob = new Blob([JSON.stringify({tool:'AC10x S3 candidate 0.2.1',hardwareValidation:'not established by this page',events},null,2)],{type:'application/json'});
+    const blob = new Blob([JSON.stringify({tool:'AC10x S3 candidate 0.3.0',hardwareValidation:'not established by this page',events},null,2)],{type:'application/json'});
     const url = URL.createObjectURL(blob), link = document.createElement('a');
     link.href=url; link.download='ac10x-s3-debug.json'; link.click(); setTimeout(()=>URL.revokeObjectURL(url),1000);
   };

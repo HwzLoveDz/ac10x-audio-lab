@@ -6,6 +6,8 @@
 |---|---|---|
 | TinyUSB | 固件源码内的对应分支 | MIT，许可随源码保留 |
 | ESP-IDF | 固件构建使用的Espressif SDK | Apache-2.0及SDK内各组件许可 |
+| ESP-SR | `bb552f1a559396a17681299cb3e199a0f1a4520a`，S3预编译AEC库 | ESPRESSIF MIT License，适用于Espressif产品；原文随组件保留 |
+| dl_fft / ESP-DL | `512ed0b0dc5f5320f3d9ca5a5aea189803f87f31` | 原许可证随组件保留 |
 | FreeRTOS | ESP-IDF对应版本 | MIT |
 | lwIP | ESP-IDF对应版本 | BSD |
 | jsdom | 26.1.0 | MIT |

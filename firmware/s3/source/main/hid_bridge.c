@@ -9,6 +9,7 @@
 #include "bridge.h"
 #include "bridge_protocol.h"
 #include "codec_default.h"
+#include "aec_service.h"
 
 typedef struct { uint8_t data[BRIDGE_REPORT_SIZE]; uint32_t epoch; } report_t;
 static _Atomic uint32_t session_epoch;
@@ -70,10 +71,28 @@ static void hid_worker(void *unused)
         memset(&r, 0, sizeof(r)); r.data[0] = q.data[0];
         r.epoch = q.epoch;
         if ((q.data[0] & 0x0f) <= 1 && q.data[0] != 0x7e) {
+            if ((q.data[0]&15)==0) aec_service_set(false);
             bridge_register_request(q.data, r.data, transfer, NULL);
         } else if (q.data[0] == 2) {
             r.data[1] = 1; r.data[2] = q.data[2];
             r.data[8] = q.data[2] <= 1 && audio_bridge_gate(q.data[2] != 0) == ESP_OK;
+        } else if (q.data[0] == 0x7b) {
+            aec_diag(r.data);
+        } else if (q.data[0] == 0x7d) {
+            aec_service_status(r.data);
+        } else if (q.data[0] == 0x7c) {
+            if(q.data[2]) aec_trace(10);
+            bool ok=q.data[1]==1&&q.data[2]<=1;
+            if(ok&&q.data[2]) {
+                aec_trace(11);
+                uint8_t mix=0,dac=0,pattern=0;
+                ok=boot_read(NULL,0x13,&mix)&&mix==0x06&&
+                   boot_read(NULL,0x1d,&dac)&&(dac&3)==1&&
+                   boot_read(NULL,0x19,&pattern)&&(pattern&0x30)==0;
+            }
+            if(q.data[2]) aec_trace(15);
+            if(ok) ok=aec_service_set(q.data[2]!=0)==ESP_OK;
+            aec_service_status(r.data); r.data[8]=ok;
         } else if (q.data[0] == 0x7e) {
             // Local extension, status only. No I2C/flash writes.
             r.data[1] = 1; r.data[2] = 0; r.data[3] = 1;
@@ -98,7 +117,7 @@ esp_err_t hid_bridge_init(void)
         .clk_source = I2C_CLK_SRC_DEFAULT, .glitch_ignore_cnt = 7,
         .flags.enable_internal_pullup = true };
     ESP_RETURN_ON_ERROR(i2c_new_master_bus(&cfg, &bus), "bridge", "I2C bus");
-    if (xTaskCreate(hid_worker, "hid-i2c", 4096, NULL, 4, NULL) != pdPASS) return ESP_ERR_NO_MEM;
+    if (xTaskCreate(hid_worker, "hid-i2c", 8192, NULL, 4, NULL) != pdPASS) return ESP_ERR_NO_MEM;
     return ESP_OK;
 }
 

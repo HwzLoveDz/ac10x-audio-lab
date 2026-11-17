@@ -7,6 +7,7 @@ import struct
 
 root = Path(__file__).resolve().parents[1]
 build = root / 'build'
+config = json.loads((build/'config/sdkconfig.json').read_text())
 with (build/'ac10x_s3_bridge.elf').open('rb') as f:
     elf = ELFFile(f)
     assert elf['e_machine'] == 'EM_XTENSA'
@@ -27,7 +28,7 @@ with (build/'ac10x_s3_bridge.elf').open('rb') as f:
     expected_table = bytes(value for p in profile['registerPatches']
                            for value in [p['address'],p['mask'],p['single'],p['differential']])
     assert data('codec_default_patches') == expected_table, 'Linked profile differs from Quick Start'
-    assert data('esp_app_desc')[16:48].rstrip(b'\0') == b'0.2.1', 'Wrong linked app version'
+    assert data('esp_app_desc')[16:48].rstrip(b'\0') == b'0.3.0', 'Wrong linked app version'
 
     device = data('device_descriptor')
     assert len(device) == 18 and u16(device, 2) == 0x0200
@@ -77,6 +78,12 @@ with (build/'ac10x_s3_bridge.elf').open('rb') as f:
                  'tud_event_hook_cb', 'bridge_usb_task_step', 'audio_pipe_usb_sync',
                  'audio_pipe_usb_pump']:
         assert symbols.get_symbol_by_name(name)[0]['st_info']['bind'] == 'STB_GLOBAL', ('weak callback', name)
+    for name in ['aec_create_from_config','aec_process','aec_service_set','aec_service_capture','aec_decimate','aec_interpolate']:
+        assert symbols.get_symbol_by_name(name), ('missing AEC path',name)
+    for name in ['epoch','g_stats','session_epoch','enabled']:
+        for s in symbols.get_symbol_by_name(name):
+            assert 0x3fc80000 <= s['st_value'] < 0x3fce0000, ('atomic state outside internal DRAM',name)
+    assert not config.get('SPIRAM_ALLOW_BSS_SEG_EXTERNAL_MEMORY',False)
     report = data('hid_report')
     assert bytes([0x95, 10]) in report and 0x85 not in report
 
@@ -95,7 +102,7 @@ factory = next(p for p in parts if p['name'] == 'factory')
 assert factory['offset'] == 0x10000 and factory['bytes'] == 0x1f0000
 assert all(p['offset'] + p['bytes'] <= 4*1024*1024 for p in parts)
 config = json.loads((build/'config/sdkconfig.json').read_text())
-assert config['IDF_TARGET'] == 'esp32s3' and not config.get('SPIRAM', False)
+assert config['IDF_TARGET'] == 'esp32s3' and config.get('SPIRAM', False) and config['SPIRAM_MODE_OCT'] and config['LIBC_NEWLIB']
 assert config['ESP_CONSOLE_UART_DEFAULT'] and config['ESP_CONSOLE_SECONDARY_NONE']
 assert config['I2S_ISR_IRAM_SAFE']
 pins = {n:config['BRIDGE_'+n+'_GPIO'] for n in ['MCLK','BCLK','LRCK','DOUT','DIN','SDA','SCL']}
@@ -111,14 +118,14 @@ result = {
     'bytes':len(image), 'sha256':hashlib.sha256(image).hexdigest(),
     'usb':'Full Speed only, UAC2 48kHz stereo S16LE duplex + HID10',
     'vid_pid':'303A:4005 (local development only)', 'hid_protocol':'0.1',
-    'firmware_version':'0.2.1', 'default_profile':'USB soundcard / clear vocals',
+    'firmware_version':'0.3.0', 'default_profile':'USB soundcard / clear vocals',
     'linked_default_profile':'83 rows exactly match generated JSON',
     'canonical_config_sha256':profile['canonicalConfigSHA256'],
     'app_partition_free_bytes':0x1f0000-len(image),
     'descriptors':'PASS', 'strong_callbacks':'PASS', 'hot_path_internal_iram':hot,
-    'psram_required':False, 'provisional_gpio_profile':pins,
+    'psram_required_for_aec':True, 'psram_required_for_default_soundcard':False, 'gpio_profile':pins,
     'pio_fifo_calculation':{'words_total':256,'shared_rx':rx_words,'all_in_tx':tx_words,'unused':256-rx_words-tx_words},
-    'partitions':parts, 'physical_test':'NOT RUN; stop before flashing',
+    'partitions':parts, 'evidence_scope':'linked image / descriptors / generated default table',
 }
 (root/'evidence/image-check.json').write_text(json.dumps(result, indent=2)+'\n')
 print(json.dumps(result, indent=2))

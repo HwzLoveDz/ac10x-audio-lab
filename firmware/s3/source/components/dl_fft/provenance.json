@@ -1,0 +1,175 @@
+{
+  "commit": "512ed0b0dc5f5320f3d9ca5a5aea189803f87f31",
+  "files": [
+    {
+      "file": "LICENSE",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/LICENSE",
+      "sha256": "3513f1605ebcc227f7364956f6c30a303412597e232648cb3090e76697ca5aa3"
+    },
+    {
+      "file": "CMakeLists.txt",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/CMakeLists.txt",
+      "sha256": "7ee336ace81f6ea5268036415691f8c5f1f95e69eb367abbe3575922a7de6feb"
+    },
+    {
+      "file": "README.md",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/README.md",
+      "sha256": "183d680bb2b0956d317f0a97a8d7359c9c1c3e468674bbe37d880f10f7c14389"
+    },
+    {
+      "file": "base\\dl_fft2r_fc32_ansi.c",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/base/dl_fft2r_fc32_ansi.c",
+      "sha256": "8ee9794462849e498ec6d7f707f3bada7723212ecf48531a8491f114a2c5a0ac"
+    },
+    {
+      "file": "base\\dl_fft2r_sc16_ansi.c",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/base/dl_fft2r_sc16_ansi.c",
+      "sha256": "d6731bf99f42a13cd3c320ba22c19666a1093bf4a7dac859a4dadfb06ccabda1"
+    },
+    {
+      "file": "base\\dl_fft2r_sc16_dif_ansi.c",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/base/dl_fft2r_sc16_dif_ansi.c",
+      "sha256": "11c1387bf9ab462b94f1ff26a50d1fd9354ba4d4f3895edcaeffea41a2883fff"
+    },
+    {
+      "file": "base\\dl_fft2r_sc32_ansi.c",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/base/dl_fft2r_sc32_ansi.c",
+      "sha256": "30707855424c3713437dd3d60dddb92bfe87d707fc6330bf4066e8703729046d"
+    },
+    {
+      "file": "base\\dl_fft4r_fc32_ansi.c",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/base/dl_fft4r_fc32_ansi.c",
+      "sha256": "2cf9d2acbd80e4acd69601545baaef72a67924df1aacd7476530d01926ee3d7b"
+    },
+    {
+      "file": "base\\dl_fft_base.c",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/base/dl_fft_base.c",
+      "sha256": "fc5dbeaa1b2bffea94afc646d85090146631ccd7b03607973feeeb8cff40e5f9"
+    },
+    {
+      "file": "base\\dl_fft_base.h",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/base/dl_fft_base.h",
+      "sha256": "07ab6b0ea11a2da73b6ad75d39a210337df5fbc6b690fb3a926e915d8b04858e"
+    },
+    {
+      "file": "base\\dl_fft_dtype.h",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/base/dl_fft_dtype.h",
+      "sha256": "209a8da6f977565f2bbf80d8d8726afb1d3c9a6dbf1e48e342c1db6023066306"
+    },
+    {
+      "file": "base\\dl_fft_table.c",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/base/dl_fft_table.c",
+      "sha256": "8369538235750105f4fa8ea9f1fa59f84b581810860bdf1e7c744b524c2e72db"
+    },
+    {
+      "file": "base\\isa\\dl_fft_platform.h",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/base/isa/dl_fft_platform.h",
+      "sha256": "7adce5473481d06c2f00507e84000e8c8e885489c8279f3b678f6e9e339a1afa"
+    },
+    {
+      "file": "base\\isa\\esp32\\dl_fft2r_fc32_ae32.S",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/base/isa/esp32/dl_fft2r_fc32_ae32.S",
+      "sha256": "2aa2a8f98f05076b485c9e45056d9dc49fc17a200f1bdba609b01b1443a778df"
+    },
+    {
+      "file": "base\\isa\\esp32\\dl_fft4r_fc32_ae32.S",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/base/isa/esp32/dl_fft4r_fc32_ae32.S",
+      "sha256": "e64fa52065bde43eb844b89c107ed3d33a930511c6b43e90e52de9853a1a32e3"
+    },
+    {
+      "file": "base\\isa\\esp32p4\\dl_fft2r_fc32_arp4.S",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/base/isa/esp32p4/dl_fft2r_fc32_arp4.S",
+      "sha256": "25d706406cd3e7de3407ad8518790fb157097bad1a7e705a9d67736c4115f76b"
+    },
+    {
+      "file": "base\\isa\\esp32p4\\dl_fft2r_sc16_arp4.S",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/base/isa/esp32p4/dl_fft2r_sc16_arp4.S",
+      "sha256": "f07131f81cb932c8241f68159a5721084f2eeb99341ea85d53e85c1e56fc91c7"
+    },
+    {
+      "file": "base\\isa\\esp32p4\\dl_fft4r_fc32_arp4.S",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/base/isa/esp32p4/dl_fft4r_fc32_arp4.S",
+      "sha256": "16c9a05d68cda7e3b189d7c7290013bc7614aa879cc70b1e10e7c3ec4803b1ed"
+    },
+    {
+      "file": "base\\isa\\esp32s3\\dl_fft2r_fc32_aes3.S",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/base/isa/esp32s3/dl_fft2r_fc32_aes3.S",
+      "sha256": "53e570f9b1d888cf4b36a07ea099ecd80905beb2e957c5f9d390e2a14b5d49b4"
+    },
+    {
+      "file": "base\\isa\\esp32s3\\dl_fft2r_sc16_aes3.S",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/base/isa/esp32s3/dl_fft2r_sc16_aes3.S",
+      "sha256": "46867dc182ed6f85db0d6510354db1955b29be0c3e47a5968e53c7d9eb9ef05f"
+    },
+    {
+      "file": "base\\isa\\esp32s3\\dl_fft4r_fc32_aes3.S",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/base/isa/esp32s3/dl_fft4r_fc32_aes3.S",
+      "sha256": "51840adc29034c0e0983439b366bfe2f10e697c1c9667e27cdcb1394905d3930"
+    },
+    {
+      "file": "benchmark_esp32c5.md",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/benchmark_esp32c5.md",
+      "sha256": "319b276ffeb00e5b9e3c04fddeea1cdda2d2d6dc076713b9892fa6803e344464"
+    },
+    {
+      "file": "benchmark_esp32p4.md",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/benchmark_esp32p4.md",
+      "sha256": "558b95af28d374220d7c066e24cedc332ef9db19151078b9c72b3ebe7cd02a7c"
+    },
+    {
+      "file": "benchmark_esp32s3.md",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/benchmark_esp32s3.md",
+      "sha256": "9d8edd8004d6b6f67a1575a404e21f9433ed608f8a1779735c99d0188fa531ce"
+    },
+    {
+      "file": "dl_fft.h",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/dl_fft.h",
+      "sha256": "390040f96ff27e8137e8d7848c440f214f849e1822df7d55fa23fbd032f7ca2f"
+    },
+    {
+      "file": "dl_fft.hpp",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/dl_fft.hpp",
+      "sha256": "8afab2d09a12952ffe8e37ecacf3468a1bd727a00ecf946464d402ea29963d86"
+    },
+    {
+      "file": "dl_fft_f32.c",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/dl_fft_f32.c",
+      "sha256": "bedaeda9ac1b53d6a7be32e1d367f2d85af7e77b011950446df721045bb00cf9"
+    },
+    {
+      "file": "dl_fft_s16.c",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/dl_fft_s16.c",
+      "sha256": "f859769f3f767b2fbcbe3b2b4093b693d5670874638445d00845f25a633d5179"
+    },
+    {
+      "file": "dl_fft_s32.c",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/dl_fft_s32.c",
+      "sha256": "ef376cb8a82c30c7c2aea9fce778cf58f1412e2f16abc10a34e954cfebce35ba"
+    },
+    {
+      "file": "dl_rfft.h",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/dl_rfft.h",
+      "sha256": "a86559df25cfe2c8d7e4ac5d3ee418c4d04733bbf14206583819d071e4859f61"
+    },
+    {
+      "file": "dl_rfft_f32.c",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/dl_rfft_f32.c",
+      "sha256": "148fcecfe3d289577c9212d3764da42adf602d181fffd5e18340e8616f36b5c8"
+    },
+    {
+      "file": "dl_rfft_s16.c",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/dl_rfft_s16.c",
+      "sha256": "8e6ecd7c0a19bde18baec5b86126f97dbefc2f8cf7735f1681e8b53b2a94a415"
+    },
+    {
+      "file": "dl_rfft_s32.c",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/dl_rfft_s32.c",
+      "sha256": "c1bff2439abd6594093041d34d05a9c7b5f839b17fc47a8af64eae3f70a3d5e0"
+    },
+    {
+      "file": "idf_component.yml",
+      "url": "https://raw.githubusercontent.com/espressif/esp-dl/512ed0b0dc5f5320f3d9ca5a5aea189803f87f31/tools/dl_fft/idf_component.yml",
+      "sha256": "9c205240fbdbaba817808d253b6fee1cad99e9d284a2c63980b27338d25d4c08"
+    }
+  ]
+}

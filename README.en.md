@@ -6,7 +6,7 @@
 
 A browser workbench for AC101S / AC102 audio configuration. One complete signal graph brings together Quick Start, register control, EQ, configuration comparison, diagnostics, playback and recording.
 
-Web version **0.8.13-rc.1**, with **S31 0.3.3 / ESP32-S3 0.2.1** firmware. Chinese and English, light and dark themes. JavaScript and styles are bundled in the application.
+Web version **0.8.14-rc.1**, with **S31 0.3.3 / ESP32-S3 0.3.0** firmware. Chinese and English, light and dark themes. JavaScript and styles are bundled in the application.
 
 ![AC10x Audio Lab signal graph](docs/audio-lab-dark.jpg)
 
@@ -35,6 +35,8 @@ The default is **USB soundcard + clear-vocal EQ**. DAC and Line Out are both 0dB
 - **Graph:** right-drag to pan and use the wheel to zoom. Arrow keys pan,± zoom, and 0 fits the graph. Each corner can be moved as far as the viewport center.
 
 Quick Start applies codec parameters; firmware updates use the appropriate flashing tool. EQ presets load into the draft and take effect when the module is written. See [ready-to-use setups](EXAMPLES.md).
+
+S3 firmware 0.3.0 adds **AEC hands-free calling** in Quick Start. The speech algorithm runs at16kHz while USB remains48kHz stereo. AEC is off at boot; the default preset restores raw microphone capture and clear-vocal playback. See [AEC setup](AEC.md).
 
 ## Hardware and firmware
 
@@ -65,8 +67,8 @@ npm test
 
 ## Downloads
 
-- [0.8.13-rc.1 complete package](releases/AC10x-Audio-Lab-0.8.13-rc.1.zip)
-- [ESP32-S3 0.2.1 firmware and source](releases/AC10x-S3-Default-Firmware-0.2.1.zip)
+- [0.8.14-rc.1 complete package](releases/AC10x-Audio-Lab-0.8.14-rc.1.zip)
+- [ESP32-S3 0.3.0 firmware and source](releases/AC10x-S3-Default-Firmware-0.3.0.zip)
 - [SHA-256 checksums](releases/SHA256SUMS.txt)
 
 ## License

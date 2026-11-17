@@ -1,5 +1,7 @@
 /* English UI catalog. Register addresses, values and machine keys are not localized. */
 (function(root){const catalog={
+"选择用途，点击“写入并核验”即可应用。这里应用芯片与音频处理配置，不刷写固件，也不会自动播放或录音。":"Choose a task and click Write & verify to apply codec and audio-processing settings. This does not flash firmware or start playback or recording.",
+"AEC 免提通话":"AEC speakerphone","S3 · 消回声":"S3 \u00b7 Echo cancellation","播放参考与咪头同步送入 S3 的 ESP-SR AEC；保留人声清晰播放。需要 AEC 固件 0.3.0。":"Synchronized playback reference and microphone feed ESP-SR AEC on S3. Clear-vocal playback is preserved. Requires AEC firmware 0.3.0.","USB → EQ → 扬声器；MIC + PLAY → S3 AEC → USB":"USB \u2192 EQ \u2192 Speaker; MIC + PLAY \u2192 S3 AEC \u2192 USB","16 kHz 语音处理 · USB 48 kHz · 单声道录音复制到左右路":"16 kHz speech processing \u00b7 USB 48 kHz \u00b7 Mono capture duplicated to both channels","此方案需要 S3 AEC 固件 0.3.0，请先更新固件":"This setup requires S3 AEC firmware 0.3.0. Update the firmware first.","AEC 需要 S3 适配器和 AC101S 参数表":"AEC requires the S3 adapter and AC101S register profile","AEC 未能启用：请核对固件、剩余内存和参考路由":"AEC could not start. Check firmware, available memory and reference routing.",
 "打开 Quick Start 快捷方案":"Open Quick Start setups",
 "Quick Start · 快捷方案":"Quick Start · Ready-to-use setups",
 "选择用途，点击“写入并核验”即可应用。这里只恢复芯片配置，不刷写固件，也不会自动播放或录音。":"Choose a task and click Write & verify to apply. These setups configure the codec; they do not flash firmware or start playback or recording.",

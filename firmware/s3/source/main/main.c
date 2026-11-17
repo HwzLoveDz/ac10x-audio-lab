@@ -9,6 +9,7 @@
 #include "bridge.h"
 #include "board_pins.h"
 #include "audio_pipe.h"
+#include "aec_service.h"
 uint32_t tusb_time_millis_api(void) { return (uint32_t)(esp_timer_get_time()/1000); }
 static void usb_task(void *unused)
 {
@@ -19,10 +20,11 @@ static void usb_task(void *unused)
 }
 void app_main(void)
 {
-    ESP_LOGI("bridge","S3 DEFAULT FIRMWARE v0.2.1; USB soundcard / clear vocals / independent capture");
-    ESP_LOGW("bridge","S3 hardware validation pending; GPIO8-14 profile; no board PA GPIO assumed");
+    ESP_LOGI("bridge","S3 AEC FIRMWARE v0.3.0; USB soundcard / clear vocals / independent capture");
+    ESP_LOGW("bridge","GPIO8-14; default USB soundcard; AEC available through Quick Start");
     ESP_ERROR_CHECK(hid_bridge_init());
     ESP_ERROR_CHECK(audio_pipe_init());
+    if(aec_service_init()!=ESP_OK) ESP_LOGW("bridge","AEC unavailable; raw soundcard remains available");
     ESP_ERROR_CHECK(audio_bridge_init());
     // Fixed-rate clocks and zero PCM are running; USB cannot deliver data yet.
     const esp_err_t defaults = codec_default_bootstrap();

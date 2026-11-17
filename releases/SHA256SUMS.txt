@@ -2,3 +2,5 @@ aa24741f99fe32be17c1c3a69ea810739ca1e2d7874f912ab31806a39ec90295  AC10x-Audio-La
 e00b5c7d5931ffc0c57212b30d8dfaf0fbe8f22caf83bb2d57faaa17ee9b6bac  AC10x-Audio-Lab-0.8.5-rc.1.zip
 5706bfcad8c988c8cffbbf06a12060f0b5fe661c762ee5a73ec8d3f12f181ad6  AC10x-Audio-Lab-0.8.13-rc.1.zip
 ff25604062853b6c4e412409be9e96b9e16c675e8ebcca018723692bbe066b75  AC10x-S3-Default-Firmware-0.2.1.zip
+62bc02196b9bd789829c71f8750ea701228946d9dd4564aa23d3f5a203c826ec  AC10x-Audio-Lab-0.8.14-rc.1.zip
+bc05ed4c378e9176efea2370ac87c2f419e21e6047950abe4ba13dc6b70d92ee  AC10x-S3-Default-Firmware-0.3.0.zip

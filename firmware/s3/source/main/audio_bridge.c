@@ -11,6 +11,7 @@
 #include "bridge.h"
 #include "audio_pipe.h"
 #include "stream_fade.h"
+#include "aec_service.h"
 static i2s_chan_handle_t tx, rx;
 static SemaphoreHandle_t tx_lock, rx_lock;
 static _Atomic bool enabled;
@@ -126,7 +127,7 @@ static void capture_task(void *unused)
             continue;
         }
         g_stats.rx_frames += n / BRIDGE_FRAME_BYTES;
-        if (n) audio_pipe_capture(samples, n, token);
+        if (n) { aec_service_capture(samples,n,token); audio_pipe_capture(samples,n,token); }
         else vTaskDelay(pdMS_TO_TICKS(1)); // Avoid spinning only when no DMA data arrived.
     }
 }

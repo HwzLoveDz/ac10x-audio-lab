@@ -2,7 +2,7 @@
   "name": "默认固件",
   "format": "AC10x-configuration",
   "schemaVersion": 1,
-  "firmwareVersion": "0.2.1",
+  "firmwareVersion": "0.3.0",
   "target": "esp32s3",
   "derivedFromS31FirmwareVersion": "0.3.3",
   "webVersion": "0.8.12-rc.1",

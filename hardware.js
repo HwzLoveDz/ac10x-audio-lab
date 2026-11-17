@@ -30,7 +30,7 @@
     $('#quickStartStatus').textContent=busy?lastMessage+' · '+$('#hwProgressLabel').textContent:failure||quickState.message||(fresh()?'Quick Start：默认声卡、播放、录音和数字排查；选择方案后明确写入并核验。':'可先打开 Quick Start 浏览方案；连接 USB 并完整读回后可写入。');
     $('#quickStartReady').textContent=fresh()?'设备已就绪；点击任一方案的“写入并核验”。':'可先浏览方案；连接 USB 并完整读回后可写入。';
     $('#quickStartConnect').hidden=fresh();$('#quickStartConnect').disabled=busy;
-    for(const button of $$('[data-quick-apply]'))button.disabled=busy||!fresh();
+    for(const button of $$('[data-quick-apply]'))button.disabled=busy||!fresh()||(button.dataset.quickApply==='aec-call'&&T.adapterProfile(bridge?.device)?.kind!=='S3');
     if(!$('#quickStartPicker').hidden&&document.activeElement?.matches('[data-quick-apply]:disabled'))$('#closeQuickStart').focus();
     if(!activeRun&&focusedCancel){const target=$('#settingsWindow').hidden?$('#canvasScroll'):$('#inspectorTitle');target.tabIndex=-1;target.focus({preventScroll:true});}
   }
@@ -64,7 +64,7 @@
     $('#hwQueryBridge').disabled=busy||!available()||!adapter?.statusQuery;$('#hwMuteDAC').disabled=busy||!available();
     $('#hwSaveBaseline').disabled=busy||!ready;$('#hwLoadBaseline').disabled=busy;
     $('#hwRestoreLast').disabled=busy||!ready||!session?.lastTransaction;
-    if(bridgeStatus)$('#hwBridgeStatus').textContent='查询于 '+new Date(bridgeStatus.readAt).toLocaleTimeString()+' · 协议 '+bridgeStatus.protocolVersion+' · 时钟'+(bridgeStatus.clockGate?'开':'关')+' · 播放'+(bridgeStatus.playbackActive?'活动':'空闲')+' · 录音'+(bridgeStatus.captureActive?'活动':'空闲')+' · I²C计数 '+bridgeStatus.i2cErrorsLow8;
+    if(bridgeStatus)$('#hwBridgeStatus').textContent='查询于 '+new Date(bridgeStatus.readAt).toLocaleTimeString()+' · 协议 '+bridgeStatus.protocolVersion+' · 时钟'+(bridgeStatus.clockGate?'开':'关')+' · 播放'+(bridgeStatus.playbackActive?'活动':'空闲')+' · 录音'+(bridgeStatus.captureActive?'活动':'空闲')+' · I²C计数 '+bridgeStatus.i2cErrorsLow8+(bridgeStatus.aec?.supported?' · AEC '+(bridgeStatus.aec.enabled?'ON':'OFF')+' · '+bridgeStatus.aec.maxProcessMs+' ms':'');
     else $('#hwBridgeStatus').textContent=adapter?.kind==='TI'?'TI 适配器未提供桥接状态接口。':'桥接状态尚未查询；查询值不代表时钟频率的实测。';
     const last=session?.lastTransaction;
     $('#hwUndoInfo').textContent=last?'上次已核验写入：'+new Date(last.completedAt).toLocaleTimeString()+' · '+last.fields.length+'个地址；仅恢复其拥有的位。':'本次连接尚无可恢复的已核验写入。';
@@ -121,7 +121,7 @@
   async function mclk(enabled){await run(async()=>{await bridge.setMclk(enabled);bridgeStatus=null;$('#hwMclkResult').textContent='适配器已应答 '+(enabled?'开启':'关闭')+'命令；未测量频率。';if(session)session.stale=true;setStatus('MCLK 命令已应答','时钟变化后请重新读回。');});}
   $('#hwMclkOn').addEventListener('click',()=>mclk(true));$('#hwMclkOff').addEventListener('click',()=>mclk(false));
   $('#hwLogExport').addEventListener('click',()=>download('AC10x-HID-log.json',{format:'AC10x-HID-log',schemaVersion:1,adapter:D.adapterInfo(bridge?.device),droppedEvents,events:logs}));
-  $('#hwQueryBridge').addEventListener('click',()=>run(async()=>{bridgeStatus={...(await bridge.getStatus()),readAt:new Date().toISOString()};setStatus('桥接状态已读回','查询没有写入芯片寄存器。');}));
+  $('#hwQueryBridge').addEventListener('click',()=>run(async()=>{bridgeStatus={...(await bridge.getStatus()),readAt:new Date().toISOString()};if(T.adapterProfile(bridge.device)?.kind==='S3')bridgeStatus.aec=await bridge.getAEC();setStatus('桥接状态已读回','查询没有写入芯片寄存器。');}));
   $('#hwMuteDAC').addEventListener('click',()=>run(async()=>{await session.writeOne(0x1c,0);setStatus('设备 DAC 已静音','写入与读回核验完成；草稿差异已更新。');}));
   $('#hwRestoreLast').addEventListener('click',()=>run(async()=>{const r=await session.restoreLast();setStatus('上次写入已恢复','实际写入 '+r.writes+' 次；完整读回核验通过。');}));
   $('#hwSaveBaseline').addEventListener('click',()=>{if(!fresh()||busy)return;baselineRequest++;baseline={snapshot:{...session.snapshot},readAt:session.readAt,label:'设备读回 '+new Date(session.readAt).toLocaleTimeString(),adapter:D.adapterInfo(bridge.device)};render();});
@@ -145,16 +145,26 @@
   const cloneState=x=>x?JSON.parse(JSON.stringify(x)):null;
   function quickStart(exampleId='default'){return run(async request=>{
     setStatus('正在应用 Quick Start：'+request.meta.name,'正在写入所选方案，并逐项核验。');
+    let aec={supported:false,enabled:false};
+    if(T.adapterProfile(bridge.device)?.kind==='S3')aec=await bridge.getAEC();
+    if(request.meta.requiresS3AEC&&!aec.supported)throw Error('此方案需要 S3 AEC 固件 0.3.0，请先更新固件');
+    if(activeRun?.cancelled)throw Error('已取消后续操作');
+    if(aec.supported)await bridge.setAEC(false);
     const result=await session.apply(request.config,request.opt);
+    if(request.meta.requiresS3AEC){
+      try{if(activeRun?.cancelled)throw Error('已取消后续操作');aec=await bridge.setAEC(true);if(activeRun?.cancelled)throw Error('已取消后续操作');}
+      catch(error){if(available()){await bridge.setAEC(false).catch(()=>{});if(result.writes>0)await session.restoreLast().catch(recovery=>{error.message+='; recovery: '+recovery.message;});}throw error;}
+    }else aec={...aec,enabled:false};
     const unchanged=request.generation===generation&&request.revision===A.getDraftRevision();
     if(unchanged)A.importHardwareConfig(request.config,{presetId:request.meta.presetId});
-    quickState={phase:'verified',exampleId:request.meta.id,name:request.meta.name,message:unchanged?'已写入并核验：'+request.meta.name+'；点击图上模块继续调整。':'Quick Start 提交时配置已核验；保留你随后修改的草稿，图中显示设备读回。',writes:result.writes};
+    quickState={phase:'verified',exampleId:request.meta.id,name:request.meta.name,message:unchanged?'已写入并核验：'+request.meta.name+'；点击图上模块继续调整。':'Quick Start 提交时配置已核验；保留你随后修改的草稿，图中显示设备读回。',writes:result.writes,aec};
     setStatus('Quick Start 已核验',quickState.message);A.toast(quickState.message);return cloneState(quickState);
   },()=>{
     quickState={phase:'applying',message:'Quick Start 正在检查并写入配置。'};
     if(!fresh())throw Error('请先连接并完整读回设备');
     const profile=T.adapterProfile(bridge.device),base=A.getConfig(),meta=AudioExamples.quickExamples.find(x=>x.id===exampleId);
     if(!meta)throw Error('未知 Quick Start 方案');
+    if(meta.requiresS3AEC&&(profile?.kind!=='S3'||base.profile!=='AC101S'))throw Error('AEC 需要 S3 适配器和 AC101S 参数表');
     const config=A.validateConfig(AudioExamples.quickExample(exampleId,base,{fixedAudio:Boolean(profile?.fixedAudio),lineDifferential:Boolean(session.snapshot[0x26]&16)}));
     const opt={groups:['routing','eq','dynamics','clock'],scope:null,label:meta.name,mclkHz:profile?.fixedAudio?12288000:A.getReferenceMclk(),profile:base.profile};
     assertAdapterFormat(config,opt);C.makePlan(config,session.snapshot,opt);

@@ -48,11 +48,13 @@
     {id:'playback-loopback',name:'播放数字回采',tag:'数字排查',note:'USB 录音左路接处理后播放数据，右路接输入混音，便于比较；不采集咪头。',path:'USB → EQ → 扬声器；PLAY / RXM → USB',effect:'录音左路为处理后数据，右路为 EQ 前数据',presetId:'voice'},
     {id:'left-channel',name:'仅左声道播放',tag:'声道排查',note:'只把电脑的左声道送到扬声器；用于排查声道选择和接线。',path:'USB 左声道 → 人声清晰 → 扬声器',effect:'右播放声道不混入 · 麦克风独立录音',presetId:'voice'},
     {id:'right-channel',name:'仅右声道播放',tag:'声道排查',note:'只把电脑的右声道送到扬声器；用于排查声道选择和接线。',path:'USB 右声道 → 人声清晰 → 扬声器',effect:'左播放声道不混入 · 麦克风独立录音',presetId:'voice'},
+    {id:'aec-call',name:'AEC 免提通话',tag:'S3 · 消回声',note:'播放参考与咪头同步送入 S3 的 ESP-SR AEC；保留人声清晰播放。需要 AEC 固件 0.3.0。',path:'USB → EQ → 扬声器；MIC + PLAY → S3 AEC → USB',effect:'16 kHz 语音处理 · USB 48 kHz · 单声道录音复制到左右路',presetId:'voice',requiresS3AEC:true},
     {id:'mute',name:'静音待机',tag:'暂停音频',note:'关闭芯片录放和模拟输出；USB 控制保持可用，可再写入任一方案。',path:'播放关闭 · 录音关闭 · USB 控制保留',effect:'不休眠 MCU、不刷固件、不改电脑音量',presetId:'voice'}
   ];
   function quickExample(id,config,options={}){
     const meta=quickExamples.find(x=>x.id===id);if(!meta)throw new Error('未知 Quick Start 方案');
     const c=quickStart(config,options),r=c.routing;
+    if(id==='aec-call'){r.txL={rec:false,play:true,recHalf:false,playHalf:false};r.txR={rec:true,rx:false,recHalf:false,rxHalf:false};}
     if(id==='warm-music')c.eq=eq('warm',c.clock.fs);
     // Real S31 capture requires the record digital channel even for PLAY/RXM sources.
     if(['flat-playback','mute'].includes(id))c.adc.enabled=false;

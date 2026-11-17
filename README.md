@@ -6,7 +6,7 @@
 
 面向 AC101S / AC102 的浏览器音频调试工作台。一张完整信号图，配合 Quick Start、寄存器读写、EQ、配置比较、诊断和试听／录音。
 
-上位机 **0.8.13-rc.1**，配套固件 **S31 0.3.3 / ESP32-S3 0.2.1**。支持中文／English、浅色／暗色主题，运行入口内置全部 JavaScript 和样式。
+上位机 **0.8.14-rc.1**，配套固件 **S31 0.3.3 / ESP32-S3 0.3.0**。支持中文／English、浅色／暗色主题，运行入口内置全部 JavaScript 和样式。
 
 ![AC10x Audio Lab 完整信号图](docs/audio-lab-dark.jpg)
 
@@ -28,7 +28,8 @@ python qa/launch-http.py
 
 ## 调试功能
 
-- **Quick Start**：默认声卡、纯净播放、温暖音乐、独立录音、数字回采、左声道、右声道和静音待机。
+- **S3 AEC免提通话**：16kHz语音回声消除，USB保持48kHz双声道；在同一Quick Start入口应用，默认关闭。见[AEC使用说明](AEC.md)。
+- **Quick Start**：默认声卡、纯净播放、温暖音乐、独立录音、数字回采、左声道、右声道、静音待机及S3 AEC免提通话。
 - **EQ**：16种预设、三段参数编辑、频响与A/B试听；关闭EQ时使用单位传递系数旁路。
 - **设备控制**：读回、按模块写入核验、配置比较、寄存器监视、撤销与故障恢复。
 - **录音**：选择声卡输入，录成PCM后查看波形和频谱；新录音默认显示、导出原始WAV。
@@ -65,8 +66,8 @@ npm test
 
 ## 下载
 
-- [0.8.13-rc.1完整包](releases/AC10x-Audio-Lab-0.8.13-rc.1.zip)
-- [ESP32-S3 0.2.1固件与源码包](releases/AC10x-S3-Default-Firmware-0.2.1.zip)
+- [0.8.14-rc.1完整包](releases/AC10x-Audio-Lab-0.8.14-rc.1.zip)
+- [ESP32-S3 0.3.0固件与源码包](releases/AC10x-S3-Default-Firmware-0.3.0.zip)
 - [SHA-256校验](releases/SHA256SUMS.txt)
 
 ## 许可
