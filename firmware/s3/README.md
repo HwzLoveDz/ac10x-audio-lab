@@ -2,33 +2,41 @@
 
 **By mondraker**
 
-上电提供USB播放、人声清晰EQ、独立麦克风录音，DAC与Line Out各0dB，AEC默认关闭。Quick Start可切换[AEC免提通话](../../AEC.md)，或恢复原始录音。USB为48kHz／S16LE双向立体声，Codec从机，32bit×2 I²S时隙。
+上电提供 USB 播放、人声清晰 EQ 和独立麦克风录音，DAC 与 Line Out 均为 0 dB，AEC 默认关闭。在 Quick Start 中可切换[AEC 免提通话](../../AEC.md)，或恢复原始录音。
 
-## 接线与板型
+## 接线
 
-| S3 GPIO | AC101S信号 |
+| S3 GPIO | AC101S 信号 |
 |---|---|
 | 8 | MCLK |
 | 9 | BCLK |
-| 10 | LRCK／WS |
-| 11 | SDIN，S3向Codec发送播放数据 |
-| 12 | SDOUT，Codec向S3发送录音数据 |
+| 10 | LRCK / WS |
+| 11 | SDIN，接收 S3 的播放数据 |
+| 12 | SDOUT，向 S3 输出录音数据 |
 | 13 | SDA |
 | 14 | SCL |
 | GND | 共地 |
 
-GPIO19=D−、GPIO20=D+，使用原生USB／OTG音频口。USB转UART口用于烧录和日志。信号为3.3V逻辑，功放由板卡供电与使能电路控制。
+GPIO19 为 D−、GPIO20 为 D+，连接原生 USB / OTG 音频口。USB 转 UART 口用于烧录和日志。接口采用 3.3 V 逻辑，功放由板卡的供电与使能电路控制。
 
-0.3.0使用8MB八线PSRAM、240MHz和Newlib。AEC以16kHz单声道处理语音，再输出48kHz双声道录音；播放不经过AEC。USB身份仍303A:4005，桥接协议0.1。
+## 音频与板型
 
-## 镜像与更新
+USB 为 Full Speed，提供 48 kHz、S16LE 双向立体声音频。I²S 使用两个 32 bit 时隙，Codec 为从机。USB VID:PID 为 303A:4005，桥接协议为 0.1。
 
-镜像：[默认固件-S3.bin](默认固件-S3.bin)。源码：[source](source/README.md)。[SHA-256校验](SHA256SUMS.txt)。当现有引导、分区采用0x10000作为应用起始地址，且应用分区空间足够时，更新应用：
+AEC 使用八线 PSRAM，以 16 kHz 单声道处理语音，再输出 48 kHz 双声道录音。固件配置为 240 MHz 和 Newlib。无八线 PSRAM 的板型可使用[0.2.1 声卡固件](默认固件-S3-0.2.1.bin)。
+
+## 更新应用
+
+- [0.3.0 应用镜像](默认固件-S3.bin)
+- [源码与构建方法](source/README.md)
+- [SHA-256 校验](SHA256SUMS.txt)
+
+现有分区的应用起始地址为 `0x10000`，且空间足够时，可用以下命令更新应用：
 
 ```text
 python -m esptool --chip esp32s3 --port <current-port> write-flash 0x10000 默认固件-S3.bin
 ```
 
-保留现有引导、分区、NVS与PHY区。源码默认4MB Flash布局，与8MB PSRAM是不同配置；已有8MB Flash分区按实际布局使用。无八线PSRAM的板型可使用[0.2.1回退镜像](默认固件-S3-0.2.1.bin)，提供原声卡模式。
+保留原引导、分区表、NVS 和 PHY 区。源码默认使用 4 MB Flash 分区布局；已有其他布局时，按实际应用分区更新。
 
-项目自有代码采用[CC BY-NC-SA 4.0](../../LICENSE)，第三方组件保留各自许可。
+项目自有代码采用 [CC BY-NC-SA 4.0](../../LICENSE)，第三方组件沿用各自许可。

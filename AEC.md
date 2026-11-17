@@ -1,23 +1,33 @@
-# S3 AEC免提通话
+# S3 AEC 免提通话
 
-Quick Start → AEC免提通话 → 写入并核验。S3需要配套AEC固件0.3.0，AC101S接线沿用GPIO8–14。
+AEC 使用扬声器的播放信号作为参考，减少麦克风录音中的回声。需要 S3 0.3.0 固件和八线 PSRAM，AC101S 接线见[S3 GPIO 表](firmware/s3/README.md)。
 
-播放路径保留USB声卡和人声清晰EQ。AC101S的TX左路提供PLAY（EQ/DVC后的播放参考），右路提供MIC录音；两路由同一I²S时钟同步采集。ESP-SR FD_LOW_COST在S3中运行自适应回声消除及常规残余回声抑制。
+## 使用
 
-USB接口继续使用48kHz、双声道S16LE。算法以16kHz单声道处理语音，输入使用抗混叠FIR，输出通过多相FIR恢复为48kHz，复制至USB左右录音通道；语音处理带宽约7kHz。录音会增加分帧与队列延迟。播放不经过AEC。
+1. 连接 S3，等待读回参数。
+2. 打开 **Quick Start**，选择“AEC 免提通话”，点击“写入并核验”。
+3. 在通话软件中选择 **AC10x Duplex** 作为播放和录音设备。
 
-上电默认仍是原声卡模式，AEC关闭。应用“默认固件 · USB声卡”即可恢复原始录音和人声清晰播放。Quick Start只改参数，不烧录程序。手动写寄存器会关闭AEC，修改后重新应用AEC方案。
+默认上电为 USB 声卡模式，AEC 关闭。选择“默认固件 · USB 声卡”可恢复原始麦克风录音和人声清晰播放。手动写寄存器会关闭 AEC，调整后可重新应用 AEC 方案。
 
-在电脑通话软件中选择AC10x播放和录音端。测试MCU AEC时关闭通话软件的重复AEC处理，保持扬声器和麦克风不削波；AEC不会消除办公室里所有无关环境噪声。
+通话软件若自带回声消除，可关闭其 AEC 后比较 S3 的处理效果。调整播放和录音增益，避免扬声器或麦克风削波。
 
-## 控制接口
+## 音频处理
 
-原有协议0.1和10字节HID报告保持兼容。S3扩展0x7D只读查询；0x7C设置模式（byte2：0关闭、1开启）。应答byte1为0xAE、byte2扩展版本1、byte3能力标记1、byte4实际运行状态、byte5故障计数低8位、byte6丢块计数低8位、byte7最大算法调用毫秒数、byte8成功标记、byte9处理帧计数低8位。
+AC101S 的 TX 左路提供 EQ／音量处理后的 PLAY 参考，右路提供 MIC；两路使用同一 I²S 时钟采集。ESP-SR `AEC_MODE_FD_LOW_COST` 配合 `NLP NORMAL` 处理回声。
 
-旧固件的零填充应答只表示不支持；设置命令必须得到明确成功及同值读回。启用前固件检查MIC/PLAY路由；网页在启用失败或取消时关闭AEC并尝试按原会话掩码恢复上一配置。断流或处理故障期间不将原始播放参考冒充处理后录音。
+USB 使用 48 kHz、双声道 S16LE。算法将输入降采样至 16 kHz 单声道，再将结果转换为 48 kHz，复制到 USB 录音左右路；语音带宽约 7 kHz。AEC 仅处理录音，分帧和队列会增加录音延迟。
 
-## 构建
+## 控制与开发
 
-完整上位机：`node qa/build.cjs`。专项回归：`node qa/verify-aec.cjs`。完整回归：`npm test`。
+S3 使用 `0x7D` 查询 AEC 状态，使用 `0x7C` 设置开关；HID 报告仍为 10 字节，桥接协议仍为 0.1。启用失败或取消时，网页关闭 AEC 并尝试恢复上一套寄存器配置。报文定义见[固件协议](firmware/s3/source/docs/PROTOCOL.md)。
 
-固件位于`firmware/s3/source`，使用现有ESP-IDF 6.2和S3工具链。ESP-SR和dl_fft均锁定提交，来源及SHA256见各组件的provenance.json，第三方许可独立保留。固件使用八线PSRAM分配AEC与SIMD缓冲；中断原子状态保留在内部DRAM。工程启用Newlib以兼容预编译库，PSRAM不足时拒绝启用AEC，默认原声卡路径保留。
+完整上位机构建与测试：
+
+```powershell
+node qa/build.cjs
+node qa/verify-aec.cjs
+npm test
+```
+
+固件构建方法、SDK 版本和依赖见[源码说明](firmware/s3/source/README.md)。

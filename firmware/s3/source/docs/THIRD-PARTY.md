@@ -1,11 +1,12 @@
 # 构建组件
 
-- ESP-IDF6.2开发SDK，提交`c712a0dde385d659a1470a136251980d31a70bc1`，Apache-2.0及组件自有许可。
-- TinyUSB0.21.0~5对应分支，MIT许可。
-- FreeRTOS，MIT许可；lwIP，BSD许可。
-- Espressif Xtensa GCC16.1.0工具链。
+| 组件 | 版本／提交 | 许可位置 |
+|---|---|---|
+| ESP-IDF | 6.2 开发版，`c712a0dde385d659a1470a136251980d31a70bc1` | SDK 内的 Apache-2.0 及各组件许可 |
+| TinyUSB | 0.21.0~5 对应分支 | [MIT](../components/tinyusb/LICENSE) |
+| ESP-SR | `bb552f1a559396a17681299cb3e199a0f1a4520a` | [ESPRESSIF MIT License](../components/esp_aec_vendor/LICENSE)，适用于 Espressif 产品 |
+| ESP-DL dl_fft | `512ed0b0dc5f5320f3d9ca5a5aea189803f87f31` | [MIT](../components/dl_fft/LICENSE) |
+| FreeRTOS | ESP-IDF 对应版本 | [MIT](../licenses/FreeRTOS-MIT.md) |
+| lwIP | ESP-IDF 对应版本 | [BSD](../licenses/lwIP-BSD.txt) |
 
-组件版权和许可保留于[licenses](../licenses)及对应源码目录。
-
-- ESP-SR：提交`bb552f1a559396a17681299cb3e199a0f1a4520a`，ESPRESSIF MIT License，适用于Espressif产品。S3预编译库与头文件见[组件](../components/esp_aec_vendor)。
-- ESP-DL dl_fft：提交`512ed0b0dc5f5320f3d9ca5a5aea189803f87f31`，原文见[组件许可](../components/dl_fft/LICENSE)，文件哈希见provenance.json。
+编译器为 Espressif Xtensa GCC 16.1.0。ESP-SR 的预编译库、头文件及 FFT 源码随组件保留，来源和 SHA-256 记录在各组件的 `provenance.json` 中。

@@ -1,31 +1,54 @@
-# 固件和网页契约
+# S3 USB 音频与控制协议
 
-固件版本0.2.0（S3默认固件），HID协议0.1，USB `bcdDevice=0x0200`（设备版本字段，独立于固件SemVer）。S3仅使用内部USB Full Speed PHY，GPIO19 D− / GPIO20 D+；名称为 AC10x S3 Duplex。开发VID/PID为303A:4005；S31原桥为303A:4004。
+适用于 S3 固件 0.3.0，HID 协议为 0.1，USB 设备版本字段为 `bcdDevice=0x0200`。
+
+设备名称为 AC10x S3 Duplex，VID:PID 为 303A:4005。S3 使用内部 USB Full Speed PHY，GPIO19 为 D−，GPIO20 为 D+。S31 的 VID:PID 为 303A:4004。
 
 ## 音频
 
-- UAC2，固定48000 Hz，立体声S16LE，录音与播放各192000 B/s；USB不是24 bit格式。
-- 播放OUT01、显式反馈IN82（4字节）、录音IN83；数据端点最大196 B、每1 ms服务一次。
-- I²S0主机，Philips格式，16 bit样本、双声道32 bit槽、MCLK倍数256。实际时钟与品质尚未在S3验证。
-- I²S工作线程与USB拥有者分核，经过有界复制队列；复位、拔插、休眠及alt-setting变化使旧代次数据失效。
-- 录音新会话显式插入4 ms零PCM预填充；后续数据来自外部I²S，不是合成测试音。
+- UAC2，固定 48000 Hz，立体声 S16LE，录音与播放各 192000 B/s。
+- 播放端点 OUT01、显式反馈 IN82（4 字节）、录音端点 IN83；音频数据端点最大 196 B，每 1 ms 服务一次。
+- I²S0 为主机，使用 Philips 格式、16 bit 样本和双声道 32 bit 时隙；MCLK 为采样率的 256 倍，即 12.288 MHz。
+- I²S 与 USB 任务分核运行，通过有界队列交换数据；复位、拔插、休眠和 alt-setting 变化时丢弃旧会话数据。
+- 录音新会话预填充 4 ms 零 PCM，随后使用 I²S 采集数据；AEC 模式输出回声消除后的录音。
 
 ## HID / I²C
 
-Vendor usage page FF00，usage1，Report ID0，OUT和IN payload均严格10字节；WebHID不包含Windows API中额外的报告ID前缀。
+Vendor usage page 为 `0xFF00`，usage 为 1，Report ID 为 0，OUT 和 IN 载荷均为 10 字节。Windows HID API 的缓冲区额外包含报告 ID 前缀，WebHID 载荷不含此前缀。
 
 普通请求：`[cmd,1,bus8,reg_hi,reg_lo,data_hi_or_byte,data_lo_or_zero,width,0,0]`。
 
-- cmd=0写、1读；16 bit寄存器地址时cmd加10h。width为1或2，数据/寄存器宽度分开处理。
-- bus8为偶数8位线上写地址，例如7位33h对应66h；不接受67h读地址作请求地址。
+- cmd 为 0（写）或 1（读）；使用 16 bit 寄存器地址时，cmd 加 `0x10`。width 为 1 或 2，表示数据字节数。
+- bus8 为 8 bit 总线写地址，例如 7 bit 地址 `0x33` 对应 `0x66`。
 - 读响应：`[cmd,1,data_hi_or_byte,data_lo_or_zero,reg_hi,reg_lo,width,success,bus8,0]`。
 - 写响应：`[cmd,1,data_hi_or_byte,data_lo_or_zero,reg_hi,reg_lo,width,bus8,success,0]`。
-- I²C配置400 kHz，单笔驱动超时20 ms。错误计数并不等价于音质指标。
+- I²C配置400 kHz，单笔驱动超时20 ms。
 
-时钟命令：`[2,1,on,0,0,0,0,0,0,0]`，on只能0或1，响应byte2回显，byte8成功标志。网页要求当前系统音频流先停止，并显式勾选允许切换。
+时钟命令为 `[2,1,on,0,0,0,0,0,0,0]`，on 为 0 或 1。应答的 byte2 回显开关值，byte8 为成功标记。切换前停止系统播放和录音；独立诊断页还需勾选手动写入许可。
 
-只读状态命令7Eh：响应 `[7e,1,0,1,gate,playback,capture,i2cErrorsLow8,1,busyLow8]`。第2/3字节是协议版本0.1，不是固件版本；固件版本由应用描述和启动日志给出。
+`0x7E` 查询桥接状态，应答为 `[0x7E,1,0,1,gate,playback,capture,i2cErrorsLow8,1,busyLow8]`。byte2 和 byte3 表示协议版本 0.1，应用固件版本见应用描述或启动日志。
 
-命令3和未知命令不执行擦除/重启；错误长度、Report ID及类型不进入请求队列。固件在启动时、暴露USB前初始化AC101S默认配置，见DEFAULT-PROFILE.md；后续USB连接、查询和重连不重放参数。网页和固件串行化请求；没有事务ID，超时后不能盲目继续以免迟到应答串入下一笔。
+未知命令返回失败应答；报告长度、Report ID 或类型错误时拒绝入队。HID 请求按顺序处理，超时后需断开并重新连接，以隔离迟到应答。
 
-启动初始化只拥有AC101S默认表所列的83个普通RW掩码；未知ID不会触发初始化写入。其余手动HID传输仍不推断各Codec寄存器的RO/W1C/复位语义。完整Audio Lab负责芯片模型和掩码；独立诊断页的手动写入只适用于已核对的普通RW寄存器。
+固件在开放 USB 前检查芯片 ID，并按默认表的 83 项 RW 掩码初始化 AC101S，见[默认配置](../../DEFAULT-FIRMWARE.json)。后续连接、查询和重连保留当前参数。
+
+完整 Audio Lab 按芯片模型执行掩码读写与核验。独立诊断页的手动写入适用于普通 RW 寄存器；W1C、复位及电源控制需由调用方按芯片手册处理。
+
+## AEC 扩展
+
+`0x7D` 只读查询 AEC 状态，`0x7C` 设置开关。设置请求为 `[0x7C,1,on,0,0,0,0,0,0,0]`，on 为 0（关闭）或 1（开启）；查询请求为 `[0x7D,1,0,0,0,0,0,0,0,0]`。报告长度为 10 字节，以下字段使用从 0 开始的字节序号：
+
+| 字节 | 应答内容 |
+|---|---|
+| 0 | 请求命令 `0x7C` 或 `0x7D` |
+| 1 | 标识 `0xAE` |
+| 2 | 扩展版本 1 |
+| 3 | AEC 能力标记 1 |
+| 4 | 当前开关状态，0 或 1 |
+| 5 | 故障计数低 8 位 |
+| 6 | 丢块计数低 8 位 |
+| 7 | 最大算法处理时间，单位 ms |
+| 8 | 0 为失败，1 为成功 |
+| 9 | 已处理帧数低 8 位 |
+
+旧固件的零填充应答表示不支持 AEC。设置完成后，应答需同时包含成功标记和所请求的开关状态。启用 AEC 前固件检查 MIC／PLAY 路由；配置与使用方法见[AEC 设置](../../../../AEC.md)。
