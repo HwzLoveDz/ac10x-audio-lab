@@ -73,4 +73,4 @@ npm test
 
 ## License
 
-Original project code and documentation use [CC BY-NC-SA 4.0](LICENSE): attribution, noncommercial use and ShareAlike. Retain the “By mondraker” attribution when sharing adaptations and follow the ShareAlike terms. Third-party components retain their own licenses; see [third-party notices](THIRD-PARTY-NOTICES.md).
+Original project code and documentation use [CC BY-NC-SA 4.0](LICENSE): attribution, noncommercial use and ShareAlike. Retain attribution when sharing adaptations and follow the ShareAlike terms. Third-party components retain their own licenses; see [third-party notices](THIRD-PARTY-NOTICES.md).

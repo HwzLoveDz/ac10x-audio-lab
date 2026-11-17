@@ -72,4 +72,4 @@ npm test
 
 ## 许可
 
-本项目自有代码和文档采用[CC BY-NC-SA 4.0](LICENSE)：署名、非商业性使用、相同方式共享。二创分享时保留“By mondraker”署名，并遵循相同方式共享条款。第三方组件沿用各自许可，见[依赖说明](THIRD-PARTY-NOTICES.md)。
+本项目自有代码和文档采用[CC BY-NC-SA 4.0](LICENSE)：署名、非商业性使用、相同方式共享。二创分享时保留署名，并遵循相同方式共享条款。第三方组件沿用各自许可，见[依赖说明](THIRD-PARTY-NOTICES.md)。
