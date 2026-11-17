@@ -1,0 +1,23 @@
+{
+  "source": "AC10x Audio Lab 0.8.12-rc.1",
+  "repository": "https://github.com/HwzLoveDz/ac10x-audio-lab",
+  "commit": "4770abe3313ccc6e1ab609053f22f717185f9e01",
+  "entrySHA256": "5b93578713278e236cf4e9c3b558b34ea53e95c2a98233e6577c89645ff4215a",
+  "files": {
+    "AC101S-S31-ECM-Speaker-muted.json": "b5ec492f3e014cd04acba203957af59e91976d0168e3a01bd2876df25e03486c",
+    "codec.js": "9d9d756400d5982a0fdd0062a7e63cb8bd9a8ae863395ba401fb9e86f9426cf1",
+    "dsp.js": "3b82e744a97dcfe72db7efb9ea629a00387b80fe41baa627df110e449af4afc4",
+    "examples.js": "56de7f32bb0a64d9b3ea7a687901b7c0c612ef88b0b16ddcb39d599d57c32d78",
+    "package.json": "fde351ea16daa74215650ed692b8531cec94521376ab46747ae5616722674c41",
+    "routing.js": "06c0bdc14c965ee118e1a06d909bc0937154dda1b25a65341c42d16ca95310b2",
+    "session.js": "96ada78b299ee52cf65f91de08b4d23db7e0d084ce65a8cb526d58e69fbc8790",
+    "transport.js": "7c23aa43f2d120f2f729538b808817613cdf346d24b116442a10e47366db5628",
+    "qa/fake-hid.cjs": "27c1915a3e00a2b9be068fc54d2dade2df12c23b4ae69e4e7a19b323f69f6301"
+  },
+  "canonicalConfigSHA256": "1107934abf64a509b781364eabfd6b49e98f5f28df452237e5156a7f1de7ba59",
+  "copiedWithoutModification": false,
+  "originalPackageMetadataSHA256": "0ca1a1b491589bc24b9b776179b221e84de65bca7feaa6dc452c481463a3ebcc",
+  "metadataChanges": [
+    "Project license metadata; register/audio model unchanged"
+  ]
+}

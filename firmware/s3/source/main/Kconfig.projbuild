@@ -1,0 +1,30 @@
+menu "AC10x ESP32-S3 bridge provisional pin profile"
+    config BRIDGE_MCLK_GPIO
+        int "I2S MCLK (to codec)"
+        range 1 48
+        default 8
+    config BRIDGE_BCLK_GPIO
+        int "I2S BCLK (to codec)"
+        range 1 48
+        default 9
+    config BRIDGE_LRCK_GPIO
+        int "I2S LRCK (to codec)"
+        range 1 48
+        default 10
+    config BRIDGE_DOUT_GPIO
+        int "I2S data out (to codec SDIN)"
+        range 1 48
+        default 11
+    config BRIDGE_DIN_GPIO
+        int "I2S data in (from codec SDOUT)"
+        range 1 48
+        default 12
+    config BRIDGE_SDA_GPIO
+        int "I2C SDA (3.3V logic only)"
+        range 1 48
+        default 13
+    config BRIDGE_SCL_GPIO
+        int "I2C SCL (3.3V logic only)"
+        range 1 48
+        default 14
+endmenu

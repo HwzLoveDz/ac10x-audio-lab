@@ -1,0 +1,627 @@
+{
+  "name": "默认固件",
+  "format": "AC10x-configuration",
+  "schemaVersion": 1,
+  "firmwareVersion": "0.2.1",
+  "target": "esp32s3",
+  "derivedFromS31FirmwareVersion": "0.3.3",
+  "webVersion": "0.8.12-rc.1",
+  "eqPresetId": "voice",
+  "eqPresetName": "人声清晰",
+  "config": {
+    "version": 1,
+    "profile": "AC101S",
+    "routing": {
+      "input": "analog",
+      "mbias": true,
+      "rxEnabled": true,
+      "txEnabled": true,
+      "sdoEnabled": true,
+      "rxMap": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "txMap": [
+        0,
+        1,
+        0,
+        1
+      ],
+      "rx": {
+        "left": true,
+        "right": true,
+        "leftHalf": true,
+        "rightHalf": true
+      },
+      "dac": {
+        "rx": true,
+        "rec": false,
+        "rxHalf": false,
+        "recHalf": false
+      },
+      "txL": {
+        "rec": true,
+        "play": false,
+        "recHalf": false,
+        "playHalf": false
+      },
+      "txR": {
+        "rec": true,
+        "rx": false,
+        "recHalf": false,
+        "rxHalf": false
+      },
+      "lineOut": true,
+      "lineGain": 0,
+      "lineDifferential": false,
+      "adcPattern": 0,
+      "dacPattern": 0
+    },
+    "pga": 12,
+    "adc": {
+      "enabled": true,
+      "gain": 0,
+      "mute": false
+    },
+    "dac": {
+      "enabled": true,
+      "gain": 0,
+      "mute": false
+    },
+    "hpf": {
+      "enabled": false,
+      "freq": 80
+    },
+    "agc": {
+      "enabled": false,
+      "target": -18,
+      "threshold": -70,
+      "maxGain": 12,
+      "attack": 1,
+      "release": 120,
+      "debounce": 1.3,
+      "noiseDebounce": 170.6667,
+      "noiseDetect": false
+    },
+    "eq": {
+      "enabled": true,
+      "preGain": -4,
+      "bands": [
+        {
+          "enabled": true,
+          "type": "lowshelf",
+          "freq": 180,
+          "gain": -3,
+          "q": 0.707
+        },
+        {
+          "enabled": true,
+          "type": "peaking",
+          "freq": 2500,
+          "gain": 3,
+          "q": 1
+        },
+        {
+          "enabled": true,
+          "type": "highshelf",
+          "freq": 8000,
+          "gain": 1.5,
+          "q": 0.707
+        }
+      ]
+    },
+    "clock": {
+      "fs": 48000,
+      "format": "I2S",
+      "bits": 16,
+      "slot": 32,
+      "slots": 2,
+      "role": "slave"
+    },
+    "raw": {}
+  },
+  "nominalEQPeakDb": -0.9900021927632046,
+  "canonicalConfigSHA256": "1107934abf64a509b781364eabfd6b49e98f5f28df452237e5156a7f1de7ba59",
+  "registerPatches": [
+    {
+      "address": 2,
+      "mask": 4,
+      "single": 4,
+      "differential": 4
+    },
+    {
+      "address": 3,
+      "mask": 49,
+      "single": 49,
+      "differential": 49
+    },
+    {
+      "address": 4,
+      "mask": 15,
+      "single": 1,
+      "differential": 1
+    },
+    {
+      "address": 5,
+      "mask": 15,
+      "single": 1,
+      "differential": 1
+    },
+    {
+      "address": 6,
+      "mask": 63,
+      "single": 63,
+      "differential": 63
+    },
+    {
+      "address": 7,
+      "mask": 215,
+      "single": 23,
+      "differential": 23
+    },
+    {
+      "address": 8,
+      "mask": 15,
+      "single": 3,
+      "differential": 3
+    },
+    {
+      "address": 9,
+      "mask": 3,
+      "single": 0,
+      "differential": 0
+    },
+    {
+      "address": 10,
+      "mask": 255,
+      "single": 31,
+      "differential": 31
+    },
+    {
+      "address": 11,
+      "mask": 52,
+      "single": 20,
+      "differential": 20
+    },
+    {
+      "address": 12,
+      "mask": 119,
+      "single": 115,
+      "differential": 115
+    },
+    {
+      "address": 14,
+      "mask": 15,
+      "single": 5,
+      "differential": 5
+    },
+    {
+      "address": 15,
+      "mask": 15,
+      "single": 3,
+      "differential": 3
+    },
+    {
+      "address": 17,
+      "mask": 15,
+      "single": 10,
+      "differential": 10
+    },
+    {
+      "address": 19,
+      "mask": 255,
+      "single": 5,
+      "differential": 5
+    },
+    {
+      "address": 22,
+      "mask": 255,
+      "single": 228,
+      "differential": 228
+    },
+    {
+      "address": 24,
+      "mask": 15,
+      "single": 15,
+      "differential": 15
+    },
+    {
+      "address": 25,
+      "mask": 177,
+      "single": 1,
+      "differential": 1
+    },
+    {
+      "address": 26,
+      "mask": 255,
+      "single": 129,
+      "differential": 129
+    },
+    {
+      "address": 27,
+      "mask": 7,
+      "single": 1,
+      "differential": 1
+    },
+    {
+      "address": 28,
+      "mask": 255,
+      "single": 129,
+      "differential": 129
+    },
+    {
+      "address": 29,
+      "mask": 15,
+      "single": 1,
+      "differential": 1
+    },
+    {
+      "address": 32,
+      "mask": 249,
+      "single": 97,
+      "differential": 97
+    },
+    {
+      "address": 38,
+      "mask": 47,
+      "single": 32,
+      "differential": 32
+    },
+    {
+      "address": 49,
+      "mask": 28,
+      "single": 0,
+      "differential": 0
+    },
+    {
+      "address": 50,
+      "mask": 255,
+      "single": 197,
+      "differential": 197
+    },
+    {
+      "address": 51,
+      "mask": 63,
+      "single": 46,
+      "differential": 46
+    },
+    {
+      "address": 52,
+      "mask": 255,
+      "single": 24,
+      "differential": 24
+    },
+    {
+      "address": 57,
+      "mask": 255,
+      "single": 22,
+      "differential": 22
+    },
+    {
+      "address": 58,
+      "mask": 255,
+      "single": 127,
+      "differential": 127
+    },
+    {
+      "address": 59,
+      "mask": 255,
+      "single": 0,
+      "differential": 0
+    },
+    {
+      "address": 60,
+      "mask": 255,
+      "single": 47,
+      "differential": 47
+    },
+    {
+      "address": 61,
+      "mask": 31,
+      "single": 20,
+      "differential": 20
+    },
+    {
+      "address": 66,
+      "mask": 7,
+      "single": 0,
+      "differential": 0
+    },
+    {
+      "address": 67,
+      "mask": 255,
+      "single": 253,
+      "differential": 253
+    },
+    {
+      "address": 68,
+      "mask": 255,
+      "single": 85,
+      "differential": 85
+    },
+    {
+      "address": 69,
+      "mask": 255,
+      "single": 70,
+      "differential": 70
+    },
+    {
+      "address": 79,
+      "mask": 1,
+      "single": 1,
+      "differential": 1
+    },
+    {
+      "address": 80,
+      "mask": 7,
+      "single": 0,
+      "differential": 0
+    },
+    {
+      "address": 81,
+      "mask": 255,
+      "single": 161,
+      "differential": 161
+    },
+    {
+      "address": 82,
+      "mask": 255,
+      "single": 15,
+      "differential": 15
+    },
+    {
+      "address": 83,
+      "mask": 7,
+      "single": 6,
+      "differential": 6
+    },
+    {
+      "address": 84,
+      "mask": 255,
+      "single": 194,
+      "differential": 194
+    },
+    {
+      "address": 85,
+      "mask": 255,
+      "single": 206,
+      "differential": 206
+    },
+    {
+      "address": 86,
+      "mask": 7,
+      "single": 0,
+      "differential": 0
+    },
+    {
+      "address": 87,
+      "mask": 255,
+      "single": 156,
+      "differential": 156
+    },
+    {
+      "address": 88,
+      "mask": 255,
+      "single": 54,
+      "differential": 54
+    },
+    {
+      "address": 89,
+      "mask": 7,
+      "single": 6,
+      "differential": 6
+    },
+    {
+      "address": 90,
+      "mask": 255,
+      "single": 9,
+      "differential": 9
+    },
+    {
+      "address": 91,
+      "mask": 255,
+      "single": 77,
+      "differential": 77
+    },
+    {
+      "address": 92,
+      "mask": 7,
+      "single": 0,
+      "differential": 0
+    },
+    {
+      "address": 93,
+      "mask": 255,
+      "single": 246,
+      "differential": 246
+    },
+    {
+      "address": 94,
+      "mask": 255,
+      "single": 221,
+      "differential": 221
+    },
+    {
+      "address": 96,
+      "mask": 7,
+      "single": 1,
+      "differential": 1
+    },
+    {
+      "address": 97,
+      "mask": 255,
+      "single": 12,
+      "differential": 12
+    },
+    {
+      "address": 98,
+      "mask": 255,
+      "single": 148,
+      "differential": 148
+    },
+    {
+      "address": 99,
+      "mask": 7,
+      "single": 6,
+      "differential": 6
+    },
+    {
+      "address": 100,
+      "mask": 255,
+      "single": 84,
+      "differential": 84
+    },
+    {
+      "address": 101,
+      "mask": 255,
+      "single": 237,
+      "differential": 237
+    },
+    {
+      "address": 102,
+      "mask": 7,
+      "single": 0,
+      "differential": 0
+    },
+    {
+      "address": 103,
+      "mask": 255,
+      "single": 182,
+      "differential": 182
+    },
+    {
+      "address": 104,
+      "mask": 255,
+      "single": 110,
+      "differential": 110
+    },
+    {
+      "address": 105,
+      "mask": 7,
+      "single": 6,
+      "differential": 6
+    },
+    {
+      "address": 106,
+      "mask": 255,
+      "single": 84,
+      "differential": 84
+    },
+    {
+      "address": 107,
+      "mask": 255,
+      "single": 237,
+      "differential": 237
+    },
+    {
+      "address": 108,
+      "mask": 7,
+      "single": 0,
+      "differential": 0
+    },
+    {
+      "address": 109,
+      "mask": 255,
+      "single": 195,
+      "differential": 195
+    },
+    {
+      "address": 110,
+      "mask": 255,
+      "single": 2,
+      "differential": 2
+    },
+    {
+      "address": 112,
+      "mask": 7,
+      "single": 1,
+      "differential": 1
+    },
+    {
+      "address": 113,
+      "mask": 255,
+      "single": 30,
+      "differential": 30
+    },
+    {
+      "address": 114,
+      "mask": 255,
+      "single": 168,
+      "differential": 168
+    },
+    {
+      "address": 115,
+      "mask": 7,
+      "single": 7,
+      "differential": 7
+    },
+    {
+      "address": 116,
+      "mask": 255,
+      "single": 65,
+      "differential": 65
+    },
+    {
+      "address": 117,
+      "mask": 255,
+      "single": 94,
+      "differential": 94
+    },
+    {
+      "address": 118,
+      "mask": 7,
+      "single": 0,
+      "differential": 0
+    },
+    {
+      "address": 119,
+      "mask": 255,
+      "single": 71,
+      "differential": 71
+    },
+    {
+      "address": 120,
+      "mask": 255,
+      "single": 229,
+      "differential": 229
+    },
+    {
+      "address": 121,
+      "mask": 7,
+      "single": 7,
+      "differential": 7
+    },
+    {
+      "address": 122,
+      "mask": 255,
+      "single": 108,
+      "differential": 108
+    },
+    {
+      "address": 123,
+      "mask": 255,
+      "single": 235,
+      "differential": 235
+    },
+    {
+      "address": 124,
+      "mask": 7,
+      "single": 0,
+      "differential": 0
+    },
+    {
+      "address": 125,
+      "mask": 255,
+      "single": 59,
+      "differential": 59
+    },
+    {
+      "address": 126,
+      "mask": 255,
+      "single": 0,
+      "differential": 0
+    }
+  ]
+}

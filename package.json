@@ -1,8 +1,8 @@
 {
   "name": "ac10x-audio-lab",
-  "version": "0.8.12-rc.1",
+  "version": "0.8.13-rc.1",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "CC-BY-NC-SA-4.0",
   "description": "Local AC101S/AC102 audio register workbench with explicit verified hardware transactions",
   "engines": {
     "node": ">=18"

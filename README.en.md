@@ -4,47 +4,56 @@
 
 **By mondraker**
 
-A browser workbench for AC101S / AC102 audio configuration and debugging. Web release **0.8.12-rc.1**, default firmware **0.3.3**.
+A browser workbench for AC101S / AC102 audio configuration. One complete signal graph brings together Quick Start, register control, EQ, configuration comparison, diagnostics, playback and recording.
 
-One complete signal diagram and one Quick Start entry, with register readback, verified writes, configuration comparison, diagnostics, and playback/recording tools. The interface supports Chinese and English, light and dark themes. The runtime requires no CDN or remote fonts.
+Web version **0.8.13-rc.1**, with **S31 0.3.3 / ESP32-S3 0.2.1** firmware. Chinese and English, light and dark themes. JavaScript and styles are bundled in the application.
 
-![Complete signal diagram](docs/audio-lab-dark.jpg)
+![AC10x Audio Lab signal graph](docs/audio-lab-dark.jpg)
 
-## Getting started
+## Start
 
-Use desktop Chrome or Edge and Python 3. Serve the application over local HTTP:
+Use desktop Chrome / Edge and Python 3. From the repository root:
 
 ```powershell
 python qa/launch-http.py
 ```
 
-Open `http://127.0.0.1:47881/`. The static server binds only to localhost and has no device-control backend. For a separate port, use `python qa/launch-http.py --port 47882`, after checking that the port is available.
+Open `http://127.0.0.1:47881/`.
 
-1. Open **Device & connection** and select the USB bridge. Connecting reads registers without applying a configuration.
-2. Open **Quick Start**, choose a configuration, and select **Write & verify**. This restores codec parameters; it does not flash firmware or start playback or recording.
-3. Click a diagram module to edit its draft, then explicitly write and verify from the panel. Navigation, language/theme changes, and draft edits do not write to the device.
+1. Click **Connect USB**, select the bridge and read its configuration.
+2. Open **Quick Start**, choose a setup, then **Write and verify**.
+3. Click a graph module to edit its parameters and apply them from the panel.
 
-The default is a **USB soundcard with Clear vocal EQ**. DAC and Line Out are both at 0 dB. Microphone recording is independent, with recording-to-speaker monitoring and digital loopback disabled. EQ settings are 180 Hz at −3 dB, 2.5 kHz at +3 dB, 8 kHz at +1.5 dB, with −4 dB pre-gain. Start with a low computer volume when connecting a new amplifier. If playback is silent, check the system output device, mute state, and volume as well as codec settings.
+The default is **USB soundcard + clear-vocal EQ**. DAC and Line Out are both 0dB; microphone recording is independent, with monitoring and digital return disabled. The EQ uses 180Hz −3dB, 2.5kHz +3dB and 8kHz +1.5dB, with −4dB pre-gain. Select AC10x Duplex as the computer output and adjust system volume for the amplifier and speaker.
 
-Quick Start provides eight configurations: default USB soundcard, flat playback, warm music, independent recording, digital playback capture, left-channel playback, right-channel playback, and mute standby. The EQ module also has 16 presets. Disabling EQ writes unity coefficients for a true bypass while preserving the preset for restoration.
+## Tools
 
-Right-drag to pan and use the wheel to zoom. Arrow keys pan, ± zooms, and 0 fits the diagram. Each diagram corner can move as far as the viewport center. Animated connections show enabled routes from device readback; they do not measure audio activity.
+- **Quick Start:** default soundcard, flat playback, warm music, microphone recording, digital return, left channel, right channel and mute.
+- **EQ:** sixteen presets, three-band editing, response plots and A/B listening; disabling EQ applies unity coefficients for bypass.
+- **Device control:** readback, verified module writes, comparisons, register monitoring, undo and error recovery.
+- **Recording:** capture PCM from a selected input, inspect its waveform and spectrum, and export WAV. Each new recording starts in the original/raw view.
+- **Graph:** right-drag to pan and use the wheel to zoom. Arrow keys pan,± zoom, and 0 fits the graph. Each corner can be moved as far as the viewport center.
 
-## Supported bridges
+Quick Start applies codec parameters; firmware updates use the appropriate flashing tool. EQ presets load into the draft and take effect when the module is written. See [ready-to-use setups](EXAMPLES.md).
 
-| Bridge | Current validation |
-|---|---|
-| Original TI bridge | Existing protocol and variable report sizes retained; software regression covered |
-| S31 audio bridge | Real WebHID writes/readback, USB audio, and speaker path verified |
-| ESP32-S3 candidate bridge | Software regression passed; no S3 hardware acceptance in this release |
+## Hardware and firmware
 
-S31 and the S3 candidate use 48 kHz, 16-bit samples, two 32-bit I²S slots, a slave codec, and a 12.288 MHz reference MCLK. External clocks must match the configuration. The TI bridge retains and validates its configured clocks.
+| Bridge | VID:PID | Audio and control |
+|---|---|---|
+| TI adapter | 0451:4822 | Original adapter protocol, variable-length HID reports |
+| S31 | 303A:4004 | 48kHz duplex USB audio and 10-byte HID |
+| ESP32-S3 | 303A:4005 | Native Full Speed USB, 48kHz duplex audio and 10-byte HID |
 
-The tested board is physically marked AC101S. Register ID 0x12 alone cannot distinguish AC101S from AC102. See [hardware setup](HARDWARE-SETUP.md). The [default firmware](firmware/README.md) is for the confirmed S31 application partition, not a generic image for arbitrary S3 boards or pin mappings.
+S31 and S3 use 16-bit samples, two 32-bit I²S slots, a slave codec and a 12.288MHz reference MCLK. Select the AC101S or AC102 register profile using the chip marking.
 
-## Development and regression tests
+- [AC101S board wiring](HARDWARE-SETUP.md)
+- [S31 firmware and source](firmware/README.md)
+- [S3 firmware, GPIO mapping and source](firmware/s3/README.md)
+- [Bridge protocol and adapters](S3-INTEGRATION.md)
 
-Use Node.js 18+ and Python 3:
+## Development
+
+Node.js 18+ and Python 3:
 
 ```powershell
 npm ci
@@ -52,25 +61,14 @@ npm run build
 npm test
 ```
 
-If the test runner cannot find Python, select it explicitly:
+`npm test` uses isolated device models to check parameter calculations, protocol handling, transaction recovery, recording interactions, localization and layout. Set `AC10X_PYTHON` to select a Python interpreter.
 
-```powershell
-$env:AC10X_PYTHON = (Get-Command python).Source
-npm test
-```
+## Downloads
 
-`npm test` uses fake devices, a synthetic DOM, and temporary local HTTP servers. It does not access real HID, USB, serial ports, microphones, or audio devices. Native hardware scripts require a separate test arrangement and are not part of the default test command.
+- [0.8.13-rc.1 complete package](releases/AC10x-Audio-Lab-0.8.13-rc.1.zip)
+- [ESP32-S3 0.2.1 firmware and source](releases/AC10x-S3-Default-Firmware-0.2.1.zip)
+- [SHA-256 checksums](releases/SHA256SUMS.txt)
 
-Software acceptance covers **327 checks in 39 suites**, plus 104 property cases and 110 asynchronous scheduling cases. All eight corrected configurations passed native S31 transactions. Final production-page testing applied digital playback capture, obtained valid audio on both return channels, restored the default, and compared 104 readback registers against 83 masked patches with no differences.
+## License
 
-The complete browser user-flow matrix was tested on 0.8.11-rc.2. Final testing on this release covers the corrected digital capture and default restoration. An external MiniMIC detected actual webpage A/B playback and speaker output. These results establish functionality and relative changes, not calibrated THD, SNR, or sound-pressure measurements. See the [validation summary](docs/validation-0.8.12-rc.1.json).
-
-## Files and releases
-
-- `index.html`, JavaScript, and CSS: maintainable source.
-- `AC10x-Audio-Lab.html` and the versioned HTML: equivalent standalone builds, served over local HTTP.
-- `qa/`: offline tests, protocol fixtures, build tools, and HTTP launchers.
-- `firmware/`: S31 default firmware and matching source, with dependency licensing retained.
-- [0.8.12-rc.1 complete package](releases/AC10x-Audio-Lab-0.8.12-rc.1.zip) and [SHA-256 checksums](releases/SHA256SUMS.txt). The original 0.8.5 archive is preserved.
-
-The repository excludes the original commercial vendor application, user recordings, personal configurations, installed development dependencies, and personal Codex skills. No open-source license has been selected for this project; `package.json` remains `private: true` / `UNLICENSED`. See [third-party notices](THIRD-PARTY-NOTICES.md).
+Original project code and documentation use [CC BY-NC-SA 4.0](LICENSE): attribution, noncommercial use and ShareAlike. Retain the “By mondraker” attribution when sharing adaptations and follow the ShareAlike terms. Third-party components retain their own licenses; see [third-party notices](THIRD-PARTY-NOTICES.md).

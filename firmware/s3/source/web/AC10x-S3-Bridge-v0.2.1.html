@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AC10x S3 Bridge 0.2.1</title><style>
+*{box-sizing:border-box}body{font:16px/1.6 system-ui,sans-serif;color:#183a40;background:#f3f7f6;margin:0 auto;padding:32px 20px;max-width:1000px}header{border-bottom:1px solid #cfdfdc;padding-bottom:18px}h1{margin:8px 0;font-size:30px}h2{font-size:20px;margin-top:0}.tag{font-size:12px;letter-spacing:2px;color:#217d78}.warn{background:#fff4df;border-left:4px solid #c48725;padding:14px 18px}.card{background:#fff;border:1px solid #d3e2df;border-radius:12px;padding:22px;margin:18px 0}.row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}button,input{font:inherit;border:1px solid #b8ceca;border-radius:7px;padding:9px 13px}button{color:white;background:#146f69;cursor:pointer}button.secondary{background:white;color:#23544f}button:disabled{opacity:.45;cursor:default}input{width:90px}input[type=checkbox]{width:auto}label{display:inline-flex;align-items:center;gap:8px}small{color:#57716e}pre{white-space:pre-wrap;word-break:break-word;background:#f1f5f4;padding:14px;max-height:300px;overflow:auto;font-size:12px}#status,#result{overflow-wrap:anywhere}.err{color:#a13927}code{font-size:14px}@media(max-width:600px){body{padding:18px 12px}h1{font-size:25px}.card{padding:16px}.row{gap:8px}}
+</style></head><body>
+<header><div class="tag">AC10x / ESP32-S3 / USB AUDIO + HID</div><h1>S3 桥接调试入口 <small>v0.2.1</small></h1><p>48 kHz · 双向立体声 S16LE · I²S 32 bit 槽 · HID 协议 0.1</p></header>
+<p>GPIO8～14音频／I²C接口 · 原生USB Full Speed</p>
+<section class="card"><h2>设备与连接</h2><div class="row"><button id="connect">选择 S3 USB 设备</button><button class="secondary" id="disconnect" disabled>断开</button><button class="secondary" id="query" disabled>查询桥状态</button><button class="secondary" id="readId" disabled>读取芯片 ID</button></div><p id="status" role="status">未连接；打开页面不会连接设备或改写寄存器。</p><small>开发接口303A:4005，Report ID0／双向10字节。Windows管理播放与录音流。</small></section>
+<section class="card"><h2>寄存器读写</h2><div class="row"><label>I²C 7位地址 <input id="address" value="33" maxlength="2" aria-label="I2C 7位地址"></label><label>寄存器 <input id="register" value="00" maxlength="2" aria-label="寄存器"></label><button class="secondary" id="read" disabled>读取</button><label>写入值 <input id="value" value="00" maxlength="2" aria-label="写入值"></label><button id="write" disabled>写入并读回</button></div><p><label><input type="checkbox" id="armed">允许本次连接手动写入和切换时钟</label></p><p id="result" role="status">输入均为十六进制。连接和查询只读；上电默认初始化由固件完成。</p><small>写入后显示真实读回；读回不一致不算成功，不会自动重试或覆盖恢复。RO、W1C、复位等特殊寄存器不适合普通写入核验。</small></section>
+<section class="card"><h2>时钟控制</h2><div class="row"><button id="gateOn" disabled>开启 MCLK / I²S</button><button class="secondary" id="gateOff" disabled>关闭 MCLK / I²S</button></div><p><small>默认固件在启动时输出时钟，并在暴露 USB 前初始化 AC101S 的 USB 播放与人声清晰配置。切换前先停止系统播放和录音；此页不做音频刺激。</small></p></section>
+<section class="card"><div class="row"><h2>通信记录</h2><button class="secondary" id="export">导出调试记录</button></div><pre id="log" aria-label="通信记录">尚无通信。</pre></section>
+<footer><small>By mondraker · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC-SA 4.0</a></small></footer>
+<script>
+/* TAS1020 / X-Powers HID control transport. Report offsets verified against the
+ * supplied AC102_SW.exe. WebHID payloads exclude Windows' leading report-ID byte. */
+(function(root){
+  'use strict';
+  const ADAPTERS=Object.freeze([
+    {vendorId:0x0451,productId:0x4822,kind:'TI',statusQuery:false,fixedAudio:false,softwareCandidate:false},
+    {vendorId:0x303a,productId:0x4004,kind:'S31',statusQuery:true,fixedAudio:true,softwareCandidate:false},
+    {vendorId:0x303a,productId:0x4005,kind:'S3',statusQuery:true,fixedAudio:true,softwareCandidate:true}
+  ].map(Object.freeze));
+  const adapterProfile=device=>ADAPTERS.find(p=>p.vendorId===device?.vendorId&&p.productId===device?.productId)||null;
+  const deviceFilters=()=>ADAPTERS.map(p=>({vendorId:p.vendorId,productId:p.productId,...(p.fixedAudio?{usagePage:0xff00}:{})}));
+  class BridgeError extends Error{constructor(code,message,details={}){super(message);this.name='BridgeError';this.code=code;this.details=details;}}
+  function byte(v,name){if(!Number.isInteger(v)||v<0||v>255)throw new BridgeError('ARGUMENT',name+' 必须为 0–255 的整数');return v;}
+  function reportBytes(report){return Math.ceil((report.items||[]).reduce((n,item)=>n+(item.reportSize||0)*(item.reportCount||0),0)/8);}
+  function descriptors(collections){const out=[],input=[];function visit(c){for(const r of c.outputReports||[])out.push({id:r.reportId,bytes:reportBytes(r)});for(const r of c.inputReports||[])input.push({id:r.reportId,bytes:reportBytes(r)});for(const child of c.children||[])visit(child);}collections.forEach(visit);
+    const unique=a=>{const m=new Map();for(const r of a)if(!m.has(r.id)||m.get(r.id).bytes<r.bytes)m.set(r.id,r);return Array.from(m.values());};return{output:unique(out),input:unique(input)};
+  }
+  function selectReports(device){const reports=descriptors(device.collections||[]),out=reports.output.find(r=>r.id===0&&r.bytes>=8),input=reports.input.find(r=>r.id===0&&r.bytes>=9);
+    if(!out||!input)throw new BridgeError('DESCRIPTOR','未找到原适配器要求的 Report ID 0（输出至少 8 字节、输入至少 9 字节）',reports);
+    return{output:out,input};
+  }
+  function encode({command,address=0,value=0,i2cAddress=0x33,addressWidth=1,dataWidth=1},length){
+    if(![0,1,2,0x7e].includes(command))throw new BridgeError('COMMAND','不支持此调试命令');
+    if(!Number.isInteger(length)||length<8)throw new BridgeError('DESCRIPTOR','输出报告长度不足');
+    const p=new Uint8Array(length);p[0]=command;p[1]=1;
+    if(command===0x7e){if(length!==10)throw new BridgeError('DESCRIPTOR','桥接状态命令需要10字节报告');return p;}
+    if(command===2){p[2]=value?1:0;return p;}
+    if(!Number.isInteger(i2cAddress)||i2cAddress<0x08||i2cAddress>0x77)throw new BridgeError('ARGUMENT','I²C 地址必须使用 7 位格式');
+    if(![1,2].includes(addressWidth)||![1,2].includes(dataWidth)||!Number.isInteger(address)||address<0||address>=(addressWidth===1?256:65536)||!Number.isInteger(value)||value<0||value>=(dataWidth===1?256:65536))throw new BridgeError('ARGUMENT','寄存器宽度或数据超出范围');
+    p[0]|=addressWidth===2?0x10:0;p[2]=i2cAddress<<1;p[3]=(address>>8)&255;p[4]=address&255;p[5]=dataWidth===1?value:(value>>8)&255;p[6]=dataWidth===1?0:value&255;p[7]=dataWidth;return p;
+  }
+  function decode(data,request){const p=data instanceof Uint8Array?data:new Uint8Array(data.buffer,data.byteOffset||0,data.byteLength);if(p.length<1)return null;
+    if(request.command===0x7e){if(p[0]!==0x7e)return null;if(p.length!==10)throw new BridgeError('SHORT_REPORT','桥接状态报告长度不正确');if(p[1]!==1||p[8]!==1||[p[4],p[5],p[6]].some(v=>v!==0&&v!==1))throw new BridgeError('STATUS_RESPONSE','桥接状态回复无效');return{command:0x7e,protocolVersion:p[2]+'.'+p[3],clockGate:Boolean(p[4]),playbackActive:Boolean(p[5]),captureActive:Boolean(p[6]),i2cErrorsLow8:p[7],busyLow8:p[9],raw:Array.from(p)};}
+    const command=p[0]&15;if(command!==request.command)return null;
+    if(command===2)return{command,acknowledged:true,raw:Array.from(p)};
+    const min=command===1?8:9;if(p.length<min)throw new BridgeError('SHORT_REPORT','适配器返回的数据长度不足',{length:p.length,expected:min});
+    if(command===1){const address=request.addressWidth===2?(p[4]<<8)|p[5]:p[5];if(address!==request.address)return null;if(p[7]!==1)throw new BridgeError('I2C_NACK','I²C 读取失败：检查地址、供电与连接',{address,status:p[7]});return{command,address,value:request.dataWidth===2?(p[2]<<8)|p[3]:p[2],raw:Array.from(p)};}
+    if(p[8]!==1)throw new BridgeError('I2C_NACK','适配器未确认寄存器写入',{address:request.address,status:p[8]});
+    return{command,address:request.address,acknowledged:true,raw:Array.from(p)};
+  }
+  class HidBridge{
+    constructor(device,{i2cAddress=0x33,timeoutMs=1200,onLog=()=>{},onState=()=>{}}={}){this.device=device;this.i2cAddress=i2cAddress;this.timeoutMs=timeoutMs;this.onLog=onLog;this.onState=onState;this.reports=null;this.pending=null;this.queue=Promise.resolve();this.connected=false;this.fault=null;this.inputHandler=e=>this.handleInput(e);this.disconnectHandler=e=>{if(e.device===this.device)this.disconnected();};}
+    async open(){const profile=adapterProfile(this.device);if(!profile)throw new BridgeError('DEVICE','请选择 TI 0451:4822、S31 303A:4004 或 S3 303A:4005 适配器');this.reports=selectReports(this.device);if(profile.fixedAudio&&(this.reports.input.bytes!==10||this.reports.output.bytes!==10))throw new BridgeError('DESCRIPTOR','S3 / S31 需要双向 10 字节 HID 报告');if(!this.device.opened)await this.device.open();this.device.addEventListener('inputreport',this.inputHandler);if(typeof navigator!=='undefined'&&navigator.hid)navigator.hid.addEventListener('disconnect',this.disconnectHandler);this.connected=true;this.fault=null;this.onState('connected');return this;}
+    log(direction,request,payload,extra={}){try{this.onLog({time:new Date().toISOString(),direction,command:request.command,address:request.address,payload:Array.from(payload),...extra});}catch{}}
+    async close(){this.connected=false;this.rejectPending(new BridgeError('DISCONNECTED','设备连接已关闭'));this.device.removeEventListener('inputreport',this.inputHandler);if(typeof navigator!=='undefined'&&navigator.hid)navigator.hid.removeEventListener('disconnect',this.disconnectHandler);if(this.device.opened)await this.device.close();this.onState('disconnected');}
+    disconnected(){this.connected=false;this.rejectPending(new BridgeError('DISCONNECTED','USB 设备已断开'));this.onState('disconnected');}
+    rejectPending(error){if(this.pending){const p=this.pending;this.pending=null;clearTimeout(p.timer);p.reject(error);}}
+    handleInput(event){if(!this.connected||event.reportId!==this.reports.input.id||!this.pending)return;const pending=this.pending;try{const data=new Uint8Array(event.data.buffer,event.data.byteOffset,event.data.byteLength);this.log('IN',pending.request,data);
+      if(adapterProfile(this.device)?.fixedAudio&&[0,1].includes(pending.request.command)){
+        if(data.length!==10)throw new BridgeError('SHORT_REPORT','桥接器必须返回10字节报告');
+        const q=pending.request,bus=this.i2cAddress<<1;
+        if(data[0]!==q.command||data[1]!==1||data[4]!==0||data[5]!==q.address||data[6]!==1||data[q.command===1?8:7]!==bus)return;
+      }
+      const reply=decode(data,pending.request);if(!reply)return;this.pending=null;clearTimeout(pending.timer);pending.resolve(reply);}catch(error){this.rejectPending(error);if(error.code==='SHORT_REPORT')this.fail(error);}}
+    fail(error){this.fault=error;this.onState('fault',error);}
+    exclusive(work){const run=this.queue.then(()=>{if(!this.connected)throw new BridgeError('DISCONNECTED','请先连接 USB 调试设备');if(this.fault)throw new BridgeError('DESYNC','上一笔通信失去同步，请断开后重新连接',{cause:this.fault.code});return work();});this.queue=run.catch(()=>{});return run;}
+    async exchange(request){if(this.pending)throw new BridgeError('BUSY','已有待完成的 HID 请求');const payload=encode({...request,i2cAddress:this.i2cAddress},this.reports.output.bytes);let resolve,reject;const reply=new Promise((a,b)=>{resolve=a;reject=b;});reply.catch(()=>{});
+      const timer=setTimeout(()=>{const error=new BridgeError('TIMEOUT','适配器应答超时；为避免串包，本次连接已停止读写');this.rejectPending(error);this.fail(error);},this.timeoutMs);this.pending={request,resolve,reject,timer};
+      try{this.log('OUT',request,payload);await this.device.sendReport(this.reports.output.id,payload);const answer=await reply;const profile=adapterProfile(this.device);if(profile?.fixedAudio&&request.command===2&&(answer.raw[8]!==1||answer.raw[2]!==request.value))throw new BridgeError('GATE_REJECTED','桥接器未确认音频时钟开关');if(profile?.kind==='S3'&&request.command===0x7e&&answer.protocolVersion!=='0.1')throw new BridgeError('PROTOCOL_VERSION','S3 协议版本不受支持；当前仅支持协议 0.1',{received:answer.protocolVersion});return answer;}catch(error){this.rejectPending(error);if(!['I2C_NACK','DISCONNECTED'].includes(error.code))this.fail(error);throw error;}
+    }
+    readRegister(address){byte(address,'寄存器地址');return this.exclusive(async()=>{const reply=await this.exchange({command:1,address,dataWidth:1,addressWidth:1});return reply.value;});}
+    writeRegister(address,value){byte(address,'寄存器地址');byte(value,'寄存器值');return this.exclusive(async()=>{await this.exchange({command:0,address,value,dataWidth:1,addressWidth:1});const read=await this.exchange({command:1,address,dataWidth:1,addressWidth:1});return read.value;});}
+    setMclk(enabled){if(typeof enabled!=='boolean')throw new BridgeError('ARGUMENT','时钟开关必须是布尔值');return this.exclusive(()=>this.exchange({command:2,value:enabled?1:0}));}
+    getStatus(){return this.exclusive(()=>{if(!adapterProfile(this.device)?.statusQuery)throw new BridgeError('CAPABILITY','此适配器未提供桥接状态查询');return this.exchange({command:0x7e});});}
+  }
+  const api={ADAPTERS,adapterProfile,deviceFilters,BridgeError,reportBytes,descriptors,selectReports,encode,decode,HidBridge};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.AudioHardwareTransport=api;
+})(typeof globalThis!=='undefined'?globalThis:this);
+
+</script>
+<script>
+(function () {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const {HidBridge} = AudioHardwareTransport;
+  let bridge = null, busy = false;
+  const events = [];
+  function record(event) {
+    events.push({time:new Date().toISOString(), ...event});
+    if (events.length > 1000) events.shift();
+    $('log').textContent = events.map(e => JSON.stringify(e)).join('\n');
+  }
+  function controls() {
+    const active = !!bridge?.connected && !bridge?.fault && !busy;
+    $('connect').disabled = busy || !navigator.hid;
+    $('disconnect').disabled = !bridge || busy;
+    for (const id of ['query', 'readId', 'read']) $(id).disabled = !active;
+    for (const id of ['write', 'gateOn', 'gateOff']) $(id).disabled = !active || !$('armed').checked;
+  }
+  function byte(id, max = 255) {
+    const value = $(id).value.trim().replace(/^0x/i, '');
+    if (!/^[0-9a-f]{1,2}$/i.test(value) || parseInt(value, 16) > max) throw Error('十六进制输入超出范围：' + id);
+    return parseInt(value, 16);
+  }
+  function selectedAddress() {
+    const value = byte('address', 0x77);
+    if (value < 0x08) throw Error('I²C 7位地址需在 08–77 之间');
+    bridge.i2cAddress = value;
+  }
+  async function action(fn) {
+    if (busy) return;
+    busy = true; controls();
+    try { await fn(); $('result').className = ''; }
+    catch (error) { $('result').textContent = error.message; $('result').className = 'err'; record({error:error.code || 'ERROR',message:error.message}); }
+    finally { busy = false; controls(); }
+  }
+  async function status() {
+    const s = await bridge.getStatus();
+    if (s.protocolVersion !== '0.1') {
+      const error = Error('当前工具仅核对了协议0.1，请停止写入并核对固件版本');
+      error.code = 'PROTOCOL'; bridge.fail(error); throw error;
+    }
+    $('status').textContent = `${bridge.device.productName} · 协议 ${s.protocolVersion} · 时钟${s.clockGate?'开':'关'} · 播放${s.playbackActive?'活动':'空闲'} · 录音${s.captureActive?'活动':'空闲'} · I²C错误低8位 ${s.i2cErrorsLow8}`;
+  }
+  async function read(idOnly) {
+    selectedAddress();
+    const address = idOnly ? 0 : byte('register');
+    const value = await bridge.readRegister(address);
+    $('result').textContent = `寄存器 0x${address.toString(16).padStart(2,'0')} = 0x${value.toString(16).padStart(2,'0')}` + (idOnly ? '；ID本身不能区分所有同族型号。' : '');
+  }
+  $('connect').onclick = () => action(async () => {
+    if (bridge) { await bridge.close(); bridge = null; }
+    $('armed').checked = false;
+    const devices = await navigator.hid.requestDevice({filters:[{vendorId:0x303a,productId:0x4005,usagePage:0xff00}]});
+    if (!devices.length) { $('status').textContent = '已取消选择，未连接。'; return; }
+    bridge = new HidBridge(devices[0], {onLog:record, onState:(state,error) => {
+      if (state !== 'connected') { $('armed').checked = false; $('status').textContent = state === 'fault' ? '连接失步，请断开后重新连接。' : '已断开'; }
+      if (error) record({state,error:error.message});
+      controls();
+    }});
+    await bridge.open();
+    await status(); // Read-only; no register writes or clock changes.
+  });
+  $('disconnect').onclick = () => action(async () => { if (bridge) await bridge.close(); bridge = null; $('armed').checked = false; });
+  $('query').onclick = () => action(status);
+  $('readId').onclick = () => action(() => read(true));
+  $('read').onclick = () => action(() => read(false));
+  $('write').onclick = () => action(async () => {
+    if (!$('armed').checked) throw Error('尚未允许写入');
+    selectedAddress();
+    const address = byte('register'), expected = byte('value');
+    const actual = await bridge.writeRegister(address, expected);
+    if (actual !== expected) throw Error(`写入已发送，读回不一致：期望0x${expected.toString(16)}，实际0x${actual.toString(16)}；未自动重试。`);
+    $('result').textContent = `写入并读回一致：0x${actual.toString(16).padStart(2,'0')}`;
+  });
+  for (const [id, enabled] of [['gateOn',true], ['gateOff',false]]) $(id).onclick = () => action(async () => {
+    if (!$('armed').checked) throw Error('尚未允许切换时钟');
+    const current = await bridge.getStatus();
+    if (current.playbackActive || current.captureActive) throw Error('请先停止系统播放和录音，再切换时钟');
+    await bridge.setMclk(enabled); await status();
+  });
+  $('armed').onchange = controls;
+  $('export').onclick = () => {
+    const blob = new Blob([JSON.stringify({tool:'AC10x S3 candidate 0.2.1',hardwareValidation:'not established by this page',events},null,2)],{type:'application/json'});
+    const url = URL.createObjectURL(blob), link = document.createElement('a');
+    link.href=url; link.download='ac10x-s3-debug.json'; link.click(); setTimeout(()=>URL.revokeObjectURL(url),1000);
+  };
+  if (!navigator.hid) $('status').textContent = '需要支持 WebHID 的桌面 Chrome/Edge；此页仍可离线查看。';
+  controls();
+})();
+
+</script>
+</body></html>

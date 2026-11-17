@@ -141,7 +141,6 @@
   "载入方案并继续": "Load plan and continue",
   "连接并确认真实时钟": "Connect and confirm the actual clocks",
   "连接并只读检查": "Connect and read only",
-  "S3为软件候选，板卡引脚和硬件行为需另行确认。": "S3 is a software candidate; board pins and hardware behavior need separate verification.",
   "音频源与帧格式": "Audio source and frame format",
   "外部时钟，保留当前帧格式": "External clocks; keep the current frame format",
   "S31 / S3固定48kHz格式": "S31 / S3 fixed 48 kHz format",
@@ -1284,7 +1283,6 @@
   "此寄存器值不符合S3固定音频格式；使用时钟模块查看受支持配置": "Register value conflicts with S3 fixed format; inspect supported clock settings",
   "S3 固定格式一致": "S3 fixed format matches",
   "S3 与 Codec 格式不一致": "S3 and codec formats differ",
-  "S3 软件候选，尚未实机验证": "S3 software candidate; hardware validation pending",
   "开发 PID 303A:4005；实际板型、供电与引脚需另行核对": "Development PID 303A:4005; board model, power and pins require separate verification",
   "点击“查询桥接器状态”；固件版本未由此协议提供": "Click Query bridge status; this protocol does not report a firmware version",
   "TI 适配器未提供桥接状态接口。": "TI adapters do not expose the bridge status interface.",
@@ -1293,7 +1291,6 @@
   "查询桥接器状态": "Query bridge status",
   "载入 ECM 静音草稿": "Load muted ECM draft",
   "ECM 静音基础草稿已载入": "Muted ECM base draft loaded",
-  "S3 软件候选，尚未实机验证；使用开发 PID 303A:4005。": "S3 software candidate; hardware validation pending. Uses development PID 303A:4005.",
   "支持 TI、S31 与 S3 USB 控制": "TI, S31 and S3 USB control",
   "完整路径总图": "Full routing overview",
   "EQ 与预设": "EQ and presets",
@@ -1338,7 +1335,6 @@
   "不支持的寄存器表": "Unsupported register map",
   "当前页面": "Current page",
   "草稿已改变，本次导入已取消": "The draft changed; this import was canceled",
-  "；TI / S31 / S3 控制。S3 仅为软件候选，尚未实机验证。协议版本不等于固件版本。": "; TI / S31 / S3 control. S3 is a software candidate, not hardware validated. Protocol version is not firmware version.",
   "右拖 · 滚轮 · 方向键 ± 0": "Right-drag · wheel · arrows ± 0",
   "聚焦信号图后，方向键平移，Shift 加方向键加速；+ 或 = 放大，- 缩小，0 适合窗口。用 Tab 选择模块，Enter 或空格打开设置。": "Focus the signal graph, then use arrow keys to pan; hold Shift to pan faster. + or = zooms in, - zooms out, and 0 fits the view. Tab selects a module; Enter or Space opens its settings.",
   "等待操作": "Waiting for an operation",
@@ -1357,7 +1353,11 @@
   "准备操作…": "Preparing operation…",
   "操作已取消": "Operation canceled",
   "未开始新的操作。": "No new operation was started.",
-  "已取消排队操作，未开始写入": "Queued operation canceled; no write started"
+  "已取消排队操作，未开始写入": "Queued operation canceled; no write started",
+  "S3 开发适配器": "S3 development adapter",
+  "GPIO8–14；开发 PID 303A:4005；应用固件版本由烧录包确认": "GPIO8–14; development PID 303A:4005; application firmware version is identified by the flashed package",
+  "S3 原生 USB · 48kHz 双向音频 · HID 协议 0.1": "S3 native USB · 48kHz duplex audio · HID protocol 0.1",
+  "；TI / S31 / S3 控制。S3 使用原生 USB Full Speed、GPIO8–14。协议版本不等于固件版本。": "; TI / S31 / S3 control. S3 uses native Full Speed USB and GPIO8–14. Protocol version is not firmware version."
 };
 if(typeof module!=="undefined"&&module.exports)module.exports=catalog;else root.AudioLocaleCatalog=catalog;
 })(typeof globalThis!=="undefined"?globalThis:this);

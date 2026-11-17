@@ -1,0 +1,10 @@
+# Keep the USB/application hot path in internal RAM; verify S3 link/memory usage.
+[mapping:s3_tinyusb_iram]
+archive: libtinyusb.a
+entries:
+    * (noflash)
+
+[mapping:s3_audio_app_iram]
+archive: libmain.a
+entries:
+    * (noflash)

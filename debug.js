@@ -4,7 +4,7 @@
   const common=typeof module!=='undefined'&&module.exports;
   const C=common?require('./codec.js'):root.AudioCodec,R=common?require('./routing.js'):root.AudioRouting,D=common?require('./dsp.js'):root.AudioDSP;
   const T=common?require('./transport.js'):root.AudioHardwareTransport;
-  const VERSION='0.8.12-rc.1',profiles=['AC102-reference','AC101S','AC102'];
+  const VERSION='0.8.13-rc.1',profiles=['AC102-reference','AC101S','AC102'];
   const clone=x=>JSON.parse(JSON.stringify(x));
   function safeObject(value,depth=0){
     if(depth>12)throw new Error('配置嵌套过深');
@@ -72,7 +72,7 @@
     if(['S31','S3'].includes(adapter?.kind)){
       const match=fs===48000&&(snapshot[7]&0xc0)===0&&(snapshot[12]&0x77)===0x73&&snapshot[10]===31&&(snapshot[11]&0x34)===0x14;
       const s3=adapter.kind==='S3';add(s3?'s3-format':'s31-format',match?'ok':'error',s3?(match?'S3 固定格式一致':'S3 与 Codec 格式不一致'):(match?'S31 固定格式一致':'S31 与 Codec 格式不一致'),'48kHz / 16位数据 / 32位双时隙 / I²S 从机');
-      if(s3)add('s3-validation','warning','S3 软件候选，尚未实机验证','开发 PID 303A:4005；实际板型、供电与引脚需另行核对','support-status');
+      if(s3)add('s3-validation','info','S3 开发适配器','GPIO8–14；开发 PID 303A:4005；应用固件版本由烧录包确认','support-status');
       if(status){
         add('bridge',status.clockGate?'ok':'warning',status.clockGate?'桥接时钟已开启':'桥接时钟已关闭',`协议${status.protocolVersion}；播放${status.playbackActive?'活动':'空闲'}；录音${status.captureActive?'活动':'空闲'}`,'bridge-status');
         if(status.i2cErrorsLow8||status.busyLow8)add('bridge-errors','warning','桥接端有错误或忙记录',`I²C=${status.i2cErrorsLow8}，忙=${status.busyLow8}（协议计数读回）`,'bridge-status');

@@ -1,7 +1,0 @@
-{
-  "version": "0.8.10-rc.1",
-  "status": "PLAYBACK_FUNCTION_USER_ACCEPTED",
-  "score": null,
-  "scope": "Quick Start playback gain and default startup; digital RX/PLAY tracing and user-confirmed audible playback",
-  "fullDeviceAudioQualityCertified": false
-}
