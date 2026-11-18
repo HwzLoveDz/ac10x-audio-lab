@@ -2,8 +2,6 @@
 
 [中文](README.md) | **English**
 
-**By mondraker**
-
 A browser-based audio tool for AC101S and AC102 codecs. Configure signal routing, tune EQ, read and write registers, and test USB playback and recording from a signal graph. Available in Chinese and English, with light and dark themes.
 
 Web app **0.8.16-rc.1** · bridge firmware **0.4.0**
