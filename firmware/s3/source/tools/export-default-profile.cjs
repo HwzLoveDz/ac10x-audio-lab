@@ -13,7 +13,7 @@ let peak=-Infinity;for(let i=0;i<8192;i++){const f=20*Math.pow(23900/20,i/8191);
 if(peak>-.5)throw Error('Insufficient nominal EQ headroom');
 const rows=single.map((p,i)=>{if(p.address!==diff[i].address||p.mask!==diff[i].mask)throw Error('Mode-dependent ownership');return{address:p.address,mask:p.mask,single:p.value,differential:diff[i].value};});
 const canonical=JSON.stringify(config),sha=crypto.createHash('sha256').update(canonical).digest('hex');
-const doc={name:'默认固件',format:'AC10x-configuration',schemaVersion:1,firmwareVersion:'0.3.0',target:'esp32s3',derivedFromS31FirmwareVersion:'0.3.3',webVersion:require('../profile-source/package.json').version,eqPresetId:'voice',eqPresetName:'人声清晰',config,nominalEQPeakDb:peak,canonicalConfigSHA256:sha,registerPatches:rows};
+const doc={name:'默认固件',format:'AC10x-configuration',schemaVersion:1,firmwareVersion:'0.3.1',target:'esp32s3',derivedFromS31FirmwareVersion:'0.3.3',webVersion:require('../profile-source/package.json').version,eqPresetId:'voice',eqPresetName:'人声清晰',config,nominalEQPeakDb:peak,canonicalConfigSHA256:sha,registerPatches:rows};
 fs.writeFileSync(outArg,JSON.stringify(doc,null,2)+'\n');
 let text='/* Generated from the same defaultFirmware() used by Quick Start. */\n#pragma once\n#include <stdint.h>\n#include <stddef.h>\n';
 text+='typedef struct { uint8_t address, mask, single, differential; } codec_default_patch_t;\n';

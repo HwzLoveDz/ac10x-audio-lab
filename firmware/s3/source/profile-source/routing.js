@@ -10,6 +10,7 @@
   function lineGainCode(db,differential){const min=differential?-45:-39;if(!Number.isInteger(db)||db>0||db<min||db%3)throw new Error('当前 Line Out '+(differential?'差分':'单端')+'模式仅支持 '+min+' 至 0 dB，步进 3 dB');return db===0?0:-db/3+(differential?0:2);}
   function normalize(c){if(!c.routing)c.routing=defaults();return c;}
   function equivalent(a,b){if(a===b)return true;if(!a||!b||typeof a!=='object'||typeof b!=='object'||Array.isArray(a)!==Array.isArray(b))return false;const keys=Object.keys(a);return keys.length===Object.keys(b).length&&keys.every(k=>Object.prototype.hasOwnProperty.call(b,k)&&equivalent(a[k],b[k]));}
+  function dmicSupported(c){return c.profile==='AC101S'?[16000,48000].includes(c.clock.fs):c.clock.fs<=24000;}
   function validate(c){const r=c.routing;if(!r||!['analog','dmic'].includes(r.input))throw new Error('输入路径选择无效');
     for(const k of ['mbias','rxEnabled','txEnabled','sdoEnabled','lineOut'])if(typeof r[k]!=='boolean')throw new Error('路由开关格式无效');
     for(const [group,keys] of Object.entries({rx:['left','right','leftHalf','rightHalf'],dac:['rx','rec','rxHalf','recHalf'],txL:['rec','play','recHalf','playHalf'],txR:['rec','rx','recHalf','rxHalf']})){if(!r[group]||keys.some(k=>typeof r[group][k]!=='boolean'))throw new Error('混音器配置无效');}
@@ -66,16 +67,16 @@
   const nodeMap=Object.fromEntries(nodes.map(n=>[n[0],n]));
   const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function edgePaths(e,color,prefix,ui){const arrow=e.shared||(prefix==='route-arrow-'&&['rec','rxm','play'].includes(e.to))?'':' marker-end="url(#'+prefix+color+')"';return '<path class="edge-halo" d="'+e.d+'"/><path class="edge-line '+e.group+'" d="'+e.d+'"'+arrow+'/>'+(e.on&&ui.animate!==false?'<path class="edge-flow" aria-hidden="true" fill="none" stroke="none" d="'+e.d+'" style="animation-delay:'+(Number.isFinite(ui.flowOffset)?ui.flowOffset:0)+'s"/>':'')+(e.label?'<text class="edge-caption '+e.group+'" x="'+e.lx+'" y="'+e.ly+'" text-anchor="middle">'+esc(e.label)+'</text>':'');}
-  function graph(c){const r=c.routing,analog=r.input==='analog',dmic=!analog,rec=c.adc.enabled&&(analog||c.clock.fs<=24000),rxSlots=r.rxMap.slice(0,c.clock.slots),rxLeft=r.rxEnabled&&r.rx.left&&rxSlots.includes(0),rxRight=r.rxEnabled&&r.rx.right&&rxSlots.includes(1),rx=rxLeft||rxRight,play=c.dac.enabled&&(r.dac.rx&&rx||r.dac.rec&&rec),tx=r.txEnabled&&r.sdoEnabled,txSlots=r.txMap.slice(0,c.clock.slots);
+  function graph(c){const r=c.routing,analog=r.input==='analog',dmic=!analog,rec=c.adc.enabled&&(analog||dmicSupported(c)),rxSlots=r.rxMap.slice(0,c.clock.slots),rxLeft=r.rxEnabled&&r.rx.left&&rxSlots.includes(0),rxRight=r.rxEnabled&&r.rx.right&&rxSlots.includes(1),rx=rxLeft||rxRight,play=c.dac.enabled&&(r.dac.rx&&rx||r.dac.rec&&rec),tx=r.txEnabled&&r.sdoEnabled,txSlots=r.txMap.slice(0,c.clock.slots);
     const edges=[];
     function add(id,from,to,d,on,group,label='',lx=0,ly=0,kind='audio'){edges.push({id,from,to,d,on,group,label,lx,ly,kind});}
     add('bias-mic','bias','input','M108 158V240',r.mbias&&analog,'record','MBIAS',126,201,'control');
     add('mic-pga','input','pga','M176 278H232',analog,'record');
     add('pga-adc','pga','adc','M368 278H424',analog&&c.adc.enabled,'record');
     add('adc-mux','adc','source','M560 278H616',analog&&c.adc.enabled,'record');
-    add('dmic-data','dmicport','dmic','M176 456H424',dmic&&c.clock.fs<=24000,'record','PDM DATA',300,493);
-    add('dmic-clock','dmic','dmicport','M424 420H176',dmic&&c.clock.fs<=24000,'record','DMIC CLK',300,409,'control');
-    add('dmic-mux','dmic','source','M560 438H684V316',dmic&&c.clock.fs<=24000,'record');
+    add('dmic-data','dmicport','dmic','M176 456H424',dmic&&rec,'record','PDM DATA',300,493);
+    add('dmic-clock','dmic','dmicport','M424 420H176',dmic&&rec,'record','DMIC CLK',300,409,'control');
+    add('dmic-mux','dmic','source','M560 438H684V316',dmic&&rec,'record');
     add('mux-decim','source','decim','M752 278H808',rec,'record');
     add('decim-hpf','decim','hpf','M944 278H1000',rec,'record');
     add('hpf-agc','hpf','agc','M1136 278H1192',rec,'record');
@@ -108,7 +109,7 @@
     const visualWires=[{id:'rec-trunk',from:'rec',to:'rec-fork',d:'M1576 278V446',on:rec,group:'record',shared:true,junctions:[[1576,446]]}];
     return{nodes,edges,shared,visualWires,taps:[['rec',1576,278,'RECD_DAT',rec],['rxm',616,802,'RXM',rx],['play',1248,802,'PLAY_DAT',play]],state:{rec,rx,play,tx,analog,dmic}};
   }
-  function sublabel(n,c,g){const r=c.routing,s=g.state;return ({pga:c.pga+' dB',hpf:c.hpf.enabled?c.hpf.freq+' Hz':'BYPASS',agc:c.agc.enabled?'目标 '+c.agc.target+' dBFS':'BYPASS',adcvol:c.adc.mute?'MUTE':c.adc.gain+' dB',dacvol:c.dac.mute?'MUTE':c.dac.gain+' dB',eq:c.eq.enabled?c.eq.bands.filter(b=>b.enabled).length+' 段启用':'BYPASS',lineamp:r.lineGain+' dB · '+(r.lineOut?'ON':'OFF'),source:r.input==='analog'?'模拟输入':'数字麦克风',rxmix:[r.rx.left?'L':'',r.rx.right?'R':''].filter(Boolean).join(' + ')||'OFF',dacmix:[r.dac.rx?'RXM':'',r.dac.rec?'REC':''].filter(Boolean).join(' + ')||'OFF',txl:[r.txL.rec?'REC':'',r.txL.play?'PLAY':''].filter(Boolean).join(' + ')||'OFF',txr:[r.txR.rec?'REC':'',r.txR.rx?'RXM':''].filter(Boolean).join(' + ')||'OFF',adcdebug:['正常采集','0x5A5A5A','0x123456','RX_MIX 数据'][r.adcPattern],dacdebug:['正常播放','−6 dB 正弦','−60 dB 正弦','全零数据'][r.dacPattern],tx:r.txEnabled&&r.sdoEnabled?'TX / SDO ENABLED':'TX / SDO OFF',rx:r.rxEnabled?'RX ENABLED':'RX OFF'})[n[0]]??n[6];}
+  function sublabel(n,c,g){const r=c.routing,s=g.state;return ({pga:s.dmic?'DMIC BYPASS':c.pga+' dB',adc:s.dmic?'DMIC BYPASS':'模拟调制器',bias:s.dmic?'AMIC ONLY':'麦克风偏置',hpf:c.hpf.enabled?c.hpf.freq+' Hz':'BYPASS',agc:c.agc.enabled?'目标 '+c.agc.target+' dBFS':'BYPASS',adcvol:c.adc.mute?'MUTE':c.adc.gain+' dB',dacvol:c.dac.mute?'MUTE':c.dac.gain+' dB',eq:c.eq.enabled?c.eq.bands.filter(b=>b.enabled).length+' 段启用':'BYPASS',lineamp:r.lineGain+' dB · '+(r.lineOut?'ON':'OFF'),source:r.input==='analog'?'模拟输入':'数字麦克风',rxmix:[r.rx.left?'L':'',r.rx.right?'R':''].filter(Boolean).join(' + ')||'OFF',dacmix:[r.dac.rx?'RXM':'',r.dac.rec?'REC':''].filter(Boolean).join(' + ')||'OFF',txl:[r.txL.rec?'REC':'',r.txL.play?'PLAY':''].filter(Boolean).join(' + ')||'OFF',txr:[r.txR.rec?'REC':'',r.txR.rx?'RXM':''].filter(Boolean).join(' + ')||'OFF',adcdebug:['正常采集','0x5A5A5A','0x123456','RX_MIX 数据'][r.adcPattern],dacdebug:['正常播放','−6 dB 正弦','−60 dB 正弦','全零数据'][r.dacPattern],tx:r.txEnabled&&r.sdoEnabled?'TX / SDO ENABLED':'TX / SDO OFF',rx:r.rxEnabled?'RX ENABLED':'RX OFF'})[n[0]]??n[6];}
   function render(c,selected='pga',ui={focus:'all',zoom:1}){if(ui.focus&&ui.focus!=='all')return renderFocused(c,selected,{...ui,detail:'professional'});const g=graph(c),focus=ui.focus||'all';let s='<svg id="routingSVG" viewBox="0 0 '+W+' '+H+'" role="group" aria-label="AC10x 完整音频信号路径总图" style="width:'+(ui.zoom*100)+'%">';
     s+='<defs>'+[['record','#237f70'],['play','#a96f2c'],['monitor','#7862ae'],['loopback','#396fa3'],['debug','#7864b5'],['muted','#87959d']].map(([id,color])=>'<marker id="route-arrow-'+id+'" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 1L9 5L0 9Z" fill="var(--signal-'+id+','+color+')"/></marker>').join('')+'</defs>';
     s+='<rect class="graph-region" x="406" y="214" width="1132" height="128" rx="12"/><text class="graph-region-label" x="422" y="231">ADC / RECORD CHANNEL</text><rect class="graph-region" x="846" y="740" width="996" height="128" rx="12"/><text class="graph-region-label" x="862" y="858">DAC / PLAYBACK CHANNEL</text>';
@@ -124,7 +125,7 @@
       const debugActive=id==='adcdebug'&&c.routing.adcPattern!==0||id==='dacdebug'&&c.routing.dacPattern!==0;
       s+='<g class="graph-node '+kind+(selected===id?' selected':'')+(ui.associate&&near.has(id)&&selected!==id?' related':'')+(off?' off':'')+(debugActive?' enabled-node':'')+'" role="button" tabindex="0" aria-label="'+title+' 模块" data-node="'+id+'" aria-pressed="'+(selected===id)+'"><rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="8"/>'+(kind==='mix'?'<circle cx="'+(x+13)+'" cy="'+(y+13)+'" r="3" class="mixer-dot"/>':'')+'<text class="node-title" x="'+(x+w/2)+'" y="'+(y+h/2-4)+'" text-anchor="middle">'+esc(title)+'</text><text class="node-subtitle" x="'+(x+w/2)+'" y="'+(y+h/2+17)+'" text-anchor="middle">'+esc(id==='eq'&&ui.readback?(c.eq.enabled?'已启用 · 设备系数':'BYPASS'):id==='hpf'&&ui.readback&&ui.hpfKnown===false&&c.hpf.enabled?'频率未知':sublabel(n,c,g))+'</text></g>';}
     s+='<text class="graph-note" x="40" y="912">AMIC 与 DMIC 共用 MICP / MICN；DMIC 使用抽取滤波，绕过模拟 PGA / ΣΔ ADC。</text><text class="graph-note" x="40" y="940">REC → DAC 为监听；PLAY → TXL 为播放回采；RXM → TXR 为数字直通。交叉线无圆点不连接。</text><text class="graph-note" x="2136" y="940" text-anchor="end">'+esc(ui.sourceLabel||'参数草稿路径')+'</text>';
-    if(c.routing.input==='dmic'&&c.clock.fs>24000)s+='<text class="graph-warning" x="40" y="516">当前 '+c.clock.fs/1000+' kHz 超出手册列出的 DMIC 8–24 kHz 范围</text>';
+    if(c.routing.input==='dmic'&&!dmicSupported(c))s+='<text class="graph-warning" x="40" y="516">DMIC 采样率不适用于所选型号：'+c.clock.fs/1000+' kHz</text>';
     return{html:s+'</svg>',count:g.edges.length,nodes:g.nodes.length+g.taps.length,width:W,height:H};
   }
   const focusLabels={record:'麦克风录音',play:'USB / I²S播放',monitor:'麦克风本地监听',loopback:'RX数字直通',recapture:'播放数据回采',duplex:'独立录音与播放',mixed:'USB与麦克风混合输出'};
@@ -228,9 +229,9 @@
   function mixFields(name,a,b,labelA,labelB){const p='routing.'+name;return '<div class="mix-input">'+check(p+'.'+a,labelA)+check(p+'.'+a+'Half',labelA+' −6 dB')+'</div><div class="mix-input">'+check(p+'.'+b,labelB)+check(p+'.'+b+'Half',labelB+' −6 dB')+'</div>';}
   function inspector(id,c){const r=c.routing;let title='',desc='',controls='',ref='',note='修改后在本悬窗底部写入；只更新当前模块并核验读回。';
     switch(id){
-      case 'bias':title='MIC BIAS';desc='给模拟麦克风提供偏置，和音频输入信号分开显示。';controls=check('routing.mbias','启用麦克风偏置');ref='PWR_CTRL2 · 0x02[2]';break;
-      case 'input':case 'source':case 'dmic':case 'dmicport':title='输入选择 · AMIC / DMIC';desc='模拟 PGA / ΣΔ ADC 和 DMIC 数据在共享抽取滤波器前选择。DMIC 使用 MICP 输出时钟，MICN 输入 PDM 数据。';controls=select('routing.input','录音输入',[['analog','模拟麦克风 · AMIC'],['dmic','数字麦克风 · DMIC']])+check('adc.enabled','启用 ADC 数字通道');ref='ADC_DIG_CTRL · 0x19[7,0]';note=c.clock.fs>24000?'手册仅列出 DMIC 8–24 kHz 的时钟配置。当前高于该范围，图中分支显示不可用。':'DMIC 路径由 AC102 手册核对；不据此推定 AC101S 同样支持。';break;
-      case 'pga':title='PGA · 模拟输入增益';desc='差分输入前置放大，只作用于模拟麦克风路径；DMIC 绕过此模块。';controls=range('pga','PGA 增益',0,31,1,'dB');ref='ADC_ANA_CTRL1 · 0x20[7:3]';break;
+      case 'bias':title='MIC BIAS';desc='给模拟麦克风提供偏置，和音频输入信号分开显示。';controls=(r.input==='dmic'?'<fieldset disabled>':'')+check('routing.mbias','启用麦克风偏置')+(r.input==='dmic'?'</fieldset>':'');note=r.input==='dmic'?'DMIC 使用独立供电；本评估板由 H32 接通 MIC3 电源，模拟咪头偏置不控制 DMIC。':note;ref='PWR_CTRL2 · 0x02[2]';break;
+      case 'input':case 'source':case 'dmic':case 'dmicport':title='输入选择 · AMIC / DMIC';desc='模拟 PGA / ΣΔ ADC 和 DMIC 数据在共享抽取滤波器前选择。DMIC 使用 MICP 输出时钟，MICN 输入 PDM 数据。';controls=select('routing.input','录音输入',[['analog','模拟麦克风 · AMIC'],['dmic','数字麦克风 · DMIC']])+check('adc.enabled','启用 ADC 数字通道');ref='ADC_DIG_CTRL · 0x19[7,0]';note=c.profile==='AC101S'?'AC101S 数字输入可用 16 / 48 kHz；S3 固件 0.3.1 使用固定 48 kHz。DMIC 接 MICP 时钟和 MICN 数据，评估板 C34 留空、H29 移除。':'AC102 按手册使用 8–24 kHz DMIC；48 kHz 适配仅用于 AC101S / S3。';break;
+      case 'pga':title='PGA · 模拟输入增益';desc='差分输入前置放大，只作用于模拟麦克风路径；DMIC 绕过此模块。';controls=(r.input==='dmic'?'<fieldset disabled>':'')+range('pga','PGA 增益',0,31,1,'dB')+(r.input==='dmic'?'</fieldset>':'');note=r.input==='dmic'?'数字麦克风绕过模拟 PGA；请在录音音量模块调整数字增益。':note;ref='ADC_ANA_CTRL1 · 0x20[7:3]';break;
       case 'adc':title='ΣΔ ADC';desc='模拟麦克风的 ΣΔ 调制器。DMIC 模式绕过模拟调制器并共用后续抽取滤波。';controls=check('adc.enabled','启用 ADC 数字通道')+jump('clock','配置采样率与时钟');ref='ADC_DIG_CTRL · 0x19[0]';break;
       case 'decim':title='DECIM · 抽取滤波';desc='将 ADC 调制器或 DMIC 的过采样数据转换为录音采样率，再进入 HPF、AGC 和数字音量。';controls=jump('clock','查看采样率');ref='手册 Fig 9-24';break;
       case 'hpf':title='HPF · 录音高通';desc='位于抽取滤波之后、AGC 之前。关闭时旁路通过，不切断录音路径。';controls=check('hpf.enabled','启用高通')+range('hpf.freq','HPF 截止频率',.1,1000,.1,'Hz')+jump('dynamics','编辑高通');ref='AGC_CTRL · 0x31[3]';note='器件 HPF 为一阶 IIR。下发系数时先旁路，写后读回核验，再恢复使能。';break;
@@ -260,7 +261,7 @@
     }
     return{kind:nodeMap[id]?.[7]?.toUpperCase()||'SIGNAL',html:'<div class="routing-inspector"><div class="detail-identity"><h3>'+esc(title)+'</h3><p>'+esc(desc)+'</p></div><div class="route-fields">'+controls+'</div><div class="detail-reference"><div class="eyebrow">REGISTER / SOURCE</div><b>'+esc(ref)+'</b><p>'+esc(note)+'</p></div></div>'};
   }
-  const api={defaults,normalize,equivalent,validate,lineGainDb,lineGainCode,generated,registers,graph,focusedGraph,renderFocused,render,renderSimple,SIMPLE_IDS,inspector,W,H};
+  const api={dmicSupported,defaults,normalize,equivalent,validate,lineGainDb,lineGainCode,generated,registers,graph,focusedGraph,renderFocused,render,renderSimple,SIMPLE_IDS,inspector,W,H};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.AudioRouting=api;
 })(typeof globalThis!=='undefined'?globalThis:this);
 

@@ -24,16 +24,18 @@ class NativeDevice{
 }
 
 
-const E=require('../examples.js'),mode=args.mode||'enable',result={mode,rows:[]};
+const E=require('../examples.js'),mode=args.mode||'enable',inputMode=args.input||'analog',result={mode,inputMode,rows:[]};
+assert.ok(['enable','default'].includes(mode),'--mode must be enable or default');assert.ok(['analog','dmic'].includes(inputMode),'--input must be analog or dmic');
 const device=new NativeDevice(),bridge=new T.HidBridge(device,{timeoutMs:2000}),session=new S.RegisterSession(bridge);
-const opt={groups:['routing','eq','dynamics','clock'],profile:'AC101S',mclkHz:12288000};let baseline;
+const opt={groups:['routing','eq','dynamics','clock'],profile:'AC101S',mclkHz:12288000};let baseline,touched=false;
 (async()=>{try{
- await bridge.open();const state=await session.readAll();baseline=E.defaultFirmware(require('../AC101S-S31-ECM-Speaker-muted.json'),{fixedAudio:true,lineDifferential:Boolean(state[38]&16)});
- result.before=await bridge.getAEC();await bridge.setAEC(false);
- const cfg=mode==='default'?baseline:E.quickExample('aec-call',baseline,{fixedAudio:true,lineDifferential:Boolean(state[38]&16)});
+ await bridge.open();result.capabilities=await bridge.getCapabilities();const state=await session.readAll();baseline=E.defaultFirmware(require('../AC101S-S31-ECM-Speaker-muted.json'),{inputMode,fixedAudio:true,lineDifferential:Boolean(state[38]&16)});
+ const cfg=mode==='default'?baseline:E.quickExample('aec-call',baseline,{inputMode,fixedAudio:true,lineDifferential:Boolean(state[38]&16)});
+ C.assertAdapterClock(cfg,opt,device);C.makePlan(cfg,state,opt);
+ result.before=await bridge.getAEC();touched=true;await bridge.setAEC(false);
  const applied=await session.apply(cfg,opt);assert.equal(C.makePlan(cfg,session.snapshot,opt).steps.length,0);
  if(mode==='enable')await bridge.setAEC(true);
  result.after=await bridge.getAEC();result.bridge=await bridge.getStatus();result.snapshot={...session.snapshot};result.writes=applied.writes;
  assert.equal(result.after.enabled,mode==='enable');result.status='PASS';
-}catch(e){result.status='FAILED';result.error={message:e.message,code:e.code,details:e.details};if(baseline&&bridge.connected&&!bridge.fault){try{await bridge.setAEC(false);await session.apply(baseline,opt);result.restoredDefault=true;}catch(x){result.restoreError=x.message;}}process.exitCode=1;
+}catch(e){result.status='FAILED';result.error={message:e.message,code:e.code,details:e.details};if(touched&&baseline&&bridge.connected&&!bridge.fault){try{await bridge.setAEC(false);await session.apply(baseline,opt);result.restoredDefault=true;}catch(x){result.restoreError=x.message;}}process.exitCode=1;
 }finally{try{await bridge.close();result.cleanup=device.cleanup;}catch(e){result.closeError=e.message;device.child?.kill();}device.child?.stdin.end();fs.writeFileSync(path.join(out,'result.json'),JSON.stringify(result,null,2));console.log(JSON.stringify(result));}})();

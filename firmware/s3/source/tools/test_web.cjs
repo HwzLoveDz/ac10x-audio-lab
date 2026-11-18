@@ -55,7 +55,7 @@ async function transportTests() {
 }
 async function dom() {
   const d=new FakeHID();let chooser=0;
-  const html=fs.readFileSync(path.join(root,'web/AC10x-S3-Bridge-v0.3.0.html'),'utf8');
+  const html=fs.readFileSync(path.join(root,'web/AC10x-S3-Bridge-v0.3.1.html'),'utf8');
   const page=new JSDOM(html,{runScripts:'dangerously',url:'https://offline.test/',beforeParse(window){
     Object.defineProperty(window.navigator,'hid',{value:{async requestDevice(options){chooser++;assert.equal(options.filters[0].productId,0x4005);return[d];},addEventListener(){},removeEventListener(){}}});
   }});
@@ -81,7 +81,7 @@ async function dom() {
 }
 (async()=>{
   await transportTests();await dom();
-  const result={result:'PASS',firmwareVersion:'0.3.0',checks,hardware:'NOT OPENED; simulated HID only',webSourceSHA256:require('node:crypto').createHash('sha256').update(fs.readFileSync(path.join(root,'web/AC10x-S3-Bridge-v0.3.0.html'))).digest('hex')};
+  const result={result:'PASS',firmwareVersion:'0.3.1',checks,hardware:'NOT OPENED; simulated HID only',webSourceSHA256:require('node:crypto').createHash('sha256').update(fs.readFileSync(path.join(root,'web/AC10x-S3-Bridge-v0.3.1.html'))).digest('hex')};
   fs.writeFileSync(path.join(root,'evidence/web-tests.json'),JSON.stringify(result,null,2)+'\n');
   console.log(JSON.stringify(result,null,2));
 })().catch(e=>{console.error(e);process.exitCode=1;});

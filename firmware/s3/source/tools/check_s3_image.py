@@ -28,7 +28,7 @@ with (build/'ac10x_s3_bridge.elf').open('rb') as f:
     expected_table = bytes(value for p in profile['registerPatches']
                            for value in [p['address'],p['mask'],p['single'],p['differential']])
     assert data('codec_default_patches') == expected_table, 'Linked profile differs from Quick Start'
-    assert data('esp_app_desc')[16:48].rstrip(b'\0') == b'0.3.0', 'Wrong linked app version'
+    assert data('esp_app_desc')[16:48].rstrip(b'\0') == b'0.3.1', 'Wrong linked app version'
 
     device = data('device_descriptor')
     assert len(device) == 18 and u16(device, 2) == 0x0200
@@ -118,7 +118,7 @@ result = {
     'bytes':len(image), 'sha256':hashlib.sha256(image).hexdigest(),
     'usb':'Full Speed only, UAC2 48kHz stereo S16LE duplex + HID10',
     'vid_pid':'303A:4005 (local development only)', 'hid_protocol':'0.1',
-    'firmware_version':'0.3.0', 'default_profile':'USB soundcard / clear vocals',
+    'firmware_version':'0.3.1', 'default_profile':'USB soundcard / clear vocals',
     'linked_default_profile':'83 rows exactly match generated JSON',
     'canonical_config_sha256':profile['canonicalConfigSHA256'],
     'app_partition_free_bytes':0x1f0000-len(image),

@@ -20,7 +20,7 @@ static void usb_task(void *unused)
 }
 void app_main(void)
 {
-    ESP_LOGI("bridge","S3 AEC FIRMWARE v0.3.0; USB soundcard / clear vocals / independent capture");
+    ESP_LOGI("bridge","S3 AEC FIRMWARE v0.3.1; USB soundcard / clear vocals / independent capture");
     ESP_LOGW("bridge","GPIO8-14; default USB soundcard; AEC available through Quick Start");
     ESP_ERROR_CHECK(hid_bridge_init());
     ESP_ERROR_CHECK(audio_pipe_init());

@@ -1,9 +1,9 @@
 {
   "name": "ac10x-audio-lab",
-  "version": "0.8.12-rc.1",
+  "version": "0.8.15-rc.1",
   "private": true,
   "license": "CC-BY-NC-SA-4.0",
-  "description": "Local AC101S/AC102 audio register workbench with explicit verified hardware transactions",
+  "description": "Browser audio workbench for AC101S/AC102, with S3 AC101S digital-microphone capture and echo cancellation.",
   "engines": {
     "node": ">=18"
   },

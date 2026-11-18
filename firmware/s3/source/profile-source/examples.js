@@ -27,10 +27,11 @@
     const p=eqPresets.find(x=>x.id===id);if(!p)throw new Error('未知 EQ 预设');if(!C.FS.includes(fs))throw new Error('不支持此采样率');
     return{enabled:true,preGain:p.preGain,bands:p.bands.map(b=>({...b,freq:Math.min(b.freq,Math.floor(fs*.4))}))};
   }
-  function quickStart(config,{fixedAudio=false,lineDifferential=config.routing?.lineDifferential}={}){
+  function quickStart(config,{fixedAudio=false,lineDifferential=config.routing?.lineDifferential,inputMode='analog'}={}){
     const c=C.normalize(copy(config)),r=R.defaults();
     if(fixedAudio)c.clock={fs:48000,format:'I2S',bits:16,slot:32,slots:2,role:'slave'};
-    Object.assign(r,{input:'analog',mbias:true,rxEnabled:true,txEnabled:true,sdoEnabled:true,lineOut:true,lineGain:0,lineDifferential:Boolean(lineDifferential)});
+    if(!['analog','dmic'].includes(inputMode))throw Error('麦克风类型无效');
+    Object.assign(r,{input:inputMode,mbias:true,rxEnabled:true,txEnabled:true,sdoEnabled:true,lineOut:true,lineGain:0,lineDifferential:Boolean(lineDifferential)});
     r.rx={left:true,right:true,leftHalf:true,rightHalf:true};
     r.dac={rx:true,rec:false,rxHalf:false,recHalf:false};
     r.txL={rec:true,play:false,recHalf:false,playHalf:false};
@@ -44,15 +45,17 @@
     {id:'default',name:'默认固件 · USB 声卡',tag:'日常使用',note:'USB 播放与麦克风独立录音，人声清晰 EQ；恢复正常播放电平。',path:'USB → 人声清晰 → 扬声器；MIC → USB',effect:'DAC 0 dB · Line Out 0 dB · 监听关闭',presetId:'voice'},
     {id:'flat-playback',name:'纯净播放',tag:'播放',note:'EQ 真正旁路，保留原始音色；关闭芯片麦克风采集。',path:'USB → EQ 旁路 → 扬声器',effect:'正常播放电平 · 麦克风采集关闭',presetId:'voice'},
     {id:'warm-music',name:'温暖音乐',tag:'播放',note:'增加少量低频厚度，缓和高频；麦克风仍独立录音。',path:'USB → 温暖柔和 EQ → 扬声器',effect:'正常播放电平 · 不开录音监听',presetId:'warm'},
-    {id:'record-only',name:'独立录音',tag:'录音',note:'模拟麦克风经 80 Hz 高通送到 USB；AGC 关闭，扬声器静音。',path:'MIC → PGA 12 dB → HPF 80 Hz → USB',effect:'DAC 与 Line Out 关闭 · 不会自动开始录音',presetId:'voice'},
+    {id:'record-only',name:'独立录音',tag:'录音',note:'所选麦克风经 80 Hz 高通送到 USB；AGC 关闭，扬声器静音。',path:'MIC → HPF 80 Hz → USB',effect:'DAC 与 Line Out 关闭 · 不会自动开始录音',presetId:'voice'},
     {id:'playback-loopback',name:'播放数字回采',tag:'数字排查',note:'USB 录音左路接处理后播放数据，右路接输入混音，便于比较；不采集咪头。',path:'USB → EQ → 扬声器；PLAY / RXM → USB',effect:'录音左路为处理后数据，右路为 EQ 前数据',presetId:'voice'},
     {id:'left-channel',name:'仅左声道播放',tag:'声道排查',note:'只把电脑的左声道送到扬声器；用于排查声道选择和接线。',path:'USB 左声道 → 人声清晰 → 扬声器',effect:'右播放声道不混入 · 麦克风独立录音',presetId:'voice'},
     {id:'right-channel',name:'仅右声道播放',tag:'声道排查',note:'只把电脑的右声道送到扬声器；用于排查声道选择和接线。',path:'USB 右声道 → 人声清晰 → 扬声器',effect:'左播放声道不混入 · 麦克风独立录音',presetId:'voice'},
+    {id:'aec-call',name:'AEC 免提通话',tag:'S3 · 消回声',note:'所选麦克风与播放参考同步送入 S3 AEC，保留人声清晰播放。模拟输入使用 0.3.0 起的 AEC 固件，数字输入使用 0.3.1。',path:'USB → EQ → 扬声器；MIC + PLAY → S3 AEC → USB',effect:'16 kHz 语音处理 · USB 48 kHz · 单声道录音复制到左右路',presetId:'voice',requiresS3AEC:true},
     {id:'mute',name:'静音待机',tag:'暂停音频',note:'关闭芯片录放和模拟输出；USB 控制保持可用，可再写入任一方案。',path:'播放关闭 · 录音关闭 · USB 控制保留',effect:'不休眠 MCU、不刷固件、不改电脑音量',presetId:'voice'}
   ];
   function quickExample(id,config,options={}){
     const meta=quickExamples.find(x=>x.id===id);if(!meta)throw new Error('未知 Quick Start 方案');
     const c=quickStart(config,options),r=c.routing;
+    if(id==='aec-call'){r.txL={rec:false,play:true,recHalf:false,playHalf:false};r.txR={rec:true,rx:false,recHalf:false,rxHalf:false};}
     if(id==='warm-music')c.eq=eq('warm',c.clock.fs);
     // Real S31 capture requires the record digital channel even for PLAY/RXM sources.
     if(['flat-playback','mute'].includes(id))c.adc.enabled=false;

@@ -278,7 +278,7 @@
   window.addEventListener('pagehide',()=>{stopAudio();if(audioContext)audioContext.close().catch(()=>{});});
 
   const capture=new AudioCapture.Recorder({
-    onState(state){const idle=state==='idle';$('#captureList').disabled=!idle;$('#captureDevice').disabled=!idle;$('#captureSeconds').disabled=!idle;$('#captureStart').disabled=!idle||!$('#captureDevice').value;$('#captureStop').disabled=!['starting','recording','listing'].includes(state);if(!idle)$('#captureStatus').textContent={listing:'等待录音权限并读取设备列表…',starting:'正在打开所选声卡…',recording:'录音中，不监听输入；到时自动停止。'}[state]||state;},
+    onState(state){const idle=state==='idle';$('#captureList').disabled=!idle;$('#captureDevice').disabled=!idle;$('#captureSeconds').disabled=!idle;$('#captureStart').disabled=!idle||!$('#captureDevice').value;$('#captureStop').disabled=!['starting','recording','listing','processing'].includes(state);if(!idle)$('#captureStatus').textContent={listing:'等待录音权限并读取设备列表…',starting:'正在打开所选声卡…',recording:'录音中，不监听输入；到时自动停止。',processing:'正在整理原始 PCM…'}[state]||state;},
     onDone(result){stopAudio();audioChannels=result.channels;audioFs=result.sampleRate;importedName='声卡录音';audioOrigin='recording';audioWet=false;wetCache=null;$('#audioSourceName').textContent='本地声卡录音 · '+result.seconds.toFixed(3)+' s';const settings=result.settings,flags=['echoCancellation','noiseSuppression','autoGainControl'].map(k=>k+'='+String(settings[k]??'未报告')).join('，');$('#captureStatus').textContent=result.engine+'；浏览器PCM '+result.sampleRate+' Hz / '+result.channels.length+'通道。'+flags+'。可能经过系统混音或重采样，不能据此声称器件本体THD/SNR。';renderAudio();toast('录音已载入，已选择原始信号；可切换B试听，导出当前A/B');},
     onError(e){$('#captureStatus').textContent=e.message;toast('录音停止：'+e.message);}
   });

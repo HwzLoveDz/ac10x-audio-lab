@@ -6,5 +6,5 @@ for marker, name in [('TRANSPORT_INLINE', 'transport.js'), ('APP_INLINE', 'app.j
     code = (root/'web'/name).read_text(encoding='utf-8')
     assert '</script' not in code.lower()
     html = html.replace(f'<!-- {marker} -->', '<script>\n' + code + '\n</script>')
-(root/'web/AC10x-S3-Bridge-v0.3.0.html').write_text(html, encoding='utf-8')
+(root/'web/AC10x-S3-Bridge-v0.3.1.html').write_text(html, encoding='utf-8')
 print('Built standalone S3 diagnostic WebTool; no hardware opened.')

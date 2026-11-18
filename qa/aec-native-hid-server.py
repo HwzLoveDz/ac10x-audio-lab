@@ -55,7 +55,8 @@ def exchange(q):
     if time.monotonic()-started>120 or commands>=6000:raise RuntimeError('TEST_DEADLINE')
     if len(q)!=10 or any(type(v)!=int or not 0<=v<=255 for v in q):raise RuntimeError('BAD_REPORT')
     command=q[0]
-    if command not in (0,1,124,125,126):raise RuntimeError('NON_ACCEPTANCE_COMMAND_DENIED')
+    if command not in (0,1,122,124,125,126):raise RuntimeError('NON_ACCEPTANCE_COMMAND_DENIED')
+    if command==122 and q!=[122,1,0,0,0,0,0,0,0,0]:raise RuntimeError('INVALID_CAPABILITY_QUERY')
     if command in (0,1):
         a=q[4]
         if q[1:4]!=[1,0x66,0] or q[6:8]!=[0,1] or a not in policy['readAddresses']:raise RuntimeError('BAD_REGISTER_COMMAND')
@@ -81,6 +82,8 @@ def exchange(q):
                 if r[7 if command==1 else 8]!=1:raise RuntimeError('I2C_NACK')
                 if command==1:cache[a]=r[2]
                 else:cache[a]=q[5]
+            elif command==122:
+                if r[1:]!=[0,0,0,0,0,0,0,0,0] and not(r[1]==212 and r[2]==1 and not(r[3]&~7) and r[7:10]==[48,48,1]):raise RuntimeError('CAPABILITIES_REJECTED')
             elif command in (124,125):
                 if r[1:4]!=[0xae,1,1] or r[8] not in (0,1):raise RuntimeError('AEC_BAD_RESPONSE')
             elif r[1]!=1 or r[8]!=1:raise RuntimeError('STATUS_REJECTED')

@@ -9,7 +9,7 @@ test('S3 boot and Quick Start use the same clear-vocal canonical config',()=>{
  assert.deepEqual(E.quickStart(seed,{fixedAudio:true,lineDifferential:false}),c);
  assert.equal(crypto.createHash('sha256').update(JSON.stringify(c)).digest('hex'),doc.canonicalConfigSHA256);
  assert.equal(doc.canonicalConfigSHA256,'1107934abf64a509b781364eabfd6b49e98f5f28df452237e5156a7f1de7ba59');
- assert.equal(doc.target,'esp32s3');assert.equal(doc.firmwareVersion,'0.3.0');
+ assert.equal(doc.target,'esp32s3');assert.equal(doc.firmwareVersion,'0.3.1');
 });
 test('all 83 C-header rows equal Quick Start masked targets in both output modes',()=>{
  const h=text('main/codec_default_profile.h'),rows=[...h.matchAll(/\{\s*(0x[\da-f]+),\s*(0x[\da-f]+),\s*(0x[\da-f]+),\s*(0x[\da-f]+)\s*\}/gi)].map(m=>m.slice(1).map(Number));

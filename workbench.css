@@ -74,3 +74,5 @@ body[data-inspector-open=true] .canvas-heading p{max-width:calc(100vw - 505px)}
 .route-example-actions{display:grid;gap:9px;padding:0 18px 20px}.route-tools{padding:17px 18px;border-top:1px solid #e0e9e2}.route-tools>p{font-size:11px;color:#82978b;margin-bottom:10px}.route-tools>div{display:flex;flex-wrap:wrap;gap:7px}.route-tools .btn{font-size:10px;padding:7px 10px}
 .settings-body .eq-preset-note{margin:0 16px 14px;padding:11px 12px;line-height:1.8}.metric-draft-label{font-size:9px;color:#91a59b}
 @media(max-width:700px){.workbench-canvas .route-viewbar{top:78px;left:16px;right:16px}.workbench-canvas .route-scroll{top:132px}.route-filters button{font-size:10px;padding:7px 9px}.canvas-heading p{display:none}}
+
+.quick-start-microphone{display:grid;grid-template-columns:auto minmax(180px,1fr);align-items:center;gap:10px;margin:0 0 18px}.quick-start-microphone p{grid-column:1/-1;margin:0}.quick-start-microphone select{max-width:420px}

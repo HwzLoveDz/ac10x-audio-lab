@@ -4,7 +4,7 @@
   const common=typeof module!=='undefined'&&module.exports;
   const C=common?require('./codec.js'):root.AudioCodec,R=common?require('./routing.js'):root.AudioRouting,D=common?require('./dsp.js'):root.AudioDSP;
   const T=common?require('./transport.js'):root.AudioHardwareTransport;
-  const VERSION='0.8.14-rc.1',profiles=['AC102-reference','AC101S','AC102'];
+  const VERSION='0.8.15-rc.1',profiles=['AC102-reference','AC101S','AC102'];
   const clone=x=>JSON.parse(JSON.stringify(x));
   function safeObject(value,depth=0){
     if(depth>12)throw new Error('配置嵌套过深');
@@ -72,15 +72,17 @@
     if(['S31','S3'].includes(adapter?.kind)){
       const match=fs===48000&&(snapshot[7]&0xc0)===0&&(snapshot[12]&0x77)===0x73&&snapshot[10]===31&&(snapshot[11]&0x34)===0x14;
       const s3=adapter.kind==='S3';add(s3?'s3-format':'s31-format',match?'ok':'error',s3?(match?'S3 固定格式一致':'S3 与 Codec 格式不一致'):(match?'S31 固定格式一致':'S31 与 Codec 格式不一致'),'48kHz / 16位数据 / 32位双时隙 / I²S 从机');
-      if(s3)add('s3-validation','info','S3 开发适配器','GPIO8–14；开发 PID 303A:4005；应用固件版本由烧录包确认','support-status');
+      if(s3)add('s3-validation','info','S3 开发适配器','GPIO8–14；原生 USB Full Speed；PID 303A:4005','support-status');
       if(status){
         add('bridge',status.clockGate?'ok':'warning',status.clockGate?'桥接时钟已开启':'桥接时钟已关闭',`协议${status.protocolVersion}；播放${status.playbackActive?'活动':'空闲'}；录音${status.captureActive?'活动':'空闲'}`,'bridge-status');
         if(status.i2cErrorsLow8||status.busyLow8)add('bridge-errors','warning','桥接端有错误或忙记录',`I²C=${status.i2cErrorsLow8}，忙=${status.busyLow8}（协议计数读回）`,'bridge-status');
       }else add('bridge','unknown','桥接实时状态尚未查询','点击“查询桥接器状态”；固件版本未由此协议提供','none');
     }
-    const adc=Boolean(snapshot[3]&16)&&Boolean(snapshot[25]&1)&&Boolean(snapshot[32]&1);
-    add('record',adc?'ok':'info',adc?'模拟录音通道已开启':'模拟录音通道未完全开启','检查 REC、ADC_DIG_EN、ADC/PGA 三处使能');
-    if(snapshot[25]&0x30)add('adc-pattern','warning','ADC 正在使用调试源','当前采集不代表正常模拟输入');
+    const dmic=Boolean(snapshot[25]&128),adc=Boolean(snapshot[3]&16)&&Boolean(snapshot[25]&1)&&(dmic||Boolean(snapshot[32]&1));
+    add('record',adc?'ok':'info',dmic?(adc?'数字录音通道已开启':'数字录音通道未完全开启'):(adc?'模拟录音通道已开启':'模拟录音通道未完全开启'),dmic?'DMIC 绕过模拟 PGA；检查 REC 和 ADC_DIG_EN，使能后由 MICN 接收 PDM 数据。':'检查 REC、ADC_DIG_EN、ADC/PGA 三处使能');
+    if(dmic)add('dmic-wiring','info','DMIC · MICP 时钟 / MICN 数据','AC101S 评估板 C34 留空、H29 移除、H32 接通数字麦克风供电；返回模拟输入前按接线说明恢复。');
+    if(status?.capabilities?.supported)add('audio-capabilities','info','S3 固件 '+status.capabilities.firmwareVersion,status.capabilities.dmic48?'USB / I²S 48 kHz · AMIC / DMIC · AEC':'USB / I²S 48 kHz · AMIC','firmware-capabilities');
+    if(snapshot[25]&0x30)add('adc-pattern','warning','ADC 正在使用调试源','当前采集不代表所选麦克风输入');
     if(snapshot[27]&6)add('dac-pattern','warning','DAC 正在使用调试源','当前播放源并非普通 USB PCM');
     const playback=(snapshot[3]&0x21)===0x21&&Boolean(snapshot[27]&1)&&Boolean(snapshot[38]&32);
     add('playback',playback?'ok':'info',playback?'DAC / Line Out 通道已开启':'播放模拟通道未完全开启','检查播放功能、DAC 和 Line Out 使能');

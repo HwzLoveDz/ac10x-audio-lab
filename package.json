@@ -1,9 +1,9 @@
 {
   "name": "ac10x-audio-lab",
-  "version": "0.8.14-rc.1",
+  "version": "0.8.15-rc.1",
   "private": true,
   "license": "CC-BY-NC-SA-4.0",
-  "description": "Browser-based audio tools for AC101S and AC102: signal routing, EQ, register control, recording and S3 echo cancellation.",
+  "description": "Browser audio workbench for AC101S/AC102, with S3 AC101S digital-microphone capture and echo cancellation.",
   "engines": {
     "node": ">=18"
   },

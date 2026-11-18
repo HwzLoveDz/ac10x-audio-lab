@@ -79,7 +79,7 @@ try:
         assert 'static assertion failed' in p.stderr, p.stderr
     pin_config()
     result = {'result': 'PASS', 'host_compiler': version, 'sanitizers': bool(args.sanitize),
-              'firmwareVersion': '0.3.0',
+              'firmwareVersion': '0.3.1',
               'rawCaptureBlocks': 2000,
               'checks': ['actual C register protocol', '83 masked defaults / both output modes / every-operation fault injection / startup fade', 'production FIFO reset guard',
                          'audio queue generation/reset/suspend/alt-setting',

@@ -44,6 +44,6 @@ async function open(){const device=new FakeHID({bytes:10});device.vendorId=0x303
  pass('S3 serial derivation and USB device revision stay stable; firmware version does not switch Windows endpoint identity');
  const audio=fs.readFileSync(path.join(root,'main/audio_bridge.c'),'utf8');assert(!audio.slice(audio.indexOf('static void capture_task')).includes('stream_fade_apply'));
  pass('capture path has no playback fade or EQ processing; raw-capture PCM is exercised separately by production-C tests');
- const result={result:'PASS',checks,checkCount:checks.length,firmwareVersion:'0.3.0',sourceWebVersion:'0.8.12-rc.1',hardware:'NOT RUN; simulated S3 HID only',flashed:false};
+ const result={result:'PASS',checks,checkCount:checks.length,firmwareVersion:'0.3.1',sourceWebVersion:'0.8.15-rc.1',hardware:'NOT RUN; simulated S3 HID only',flashed:false};
  fs.writeFileSync(path.join(root,'evidence/s31-parity-tests.json'),JSON.stringify(result,null,2)+'\n');
 })().catch(e=>{console.error(e);process.exitCode=1;});

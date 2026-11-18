@@ -6,7 +6,7 @@
 
 A browser-based audio tool for AC101S and AC102 codecs. Configure signal routing, tune EQ, read and write registers, and test USB playback and recording from a signal graph. Available in Chinese and English, with light and dark themes.
 
-Web app **0.8.14-rc.1** · S31 firmware **0.3.3** · ESP32-S3 firmware **0.3.0**
+Web app **0.8.15-rc.1** · S31 firmware **0.3.3** · ESP32-S3 firmware **0.3.1**
 
 ![AC10x Audio Lab signal graph](docs/audio-lab-dark.jpg)
 
@@ -21,7 +21,7 @@ python qa/launch-http.py
 The browser opens `http://127.0.0.1:47881/`.
 
 1. Click **Connect USB**, select your bridge, and wait for the configuration to load.
-2. Open **Quick Start**, choose a setup, and click **Write & verify**.
+2. Open **Quick Start**, choose AMIC or DMIC to match the wiring, then choose a setup and click **Write & verify**.
 3. Select **AC10x Duplex** as your computer's audio output, adjust the volume, and start playback.
 4. To make further changes, click a graph module, edit its parameters, and apply them from the panel.
 
@@ -47,13 +47,16 @@ Edits stay in the draft until you click **Write & verify**. Quick Start applies 
 
 S31 and S3 use 16-bit samples, two 32-bit I²S slots, and a 12.288 MHz MCLK, with the codec in slave mode. Select the AC101S or AC102 register profile to match the chip marking.
 
-S3 firmware 0.3.0 provides AEC for hands-free calls using octal PSRAM. It processes speech at 16 kHz while USB capture remains 48 kHz stereo. See [AEC setup](AEC.md).
+S3 firmware 0.3.1 provides AEC for hands-free calls using octal PSRAM. It processes speech at 16 kHz while USB capture remains 48 kHz stereo. See [AEC setup](AEC.md).
 
 - [AC101S board wiring](HARDWARE-SETUP.md)
+- [48 kHz digital microphone](DMIC.en.md)
 - [S31 firmware and source](firmware/README.md)
 - [S3 firmware, wiring, and source](firmware/s3/README.md)
 - [USB bridge protocol](S3-INTEGRATION.md)
 - [Importing settings from the original tools](COMPARISON.md)
+
+S3 0.3.1 supports AC101S digital microphone capture at 48 kHz. Select AMIC or DMIC in Quick Start; clear-vocal playback and S3 AEC work with either input. See the [DMIC guide](DMIC.en.md).
 
 ## Development
 
@@ -69,8 +72,8 @@ npm test
 
 ## Downloads
 
-- [0.8.14-rc.1 complete package](releases/AC10x-Audio-Lab-0.8.14-rc.1.zip)
-- [ESP32-S3 0.3.0 firmware and source](releases/AC10x-S3-Default-Firmware-0.3.0.zip)
+- [0.8.15-rc.1 complete package](releases/AC10x-Audio-Lab-0.8.15-rc.1.zip)
+- [ESP32-S3 0.3.1 firmware and source](releases/AC10x-S3-Default-Firmware-0.3.1.zip)
 - [SHA-256 checksums](releases/SHA256SUMS.txt)
 
 ## License

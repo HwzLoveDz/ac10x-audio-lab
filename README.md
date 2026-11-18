@@ -6,7 +6,7 @@
 
 用于 AC101S / AC102 的网页音频调试工具。在信号图上配置音频通路、调整 EQ 和读写寄存器，并测试 USB 播放与录音。支持中英文界面和浅色／暗色主题。
 
-上位机 **0.8.14-rc.1** · S31 固件 **0.3.3** · ESP32-S3 固件 **0.3.0**
+上位机 **0.8.15-rc.1** · S31 固件 **0.3.3** · ESP32-S3 固件 **0.3.1**
 
 ![AC10x Audio Lab 信号图](docs/audio-lab-dark.jpg)
 
@@ -21,7 +21,7 @@ python qa/launch-http.py
 浏览器会打开 `http://127.0.0.1:47881/`。
 
 1. 点击“连接 USB”，选择桥接器，等待读回参数。
-2. 打开 **Quick Start**，选择方案，点击“写入并核验”。
+2. 打开 **Quick Start**，按接线选择模拟或数字麦克风，再选择方案并点击“写入并核验”。
 3. 在电脑上选择 **AC10x Duplex** 作为音频输出，调整音量后播放。
 4. 需要进一步调整时，点击信号图中的模块，修改参数后在面板底部写入。
 
@@ -47,9 +47,10 @@ python qa/launch-http.py
 
 S31 / S3 使用 16 bit 音频数据、两个 32 bit I²S 时隙和 12.288 MHz MCLK，Codec 为从机。按芯片丝印选择 AC101S 或 AC102 寄存器表。
 
-S3 0.3.0 提供 AEC 免提通话，使用八线 PSRAM，以 16 kHz 处理语音，USB 录音保持 48 kHz 双声道。见[AEC 设置](AEC.md)。
+S3 0.3.1 支持 AC101S 的 48 kHz DMIC 和模拟麦克风，可在 Quick Start 中选择。AEC 免提通话使用八线 PSRAM，以 16 kHz 处理语音，USB 录音保持 48 kHz 双声道。见[AEC 设置](AEC.md)。
 
 - [AC101S 板卡接线](HARDWARE-SETUP.md)
+- [48 kHz 数字麦克风](DMIC.md)
 - [S31 固件与源码](firmware/README.md)
 - [S3 固件、接线与源码](firmware/s3/README.md)
 - [USB 桥接协议](S3-INTEGRATION.md)
@@ -69,8 +70,8 @@ npm test
 
 ## 下载
 
-- [0.8.14-rc.1 完整包](releases/AC10x-Audio-Lab-0.8.14-rc.1.zip)
-- [ESP32-S3 0.3.0 固件与源码包](releases/AC10x-S3-Default-Firmware-0.3.0.zip)
+- [0.8.15-rc.1 完整包](releases/AC10x-Audio-Lab-0.8.15-rc.1.zip)
+- [ESP32-S3 0.3.1 固件与源码包](releases/AC10x-S3-Default-Firmware-0.3.1.zip)
 - [SHA-256 校验](releases/SHA256SUMS.txt)
 
 ## 许可

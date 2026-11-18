@@ -76,6 +76,9 @@ static void hid_worker(void *unused)
         } else if (q.data[0] == 2) {
             r.data[1] = 1; r.data[2] = q.data[2];
             r.data[8] = q.data[2] <= 1 && audio_bridge_gate(q.data[2] != 0) == ESP_OK;
+        } else if (q.data[0] == 0x7a) {
+            const uint8_t capabilities[10] = {0x7a,0xd4,1,7,0,3,1,48,48,1};
+            memcpy(r.data, capabilities, sizeof(capabilities));
         } else if (q.data[0] == 0x7b) {
             aec_diag(r.data);
         } else if (q.data[0] == 0x7d) {
