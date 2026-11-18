@@ -6,7 +6,7 @@
 
 用于 AC101S / AC102 的网页音频调试工具。在信号图上配置音频通路、调整 EQ 和读写寄存器，并测试 USB 播放与录音。支持中英文界面和浅色／暗色主题。
 
-上位机 **0.8.15-rc.1** · S31 固件 **0.3.3** · ESP32-S3 固件 **0.3.1**
+上位机 **0.8.16-rc.1** · 桥接固件 **0.4.0**
 
 ![AC10x Audio Lab 信号图](docs/audio-lab-dark.jpg)
 
@@ -29,7 +29,7 @@ python qa/launch-http.py
 
 ## 功能
 
-- **Quick Start**：9 种快捷配置，覆盖播放、录音、声道排查、数字回采和 S3 AEC 免提通话。见[方案说明](EXAMPLES.md)。
+- **Quick Start**：9 种快捷配置，覆盖播放、录音、声道排查、数字回采和 AEC 免提通话。见[方案说明](EXAMPLES.md)。
 - **EQ**：16 种预设、三段滤波器、频响曲线、旁路开关和 A/B 试听。
 - **寄存器调试**：读取设备配置、按模块写入核验、比较配置、监视寄存器，以及撤销上次写入。
 - **试听与录音**：选择声卡输入，查看波形和频谱，导出原始 WAV；可切换 A/B 比较浏览器 EQ 的处理效果。
@@ -39,21 +39,11 @@ python qa/launch-http.py
 
 ## 硬件与固件
 
-| 桥接器 | VID:PID | 音频与控制 |
-|---|---|---|
-| TI 适配器 | 0451:4822 | 原适配器协议，可变长度 HID 报告 |
-| S31 | 303A:4004 | 48 kHz 双向 USB 音频、10 字节 HID 报告 |
-| ESP32-S3 | 303A:4005 | USB Full Speed、48 kHz 双向音频、10 字节 HID 报告 |
+ESP32-S3 和 ESP32-S31 使用同一套桥接固件和网页操作。USB 音频为 48 kHz 双向立体声。AC101S 可在 Quick Start 选择模拟麦克风或 48 kHz DMIC，两种输入都可使用人声清晰播放与 AEC。AEC 使用八线 PSRAM，内部以 16 kHz 处理语音。选择与芯片丝印一致的 AC101S 或 AC102 寄存器表。TI 适配器支持寄存器控制。
 
-S31 / S3 使用 16 bit 音频数据、两个 32 bit I²S 时隙和 12.288 MHz MCLK，Codec 为从机。按芯片丝印选择 AC101S 或 AC102 寄存器表。
-
-S3 0.3.1 支持 AC101S 的 48 kHz DMIC 和模拟麦克风，可在 Quick Start 中选择。AEC 免提通话使用八线 PSRAM，以 16 kHz 处理语音，USB 录音保持 48 kHz 双声道。见[AEC 设置](AEC.md)。
-
+- [固件下载、接线与更新](firmware/README.md)
 - [AC101S 板卡接线](HARDWARE-SETUP.md)
-- [48 kHz 数字麦克风](DMIC.md)
-- [S31 固件与源码](firmware/README.md)
-- [S3 固件、接线与源码](firmware/s3/README.md)
-- [USB 桥接协议](S3-INTEGRATION.md)
+- [数字麦克风](DMIC.md) · [AEC 设置](AEC.md)
 - [导入原工具配置](COMPARISON.md)
 
 ## 开发
@@ -70,9 +60,7 @@ npm test
 
 ## 下载
 
-- [0.8.15-rc.1 完整包](releases/AC10x-Audio-Lab-0.8.15-rc.1.zip)
-- [ESP32-S3 0.3.1 固件与源码包](releases/AC10x-S3-Default-Firmware-0.3.1.zip)
-- [SHA-256 校验](releases/SHA256SUMS.txt)
+[0.8.16-rc.1 完整包](releases/AC10x-Audio-Lab-0.8.16-rc.1.zip) · [SHA-256](releases/SHA256SUMS.txt) · [历史版本](releases/)
 
 ## 许可
 

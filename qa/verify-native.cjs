@@ -33,7 +33,7 @@ const same=(a,b)=>C.READ_ADDRESSES.every(k=>a[k]===b[k]);
  const before={...await session.readAll()};result.before=before;check('104-register chip snapshot and DAC muted',Object.keys(before).length===C.READ_ADDRESSES.length&&before[0]===18&&before[28]===0);
  const changed=(before[32]&7)|((((before[32]>>3)+1)%32)<<3);
  await session.writeOne(32,changed);check('actual PGA step readback',session.snapshot[32]===changed);await session.restoreLast();check('PGA undo restores all read registers',same(before,session.snapshot));
- const config=D.mutedS31Template(JSON.parse(fs.readFileSync(path.join(__dirname,'../AC101S-S31-ECM-Speaker-muted.json'),'utf8')),{lineDifferential:Boolean(before[38]&16)});
+ const config=D.mutedBridgeTemplate(JSON.parse(fs.readFileSync(path.join(__dirname,'../AC101S-ECM-Speaker-muted.json'),'utf8')),{lineDifferential:Boolean(before[38]&16)});
  const applied=await session.apply(config,{profile:'AC101S',mclkHz:12288000,groups:['routing','eq','dynamics','clock']});result.templateWrites=applied.writes;check('muted base template applies and verifies',applied.verified&&session.snapshot[28]===0&&!(session.snapshot[79]&1)&&!(session.snapshot[49]&0x18));
  if(applied.writes)await session.restoreLast();check('template undo restores all original registers',same(before,session.snapshot));
  result.bridgeAfter=await bridge.getStatus();check('bridge counters remain clear and clock remains enabled',!result.bridgeAfter.i2cErrorsLow8&&!result.bridgeAfter.busyLow8&&result.bridgeAfter.clockGate);

@@ -1,0 +1,8 @@
+/build/
+/build-esp32s3/
+/build-esp32s31/
+/evidence/
+/sdkconfig.old
+/sdkconfig
+__pycache__/
+*.pyc

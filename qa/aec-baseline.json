@@ -1,8 +1,7 @@
 {
-  "DEFAULT-FIRMWARE.json": "2d5cb178885c5f3507fcb3334cb939d2dfcb2e3b8b6fc870b026036fd0b07cda",
-  "firmware\\s3\\source\\main\\audio_pipe.c": "1a3ec77edd822963f2080eecda7f0783eff7eb9f3efcbed65e2b9dac1d0c43a7",
-  "firmware\\s3\\source\\main\\codec_default_profile.h": "1141629a2b7dbefdca53cf0f4d6577bbd0d9af5859a5ea2482255010cd0a9992",
-  "firmware\\s3\\source\\main\\stream_fade.h": "c67f4cf080208f9e991bf3588e11d5bb51d0109c026d23d8f8d0b2a153e19017",
-  "firmware\\s3\\source\\main\\usb_descriptors.c": "44dae4dee8dcd5d5663fcd9ba9628385c516af1b2e45b21b014b959cf583c380",
-  "firmware\\s3\\source\\main\\usb_owner.c": "e50feb0f1c056e502389446a0532e5cefab880016dc679042243d0ddbde4c49c"
+  "firmware/source/main/audio_pipe.c": "1a3ec77edd822963f2080eecda7f0783eff7eb9f3efcbed65e2b9dac1d0c43a7",
+  "firmware/source/main/codec_default_profile.h": "1141629a2b7dbefdca53cf0f4d6577bbd0d9af5859a5ea2482255010cd0a9992",
+  "firmware/source/main/stream_fade.h": "c67f4cf080208f9e991bf3588e11d5bb51d0109c026d23d8f8d0b2a153e19017",
+  "firmware/source/main/usb_descriptors.c": "44dae4dee8dcd5d5663fcd9ba9628385c516af1b2e45b21b014b959cf583c380",
+  "firmware/source/main/usb_owner.c": "e50feb0f1c056e502389446a0532e5cefab880016dc679042243d0ddbde4c49c"
 }

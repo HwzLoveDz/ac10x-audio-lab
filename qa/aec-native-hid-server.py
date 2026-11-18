@@ -10,7 +10,9 @@ from ctypes import wintypes
 args=argparse.ArgumentParser()
 args.add_argument('--policy',required=True)
 args.add_argument('--hid-module-dir',required=True)
+args.add_argument('--target',choices=['esp32s3','esp32s31'],default='esp32s3')
 args=args.parse_args()
+product_id={'esp32s3':0x4005,'esp32s31':0x4004}[args.target]
 policy=json.loads(Path(args.policy).read_text(encoding='utf-8'))
 max_writes=policy.get('maxWrites',150)
 if type(max_writes)!=int or not 1<=max_writes<=600:raise RuntimeError('INVALID_WRITE_BUDGET')
@@ -100,18 +102,18 @@ try:
             op=item['op']
             if op=='open':
                 if device is not None:raise RuntimeError('ALREADY_OPEN')
-                found=[d for d in hid.enumerate(0x303a,0x4005) if d.get('usage_page')==0xff00 and d.get('usage')==1]
+                found=[d for d in hid.enumerate(0x303a,product_id) if d.get('usage_page')==0xff00 and d.get('usage')==1]
                 ready_deadline=time.monotonic()+8
                 while not found and time.monotonic()<ready_deadline:
                     time.sleep(.1)
-                    found=[d for d in hid.enumerate(0x303a,0x4005) if d.get('usage_page')==0xff00 and d.get('usage')==1]
-                if len(found)!=1:raise RuntimeError('EXPECTED_ONE_S3_CONTROL_HID')
+                    found=[d for d in hid.enumerate(0x303a,product_id) if d.get('usage_page')==0xff00 and d.get('usage')==1]
+                if len(found)!=1:raise RuntimeError('EXPECTED_ONE_CONTROL_HID_FOR_TARGET')
                 properties=caps(found[0]['path'])
                 device=hid.device();device.open_path(found[0]['path']);device.set_nonblocking(1)
                 for _ in range(16):
                     if not device.read(11):break
                 device.set_nonblocking(0)
-                value={'productName':found[0].get('product_string','S31'),**properties}
+                value={'productName':found[0].get('product_string') or args.target,**properties}
             elif op=='send':value=exchange(item['payload'])
             elif op=='close':
                 if device:device.close();device=None

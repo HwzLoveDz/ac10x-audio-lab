@@ -18,7 +18,7 @@ const result={mode:'Recorded actual HID-byte replay; NO hardware connection',sta
  await bridge.open();await bridge.getStatus();const before={...await session.readAll()};
  const value=(before[32]&7)|((((before[32]>>3)+1)%32)<<3);await session.writeOne(32,value);await session.restoreLast();
  assert.deepEqual(session.snapshot,before);
- const config=D.mutedS31Template(JSON.parse(fs.readFileSync(path.join(__dirname,'../AC101S-S31-ECM-Speaker-muted.json'),'utf8')),{lineDifferential:Boolean(before[38]&16)});
+ const config=D.mutedBridgeTemplate(JSON.parse(fs.readFileSync(path.join(__dirname,'../AC101S-ECM-Speaker-muted.json'),'utf8')),{lineDifferential:Boolean(before[38]&16)});
  const r=await session.apply(config,{profile:'AC101S',mclkHz:12288000,groups:['routing','eq','dynamics','clock']});if(r.writes)await session.restoreLast();
  assert.deepEqual(session.snapshot,before);await bridge.getStatus();assert.equal(cursor,trace.length);
  result.status='PASSED';result.reportEvents=trace.length;result.hidCommands=trace.length/2;result.allSelectedTargetBitsVerified=true;

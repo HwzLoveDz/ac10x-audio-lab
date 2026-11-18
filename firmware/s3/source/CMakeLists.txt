@@ -1,5 +1,0 @@
-cmake_minimum_required(VERSION 3.22)
-set(COMPONENTS main)
-set(CONFIGDEP_ENABLE OFF CACHE BOOL "Use standard dependencies for paths with spaces" FORCE)
-include($ENV{IDF_PATH}/tools/cmake/project.cmake)
-project(ac10x_s3_bridge VERSION 0.3.1)

@@ -30,7 +30,7 @@ const check=(name,value)=>{assert.ok(value,name);result.checks.push(name);consol
 (async()=>{try{
  await bridge.open();result.bridgeBefore=await bridge.getStatus();
  const before=await session.readAll();result.before=before;
- const seed=JSON.parse(fs.readFileSync(path.join(__dirname,'../AC101S-S31-ECM-Speaker-muted.json'),'utf8'));
+ const seed=JSON.parse(fs.readFileSync(path.join(__dirname,'../AC101S-ECM-Speaker-muted.json'),'utf8'));
  const config=E.defaultFirmware(seed,{fixedAudio:true,lineDifferential:Boolean(before[38]&16)});
  const opt={groups:['routing','eq','dynamics','clock'],profile:'AC101S',mclkHz:12288000};
  check('all startup defaults already match before any host initialization',C.makePlan(config,before,opt).steps.length===0);

@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.22)
+set(COMPONENTS main)
+set(CONFIGDEP_ENABLE OFF CACHE BOOL "Use standard dependencies for paths with spaces" FORCE)
+include($ENV{IDF_PATH}/tools/cmake/project.cmake)
+project(ac10x_bridge VERSION 0.4.0)
+if(NOT IDF_TARGET MATCHES "^esp32s(3|31)$")
+    message(FATAL_ERROR "Select ESP32-S3 or ESP32-S31 as IDF_TARGET.")
+endif()

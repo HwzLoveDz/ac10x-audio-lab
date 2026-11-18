@@ -29,7 +29,7 @@ const bridge=new T.HidBridge(device,{timeoutMs:2000,onLog:e=>log.write(JSON.stri
 let baseline=null;const opt={groups:['routing','eq','dynamics','clock'],profile:'AC101S',mclkHz:12288000};
 (async()=>{try{
  await bridge.open();result.bridgeBefore=await bridge.getStatus();const before=await session.readAll();
- const seed=require('../AC101S-S31-ECM-Speaker-muted.json');baseline=E.defaultFirmware(seed,{fixedAudio:true,lineDifferential:Boolean(before[38]&16)});
+ const seed=require('../AC101S-ECM-Speaker-muted.json');baseline=E.defaultFirmware(seed,{fixedAudio:true,lineDifferential:Boolean(before[38]&16)});
  assert.equal(C.makePlan(baseline,before,opt).steps.length,0,'Current hardware must already match the user-accepted default');result.before={...before};
  for(const meta of E.quickExamples){const config=E.quickExample(meta.id,baseline,{fixedAudio:true,lineDifferential:Boolean(before[38]&16)}),applied=await session.apply(config,opt);assert.ok(applied.verified);assert.equal(C.makePlan(config,session.snapshot,opt).steps.length,0,meta.id);result.rows.push({id:meta.id,name:meta.name,verified:true,writes:applied.writes,snapshot:{...session.snapshot}});console.log('PASS native example '+meta.id+' writes='+applied.writes);}
  const restored=await session.apply(baseline,opt);assert.ok(restored.verified);assert.equal(C.makePlan(baseline,session.snapshot,opt).steps.length,0);result.after={...session.snapshot};result.defaultSettingsLeftReadyForPlayback=true;

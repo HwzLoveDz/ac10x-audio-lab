@@ -4,7 +4,7 @@
   const common=typeof module!=='undefined'&&module.exports;
   const C=common?require('./codec.js'):root.AudioCodec,R=common?require('./routing.js'):root.AudioRouting,D=common?require('./dsp.js'):root.AudioDSP;
   const T=common?require('./transport.js'):root.AudioHardwareTransport;
-  const VERSION='0.8.15-rc.1',profiles=['AC102-reference','AC101S','AC102'];
+  const VERSION='0.8.16-rc.1',profiles=['AC102-reference','AC101S','AC102'];
   const clone=x=>JSON.parse(JSON.stringify(x));
   function safeObject(value,depth=0){
     if(depth>12)throw new Error('配置嵌套过深');
@@ -44,7 +44,7 @@
       .filter(address=>a[address]!==b[address]).map(address=>({address,before:a[address]??null,after:b[address]??null,
         changedMask:a[address]===undefined||b[address]===undefined?null:a[address]^b[address],writableMask:C.masks[address]||0}));
   }
-  function mutedS31Template(config,{lineDifferential=false}={}){
+  function mutedBridgeTemplate(config,{lineDifferential=false}={}){
     const c=parseConfig(config);c.profile='AC101S';c.pga=12;
     c.adc={enabled:true,gain:0,mute:false};c.dac={enabled:true,gain:-12,mute:true};
     c.clock={fs:48000,format:'I2S',bits:16,slot:32,slots:2,role:'slave'};
@@ -58,7 +58,7 @@
     if(!device)return null;
     const profile=T.adapterProfile(device);
     return{vendorId:device.vendorId,productId:device.productId,productName:String(device.productName||''),
-      kind:profile?.kind||'unknown',statusQuery:Boolean(profile?.statusQuery),softwareCandidate:Boolean(profile?.softwareCandidate)};
+      kind:profile?.kind||'unknown',statusQuery:Boolean(profile?.statusQuery)};
   }
   function diagnose(snapshot,{stale=true,adapter=null,mclkHz=12288000,status=null,profile='AC101S'}={}){
     const out=[],add=(id,severity,title,detail,evidence='register-readback')=>out.push({id,severity,title,detail,evidence});
@@ -71,8 +71,7 @@
     if((snapshot[49]&8)&&C.inferHpfFrequency(snapshot,fs)===null)add('hpf-frequency','warning','HPF 截止频率未知','当前系数或参考时钟无法给出支持范围内的频率；草稿数值不是设备读回。','calculated');
     if(['S31','S3'].includes(adapter?.kind)){
       const match=fs===48000&&(snapshot[7]&0xc0)===0&&(snapshot[12]&0x77)===0x73&&snapshot[10]===31&&(snapshot[11]&0x34)===0x14;
-      const s3=adapter.kind==='S3';add(s3?'s3-format':'s31-format',match?'ok':'error',s3?(match?'S3 固定格式一致':'S3 与 Codec 格式不一致'):(match?'S31 固定格式一致':'S31 与 Codec 格式不一致'),'48kHz / 16位数据 / 32位双时隙 / I²S 从机');
-      if(s3)add('s3-validation','info','S3 开发适配器','GPIO8–14；原生 USB Full Speed；PID 303A:4005','support-status');
+      add('bridge-format',match?'ok':'error',match?'桥接音频格式一致':'桥接器与 Codec 格式不一致','48kHz / 16位数据 / 32位双时隙 / I²S 从机');
       if(status){
         add('bridge',status.clockGate?'ok':'warning',status.clockGate?'桥接时钟已开启':'桥接时钟已关闭',`协议${status.protocolVersion}；播放${status.playbackActive?'活动':'空闲'}；录音${status.captureActive?'活动':'空闲'}`,'bridge-status');
         if(status.i2cErrorsLow8||status.busyLow8)add('bridge-errors','warning','桥接端有错误或忙记录',`I²C=${status.i2cErrorsLow8}，忙=${status.busyLow8}（协议计数读回）`,'bridge-status');
@@ -81,7 +80,12 @@
     const dmic=Boolean(snapshot[25]&128),adc=Boolean(snapshot[3]&16)&&Boolean(snapshot[25]&1)&&(dmic||Boolean(snapshot[32]&1));
     add('record',adc?'ok':'info',dmic?(adc?'数字录音通道已开启':'数字录音通道未完全开启'):(adc?'模拟录音通道已开启':'模拟录音通道未完全开启'),dmic?'DMIC 绕过模拟 PGA；检查 REC 和 ADC_DIG_EN，使能后由 MICN 接收 PDM 数据。':'检查 REC、ADC_DIG_EN、ADC/PGA 三处使能');
     if(dmic)add('dmic-wiring','info','DMIC · MICP 时钟 / MICN 数据','AC101S 评估板 C34 留空、H29 移除、H32 接通数字麦克风供电；返回模拟输入前按接线说明恢复。');
-    if(status?.capabilities?.supported)add('audio-capabilities','info','S3 固件 '+status.capabilities.firmwareVersion,status.capabilities.dmic48?'USB / I²S 48 kHz · AMIC / DMIC · AEC':'USB / I²S 48 kHz · AMIC','firmware-capabilities');
+    if(status?.capabilities?.supported){
+      const caps=status.capabilities;
+      const features=['USB / I²S 48 kHz',caps.dmic48?'AMIC / DMIC':'AMIC'];
+      if(caps.aec)features.push('AEC');
+      add('audio-capabilities','info',(adapter?.kind||'AC10x')+' '+caps.firmwareVersion,features.join(' · '),'firmware-capabilities');
+    }
     if(snapshot[25]&0x30)add('adc-pattern','warning','ADC 正在使用调试源','当前采集不代表所选麦克风输入');
     if(snapshot[27]&6)add('dac-pattern','warning','DAC 正在使用调试源','当前播放源并非普通 USB PCM');
     const playback=(snapshot[3]&0x21)===0x21&&Boolean(snapshot[27]&1)&&Boolean(snapshot[38]&32);
@@ -105,6 +109,6 @@
       transactions:clone(history),events:clone(events),droppedEvents,diagnostics:clone(diagnostics),monitor:clone(monitor),
       evidenceNote:'设备读回、推导、桥接状态、草稿和未测量项目分别记录；不自动采集录音、设备序列号或本机文件路径'};
   }
-  const api={VERSION,profiles,parseConfig,normalizeSnapshot,diffSnapshots,mutedS31Template,mutedBridgeTemplate:mutedS31Template,adapterInfo,diagnose,monitorAddresses,debugBundle};
+  const api={VERSION,profiles,parseConfig,normalizeSnapshot,diffSnapshots,mutedBridgeTemplate,adapterInfo,diagnose,monitorAddresses,debugBundle};
   if(common)module.exports=api;else root.AudioDebug=api;
 })(typeof globalThis!=='undefined'?globalThis:this);

@@ -2,7 +2,7 @@
 
 [中文](DMIC.md) | **English**
 
-S3 firmware 0.3.1 and Audio Lab 0.8.15 support AC101S digital microphone capture at 48 kHz. PDM input shares the downstream high-pass filter, AGC, digital gain and USB capture path. DMIC bypasses the analog PGA and sigma-delta modulator; adjust its level in Recording volume.
+AC10x bridge firmware 0.4.0 and Audio Lab 0.8.16 provide AC101S digital microphone capture at 48 kHz. PDM input shares the downstream high-pass filter, AGC, digital gain and USB capture path. DMIC bypasses the analog PGA and sigma-delta modulator; adjust its level in Recording volume.
 
 ## Evaluation-board wiring
 
@@ -26,10 +26,10 @@ To return to ECM, disconnect all power, disconnect the digital clock/data connec
 
 ![Choose the digital microphone in Quick Start](docs/dmic-quickstart.jpg)
 
-1. Start the full workbench over local HTTP, connect S3 and choose the AC101S register map.
+1. Start the full workbench over local HTTP, connect the AC10x bridge, and choose the AC101S register map.
 2. Open **Quick Start** and choose **Digital microphone · DMIC**.
 3. Apply **Default firmware · USB sound card** to keep clear-vocal playback and independent DMIC recording, or choose **AEC hands-free call**.
-4. Open Audition / Recording, list inputs, choose **AC10x Duplex** and start recording. New recordings display and export raw WAV by default; A/B is a browser audition control. Raw means the USB input: when S3 AEC is enabled, this input contains the AEC result.
+4. Open Audition / Recording, list inputs, choose **AC10x Duplex** and start recording. New recordings display and export raw WAV by default; A/B is a browser audition control. Raw means the USB input: when AEC is enabled, this input contains the AEC result.
 
 The selector alone never writes registers. All nine setups use the selected microphone. Free editing uses the AMIC/DMIC graph module and the usual verified write action. Analog PGA and bias controls are disabled for DMIC.
 
@@ -39,6 +39,6 @@ Boot retains the original AMIC default table and does not save this temporary ch
 
 USB, I²S and AC101S capture run at **48 kHz**, with a 12.288 MHz MCLK and Codec in slave mode. The Codec generates the PDM clock on MICP; the USB sample rate is not that electrical clock frequency.
 
-The AC101S model supports 16/48 kHz DMIC; this S3 firmware uses fixed 48 kHz. AC102 retains its documented 8–24 kHz digital-input range. Do not use the AC101S 48 kHz setup for AC102. TI, S31 and older S3 firmware retain analog input.
+The AC101S model supports 16/48 kHz DMIC; the bridge firmware uses fixed 48 kHz. AC102 retains its documented 8–24 kHz digital-input range. Do not use the AC101S 48 kHz setup for AC102. For earlier firmware, use Quick Start to check which input modes the bridge offers.
 
 [AEC](AEC.md) accepts either selected input and a synchronous PLAY reference. It processes speech at 16 kHz and outputs 48 kHz USB audio. With AEC disabled, capture retains the raw 48 kHz microphone data.

@@ -27,17 +27,17 @@
     const adapter=T.adapterProfile(device);
     const touchesInput=options.groups?.includes('routing')&&(!options.scope||Boolean(NODE_MASKS[options.scope]?.[25]&128));
     if(adapter?.fixedAudio&&touchesInput&&config.routing.input==='dmic'){
-      if(adapter.kind!=='S3'||(options.profile||config.profile)!=='AC101S'||config.clock.fs!==48000||!T.deviceCapabilities(device)?.dmic48)throw new Error('48 kHz DMIC 需要 AC101S 和支持 DMIC 的 S3 0.3.1 固件');
+      if((options.profile||config.profile)!=='AC101S'||config.clock.fs!==48000||!T.deviceCapabilities(device)?.dmic48)throw new Error('48 kHz DMIC 需要 AC101S 和支持 DMIC 的桥接固件');
     }
     if(!adapter?.fixedAudio||!options.groups?.includes('clock'))return;
     const c=config.clock,mclk=options.mclkHz||c.fs*256;
-    if(c.fs!==48000||c.bits!==16||c.slot!==32||c.slots!==2||c.format!=='I2S'||c.role!=='slave'||mclk!==12288000)throw new Error(adapter.kind==='S3'?'S3 固定为48kHz、16位数据、32位双时隙I²S从机，MCLK参考为12.288MHz':'S31 固定为48kHz、16位数据、32位双时隙I²S从机，MCLK参考为12.288MHz');
+    if(c.fs!==48000||c.bits!==16||c.slot!==32||c.slots!==2||c.format!=='I2S'||c.role!=='slave'||mclk!==12288000)throw new Error('桥接音频使用 48 kHz、16 位数据、32 位双时隙 I²S，Codec 为从机，MCLK 为 12.288 MHz');
   }
   function assertAdapterRegister(address,value,device=null){
     const adapter=T.adapterProfile(device);if(!adapter?.fixedAudio)return;
-    if(address===25&&(value&128)&&!(adapter.kind==='S3'&&T.deviceCapabilities(device)?.dmic48))throw new Error('当前适配器未提供 48 kHz DMIC 支持');
+    if(address===25&&(value&128)&&!T.deviceCapabilities(device)?.dmic48)throw new Error('当前适配器未提供 48 kHz DMIC 支持');
     const fixed={4:[15,1],5:[15,1],7:[0xc0,0],8:[15,3],9:[3,0],10:[255,31],11:[0x34,0x14],12:[0x77,0x73],13:[0xef,0],14:[15,5]};
-    const p=fixed[address];if(p&&(value&p[0])!==p[1])throw new Error(adapter.kind==='S3'?'此寄存器值不符合S3固定音频格式；使用时钟模块查看受支持配置':'此寄存器值不符合S31固定音频格式；使用时钟模块查看受支持配置');
+    const p=fixed[address];if(p&&(value&p[0])!==p[1])throw new Error('此寄存器值与桥接音频格式冲突，请在时钟模块查看配置');
   }
   function encode(config,{groups=['routing','eq','dynamics','clock'],mclkHz=config.clock.fs*256,checkStability=true,manualBase={},profile=(config.profile==='AC101S'?'AC101S':'AC102'),scope=null}={}){
     const c=normalize(clone(config)),r=c.routing,map=new Map(),notes=[],chosen=new Set(groups);
@@ -89,7 +89,7 @@
       const mode={PCM:0,LJ:0x10,I2S:0x14,RJ:0x20}[c.clock.format];if(mode===undefined)throw new Error('数据格式无效');add(11,0x34,mode,'clock','串行格式与偏移');add(12,0x77,((c.clock.slot/4-1)<<4)|(c.clock.bits/4-1),'clock','时隙 / 数据宽度');add(14,15,(c.clock.slots-1)*5,'clock','TX / RX 时隙数');
     }
     const touchesInput=!scope||Boolean(NODE_MASKS[scope]?.[25]&0x80);
-    if(chosen.has('routing')&&touchesInput&&r.input==='dmic'&&!R.dmicSupported({...c,profile}))throw new Error(profile==='AC101S'?'AC101S DMIC 使用 16 或 48 kHz；48 kHz 需要配套 S3 固件':'AC102 DMIC 采样率范围为 8–24 kHz');
+    if(chosen.has('routing')&&touchesInput&&r.input==='dmic'&&!R.dmicSupported({...c,profile}))throw new Error(profile==='AC101S'?'AC101S DMIC 使用 16 或 48 kHz；48 kHz 需要支持 DMIC 的桥接固件':'AC102 DMIC 采样率范围为 8–24 kHz');
     return{patches:Array.from(map.values()).sort((a,b)=>a.address-b.address),notes};
   }
   function inferFs(snapshot,mclkHz){const a=ADC_DIV[(snapshot[4]||0)&15],b=ADC_DIV[(snapshot[5]||0)&15];if(!a||a!==b)return null;const fs=mclkHz/a/128;return FS.find(x=>Math.abs(fs-x)<.01)||null;}

@@ -6,7 +6,7 @@ async function opened(options={}){const d=device('S3',options),b=new T.HidBridge
 (async()=>{
 await test('one adapter registry distinguishes TI/S31/S3 identities, capabilities and picker filters',()=>{
  assert.deepEqual(T.deviceFilters().map(f=>[f.vendorId,f.productId,f.usagePage]),[[0x0451,0x4822,undefined],[0x303a,0x4004,0xff00],[0x303a,0x4005,0xff00]]);
- for(const kind of ['TI','S31','S3']){const d=device(kind),p=T.adapterProfile(d),info=D.adapterInfo(d);assert.equal(p.kind,kind);assert.equal(info.kind,kind);assert.equal(info.statusQuery,kind!=='TI');assert.equal(info.softwareCandidate,kind==='S3');}
+ for(const kind of ['TI','S31','S3']){const d=device(kind),p=T.adapterProfile(d),info=D.adapterInfo(d);assert.equal(p.kind,kind);assert.equal(info.kind,kind);assert.equal(info.statusQuery,kind!=='TI');assert.equal(p.fixedAudio,kind!=='TI');}
  assert.equal(T.adapterProfile({vendorId:0x303a,productId:0x4006}),null);assert.ok(Object.isFrozen(T.ADAPTERS[2]));const filters=T.deviceFilters();filters[2].productId=0;assert.equal(T.deviceFilters()[2].productId,0x4005);
 });
 await test('S3 rejects wrong report IDs and asymmetric report lengths before opening',async()=>{
@@ -29,12 +29,12 @@ await test('S3 disconnect rejects in-flight reads; reopening does not replay wri
 });
 await test('S3 fixed audio policy blocks invalid clock/register writes, including the raw mirror API',async()=>{
  const {d,b,s}=await opened(),c=D.mutedBridgeTemplate(config());
- for(const change of [{fs:44100},{bits:24},{slot:16},{slots:1},{format:'LJ'},{role:'master'}]){const bad=structuredClone(c);Object.assign(bad.clock,change);await assert.rejects(s.apply(bad,{groups:['clock'],mclkHz:12288000}),/S3/);}
- await assert.rejects(s.apply(c,{groups:['clock'],mclkHz:12000000}),/S3/);await assert.rejects(s.writeOne(4,4),/S3/);assert.equal(d.sent.length,0);c.raw={4:4};await assert.rejects(s.apply(c,{groups:['manual']}),/S3/);assert.equal(d.writes,0);assert.ok(d.sent.every(r=>r.command===1));assert.doesNotThrow(()=>C.assertAdapterRegister(7,0x16,d));await b.close();
+ for(const change of [{fs:44100},{bits:24},{slot:16},{slots:1},{format:'LJ'},{role:'master'}]){const bad=structuredClone(c);Object.assign(bad.clock,change);await assert.rejects(s.apply(bad,{groups:['clock'],mclkHz:12288000}),/桥接音频/);}
+ await assert.rejects(s.apply(c,{groups:['clock'],mclkHz:12000000}),/桥接音频/);await assert.rejects(s.writeOne(4,4),/桥接音频/);assert.equal(d.sent.length,0);c.raw={4:4};await assert.rejects(s.apply(c,{groups:['manual']}),/桥接音频/);assert.equal(d.writes,0);assert.ok(d.sent.every(r=>r.command===1));assert.doesNotThrow(()=>C.assertAdapterRegister(7,0x16,d));await b.close();
 });
-await test('S3 masked apply/undo and diagnostics preserve model ownership and candidate evidence',async()=>{
+await test('S3 masked apply/undo and diagnostics preserve model ownership and use the same format diagnostic on both targets',async()=>{
  const {d,b,s}=await opened();Object.assign(d.mem,{12:0x73,13:0,28:0});const before={...d.mem};await s.readAll();const c=D.mutedBridgeTemplate(config());c.pga=16;const r=await s.apply(c,{groups:['routing'],scope:'pga',profile:'AC101S',mclkHz:12288000});assert.ok(r.verified);assert.equal(d.mem[32]&7,before[32]&7);await s.restoreLast();assert.deepEqual(d.mem,before);
- const diagnostics=D.diagnose(d.mem,{stale:false,adapter:D.adapterInfo(d)});assert.ok(diagnostics.some(x=>x.id==='s3-format'&&x.severity==='ok'));assert.ok(diagnostics.some(x=>x.id==='s3-validation'&&x.evidence==='support-status'));assert.ok(!diagnostics.some(x=>x.id==='s31-format'));await b.close();
+ const diagnose=kind=>D.diagnose(d.mem,{stale:false,adapter:D.adapterInfo(device(kind))});assert.deepEqual(diagnose('S3'),diagnose('S31'));assert.ok(diagnose('S3').some(x=>x.id==='bridge-format'&&x.severity==='ok'));await b.close();
 });
 const fixtures=require('./fixtures/legacy-adapter-parity.json');
 for(const f of fixtures.cases)await test(f.kind+' legacy request bytes and final state match, with the documented S31 register-6 pipeline-clock correction',async()=>{

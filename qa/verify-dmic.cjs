@@ -14,7 +14,7 @@ async function fixture(fn,{kind='S3',modern=true}={}){
  assert.deepEqual(Array.from(T.encode({command:0x7a},10)),[0x7a,1,0,0,0,0,0,0,0,0]);
  assert.equal(T.decode(Uint8Array.from([0x7a,0,0,0,0,0,0,0,0,0]),{command:0x7a}).supported,false);
  for(const [index,value] of [[1,0xd5],[2,2],[3,8],[7,16],[8,16],[9,0]]){const r=[...reply];r[index]=value;assert.throws(()=>T.decode(Uint8Array.from(r),{command:0x7a}));}
- const producer=fs.readFileSync(path.join(__dirname,'../firmware/s3/source/main/hid_bridge.c'),'utf8');assert(producer.includes('{0x7a,0xd4,1,7,0,3,1,48,48,1}'));
+ const producer=fs.readFileSync(path.join(__dirname,'../firmware/source/main/hid_bridge.c'),'utf8');assert(producer.includes('{0x7a,0xd4,1,flags,')&&producer.includes('BRIDGE_FW_MAJOR,BRIDGE_FW_MINOR,BRIDGE_FW_PATCH,48,48,1}'));
  pass('capability encoder/decoder matches the real firmware producer and rejects malformed replies');
  for(const profile of ['AC101S','AC102'])for(const rate of [8000,16000,24000,32000,44100,48000]){
   const c=E.quickExample('default',config(),{inputMode:'dmic',fixedAudio:false});c.profile=profile;c.clock.fs=rate;
@@ -27,20 +27,20 @@ async function fixture(fn,{kind='S3',modern=true}={}){
  assert.deepEqual(plain,amic);assert.equal(plain.routing.input,'analog');assert.deepEqual(plain.eq,dmic.eq);assert.equal(dmic.dac.gain,0);assert.equal(dmic.routing.lineGain,0);assert.equal(dmic.routing.dac.rec,false);assert.equal(E.quickExamples.length,9);
  const g=R.graph(dmic);assert(g.edges.find(e=>e.id==='dmic-data').on);assert(!g.edges.find(e=>e.id==='mic-pga').on);dmic.adc.enabled=false;for(const id of ['dmic-data','dmic-clock','dmic-mux'])assert.equal(R.graph(dmic).edges.find(e=>e.id===id).on,false);
  pass('analog default and clear-vocal playback are unchanged; DMIC graph follows the actual capture enable');
- await fixture(async(x,H,d)=>{
+ for(const kind of ['S3','S31'])await fixture(async(x,H,d)=>{
   const before=copy(x.A.getConfig()),writes=d.writes;x.$('#quickStart').click();x.$('#quickStartMic').value='dmic';x.event(x.$('#quickStartMic'),'change');assert.equal(d.writes,writes);assert.deepEqual(copy(x.A.getConfig()),before);
   for(const lang of ['en','zh-CN']){x.w.AudioI18n.setLanguage(lang);if(lang==='en')assert.doesNotMatch(x.$('#quickStartPicker').textContent,/[\u3400-\u9fff]/);assert.equal(x.$('#quickStartMic').value,'dmic');}
-  for(const meta of E.quickExamples){await H.quickStart(meta.id);assert.equal(H.getState().quickStart.phase,'verified',H.getState().failure);assert.equal(d.mem[25]&128,128);assert.equal(d.mem[32]&1,0);assert.equal(d.aecEnabled,Boolean(meta.requiresS3AEC));}
+  for(const meta of E.quickExamples){await H.quickStart(meta.id);assert.equal(H.getState().quickStart.phase,'verified',H.getState().failure);assert.equal(d.mem[25]&128,128);assert.equal(d.mem[32]&1,0);assert.equal(d.aecEnabled,Boolean(meta.requiresAEC));}
   await H.quickStart('default');assert.equal(H.getState().quickStart.phase,'verified');x.$('#closeQuickStart').click();x.A.openNode('pga');assert(x.$('[data-bind="pga"]').matches(':disabled'));x.A.openNode('bias');assert(x.$('[data-bind="routing.mbias"]').matches(':disabled'));
-  const diag=x.w.AudioDebug.diagnose(d.mem,{stale:false,adapter:{kind:'S3'},status:{clockGate:true,protocolVersion:'0.1',capabilities:x.w.AudioHardwareTransport.deviceCapabilities(d)}});assert(diag.some(row=>row.id==='record'&&row.title==='数字录音通道已开启'));assert(diag.some(row=>row.id==='audio-capabilities'));
+  const diag=x.w.AudioDebug.diagnose(d.mem,{stale:false,adapter:{kind},status:{clockGate:true,protocolVersion:'0.1',capabilities:x.w.AudioHardwareTransport.deviceCapabilities(d)}});assert(diag.some(row=>row.id==='record'&&row.title==='数字录音通道已开启'));assert(diag.some(row=>row.id==='audio-capabilities'));
   x.$('#quickStartMic').value='analog';await H.quickStart('default');assert.equal(H.getState().quickStart.phase,'verified');assert.equal(d.mem[25]&128,0);assert.equal(d.mem[32]&1,1);assert.equal(d.aecEnabled,false);assert.equal(x.A.getConfig().routing.input,'analog');
   assert.equal(x.$('[data-quick-apply="default"]').disabled,false);
- });pass('all nine real UI workflows support selected DMIC, AEC, disabled analog controls, bilingual hints and AMIC restoration');
+ },{kind});pass('both targets run all nine DMIC Quick Start workflows, AEC, bilingual hints and AMIC restoration');
  for(const kind of ['S31','S3'])await fixture(async(x,H,d)=>{
   const before={...d.mem};x.$('#quickStartMic').value='dmic';x.event(x.$('#quickStartMic'),'change');assert.equal(x.$('[data-quick-apply="default"]').disabled,true);await H.quickStart('default');assert.equal(H.getState().quickStart.phase,'error');assert.deepEqual(d.mem,before);assert.equal(d.writes,0);
   assert.throws(()=>x.w.AudioCodec.assertAdapterRegister(25,128,d),/DMIC/);
   x.$('#quickStartMic').value='analog';await H.quickStart('default');assert.equal(H.getState().quickStart.phase,'verified',H.getState().failure);
- },{kind,modern:false});pass('S31 and old S3 reject DMIC writes before mutation while retaining analog Quick Start');
+ },{kind,modern:false});pass('Legacy S31 and S3 reject DMIC writes before mutation while retaining analog Quick Start');
  await fixture(async(x,H,d)=>{
   x.$('#quickStartMic').value='dmic';let changed=false;d.hook=({command})=>{if(command===0x7d&&!changed){changed=true;x.$('#quickStartMic').value='analog';x.event(x.$('#quickStartMic'),'change');}return{};};
   await H.quickStart('default');assert(changed);assert.equal(H.getState().quickStart.phase,'verified',H.getState().failure);assert.equal(d.mem[25]&128,128);assert.equal(x.A.getConfig().routing.input,'dmic');

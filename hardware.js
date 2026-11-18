@@ -30,10 +30,10 @@
     $('#quickStartStatus').textContent=busy?lastMessage+' · '+$('#hwProgressLabel').textContent:failure||quickState.message||(fresh()?'Quick Start：默认声卡、播放、录音和数字排查；选择方案后明确写入并核验。':'可先打开 Quick Start 浏览方案；连接 USB 并完整读回后可写入。');
     $('#quickStartReady').textContent=fresh()?'设备已就绪；点击任一方案的“写入并核验”。':'可先浏览方案；连接 USB 并完整读回后可写入。';
     $('#quickStartConnect').hidden=fresh();$('#quickStartConnect').disabled=busy;
-    const mic=$('#quickStartMic'),digital=mic.value==='dmic',dmicReady=T.adapterProfile(bridge?.device)?.kind==='S3'&&T.deviceCapabilities(bridge?.device)?.dmic48&&A.getConfig().profile==='AC101S';
+    const mic=$('#quickStartMic'),digital=mic.value==='dmic',dmicReady=T.deviceCapabilities(bridge?.device)?.dmic48&&A.getConfig().profile==='AC101S';
     mic.disabled=busy;
-    $('#quickStartMicNote').textContent=digital?(fresh()&&!dmicReady?'48 kHz DMIC 需要 AC101S 和支持 DMIC 的 S3 0.3.1 固件':'DMIC：MICP 接时钟，MICN 接数据；评估板 C34 留空、H29 移除，H32 供电。'):'AMIC 使用模拟咪头接线；PGA 和麦克风偏置只作用于模拟输入。';
-    for(const button of $$('[data-quick-apply]'))button.disabled=busy||!fresh()||(digital&&!dmicReady)||(button.dataset.quickApply==='aec-call'&&T.adapterProfile(bridge?.device)?.kind!=='S3');
+    $('#quickStartMicNote').textContent=digital?(fresh()&&!dmicReady?'48 kHz DMIC 需要 AC101S 和支持 DMIC 的桥接固件':'DMIC：MICP 接时钟，MICN 接数据；评估板 C34 留空、H29 移除，H32 供电。'):'AMIC 使用模拟咪头接线；PGA 和麦克风偏置只作用于模拟输入。';
+    for(const button of $$('[data-quick-apply]'))button.disabled=busy||!fresh()||(digital&&!dmicReady)||(button.dataset.quickApply==='aec-call'&&!(aecSupported()&&A.getConfig().profile==='AC101S'));
     if(!$('#quickStartPicker').hidden&&document.activeElement?.matches('[data-quick-apply]:disabled'))$('#closeQuickStart').focus();
     if(!activeRun&&focusedCancel){const target=$('#settingsWindow').hidden?$('#canvasScroll'):$('#inspectorTitle');target.tabIndex=-1;target.focus({preventScroll:true});}
   }
@@ -99,14 +99,14 @@
     if(!busy){if(failure)setStatus('操作未完成',failure);else if(error)setStatus('参数尚不能下发',error);else if(ready&&plan)setStatus(plan.steps.length?opt.label+' · '+plan.steps.length+' 项待写入':'与设备读回一致',plan.steps.length?'调整仅保存在草稿；点击下方按钮写入当前模块。':'下次写入仍会重新读取并核验。最近读回 '+new Date(session.readAt).toLocaleTimeString());else setStatus(lastMessage,lastDetail);}
     $('#canvasNotice').textContent=busy?lastMessage:ready?'设备已读回 · 编辑后在悬窗底部写入':bridge?.fault?'通信待恢复 · 重新连接 USB':'完整路径 · 点击模块设置，右上角连接 USB';
     renderOperation();
-    $('#hwAdapterNotice').hidden=T.adapterProfile(bridge?.device)?.kind!=='S3';renderDebug();window.dispatchEvent(new Event('audiolab:hardwarestate'));
+    renderDebug();window.dispatchEvent(new Event('audiolab:hardwarestate'));
   }
   function describeError(error){const d=error.details||{};let text=error.message;if(d.attempted?.length)text+='；已尝试 '+d.attempted.length+' 个地址，恢复 '+d.restored.length+' 个'+(d.restoreFailed.length?'，'+d.restoreFailed.length+' 个未确认恢复，请核对连接并重新读回。':'，已改位已恢复。');if(d.recoveryConflicts?.length)text=text.replace(/。$/,'')+'；目标位发生外部变化，未覆盖新值。';return text;}
   async function run(action,prepare){if(busy)return;failure='';busy=true;const operation={cancelled:false};activeRun=operation;let outcome;try{const request=prepare?.();$('#hwProgress').value=0;$('#hwProgress').max=1;$('#hwProgressLabel').textContent=monitorFlight?'等待现有读取结束…':'准备操作…';render();if(monitorFlight)await monitorFlight.catch(()=>{});if(operation.cancelled){if(quickState.phase==='applying')quickState={phase:'cancelled',message:'Quick Start 已取消，未开始写入。'};setStatus('操作已取消','未开始新的操作。');A.toast('已取消排队操作，未开始写入');return;}outcome=await action(request);}catch(e){if(quickState.phase==='applying')quickState={phase:'error',message:describeError(e)};failure=describeError(e);setStatus('操作未完成',failure);A.toast(failure);}finally{if(activeRun===operation)activeRun=null;busy=false;updateSnapshot();render();}return outcome;}
   async function connect(){if(!navigator.hid){A.toast('请使用支持 WebHID 的桌面 Chrome / Edge');return;}if(available()||busy)return;const timeout=Number($('#hwTimeout').value),mclk=A.getReferenceMclk();if(timeout<200||timeout>5000||!Number.isInteger(timeout)||mclk<1e6||mclk>5e7){A.toast('请检查参考时钟和通信超时');return;}
     failure='';quickState={phase:'idle',message:''};busy=true;stopMonitor();bridgeStatus=null;render();const token=++generation;try{if(monitorFlight)await monitorFlight.catch(()=>{});if(bridge)await bridge.close();const picked=await navigator.hid.requestDevice({filters:T.deviceFilters()});if(!picked.length){setStatus('未选择设备','继续编辑草稿，尚未连接设备。');return;}
       bridge=new T.HidBridge(picked[0],{i2cAddress:Number($('#hwAddress').value),timeoutMs:timeout,onLog:log,onState:(state,error)=>{if(token!==generation)return;if(state==='disconnected'){stopMonitor('设备已断开，监视已停止');bridgeStatus=null;if(session)session.stale=true;setStatus('设备已断开','旧读回已标记，重新连接后再写入。');}if(state==='fault'){stopMonitor('通信故障，监视已停止');bridgeStatus=null;if(session)session.stale=true;setStatus('通信已停止',error.message);}updateSnapshot();render();}});
-      session=new S.RegisterSession(bridge,{onProgress:progress});await bridge.open();if(T.adapterProfile(bridge.device)?.fixedAudio){A.setReferenceMclk(12288000);}if(T.adapterProfile(bridge.device)?.kind==='S3'){bridgeStatus={...(await bridge.getStatus()),readAt:new Date().toISOString()};bridgeStatus.capabilities=await bridge.getCapabilities();}$('#hwImportNotes').hidden=true;setStatus('正在读回设备','连接时只读取，不自动写入。');await session.readAll();setStatus('设备已读回','点击框图模块设置，并在悬窗底部写入。');
+      session=new S.RegisterSession(bridge,{onProgress:progress});await bridge.open();if(T.adapterProfile(bridge.device)?.fixedAudio){A.setReferenceMclk(12288000);}if(T.adapterProfile(bridge.device)?.fixedAudio){bridgeStatus={...(await bridge.getStatus()),readAt:new Date().toISOString()};bridgeStatus.capabilities=await bridge.getCapabilities();bridgeStatus.aec=await bridge.getAEC();}$('#hwImportNotes').hidden=true;setStatus('正在读回设备','连接时只读取，不自动写入。');await session.readAll();setStatus('设备已读回','点击框图模块设置，并在悬窗底部写入。');
     }catch(error){setStatus('连接 / 读回未完成',error.name==='NotFoundError'?'未选择 USB 设备。':describeError(error));if(session)session.stale=true;A.toast(lastDetail);}finally{busy=false;updateSnapshot();render();}
   }
   $('#usbConnect').addEventListener('click',()=>{A.navigate('hardware');if(!available())connect();});
@@ -124,7 +124,7 @@
   async function mclk(enabled){await run(async()=>{await bridge.setMclk(enabled);bridgeStatus=null;$('#hwMclkResult').textContent='适配器已应答 '+(enabled?'开启':'关闭')+'命令；未测量频率。';if(session)session.stale=true;setStatus('MCLK 命令已应答','时钟变化后请重新读回。');});}
   $('#hwMclkOn').addEventListener('click',()=>mclk(true));$('#hwMclkOff').addEventListener('click',()=>mclk(false));
   $('#hwLogExport').addEventListener('click',()=>download('AC10x-HID-log.json',{format:'AC10x-HID-log',schemaVersion:1,adapter:D.adapterInfo(bridge?.device),droppedEvents,events:logs}));
-  $('#hwQueryBridge').addEventListener('click',()=>run(async()=>{bridgeStatus={...(await bridge.getStatus()),readAt:new Date().toISOString()};if(T.adapterProfile(bridge.device)?.kind==='S3'){bridgeStatus.aec=await bridge.getAEC();bridgeStatus.capabilities=T.deviceCapabilities(bridge.device);}setStatus('桥接状态已读回','查询没有写入芯片寄存器。');}));
+  $('#hwQueryBridge').addEventListener('click',()=>run(async()=>{bridgeStatus={...(await bridge.getStatus()),readAt:new Date().toISOString()};bridgeStatus.capabilities=await bridge.getCapabilities();bridgeStatus.aec=await bridge.getAEC();setStatus('桥接状态已读回','查询没有写入芯片寄存器。');}));
   $('#hwMuteDAC').addEventListener('click',()=>run(async()=>{await session.writeOne(0x1c,0);setStatus('设备 DAC 已静音','写入与读回核验完成；草稿差异已更新。');}));
   $('#hwRestoreLast').addEventListener('click',()=>run(async()=>{const r=await session.restoreLast();setStatus('上次写入已恢复','实际写入 '+r.writes+' 次；完整读回核验通过。');}));
   $('#hwSaveBaseline').addEventListener('click',()=>{if(!fresh()||busy)return;baselineRequest++;baseline={snapshot:{...session.snapshot},readAt:session.readAt,label:'设备读回 '+new Date(session.readAt).toLocaleTimeString(),adapter:D.adapterInfo(bridge.device)};render();});
@@ -146,18 +146,19 @@
   window.addEventListener('pagehide',()=>{++generation;stopMonitor();if(logPaint!==null)clearTimeout(logPaint);logPaint=null;session?.cancel();bridge?.close().catch(()=>{});});
   function cancel(){const fromButton=['hwCancel','quickStartCancel'].includes(document.activeElement?.id);if(activeRun)activeRun.cancelled=true;session?.cancel();$('#hwProgressLabel').textContent='等待当前通信结束，然后取消并尝试恢复…';renderOperation();if(fromButton){const target=$('#settingsWindow').hidden?$('#canvasScroll'):$('#inspectorTitle');target.tabIndex=-1;target.focus({preventScroll:true});}}
   const cloneState=x=>x?JSON.parse(JSON.stringify(x)):null;
+  function aecSupported(){return T.deviceCapabilities(bridge?.device)?.aec??Boolean(bridgeStatus?.aec?.supported);}
   function quickStart(exampleId='default'){return run(async request=>{
     setStatus('正在应用 Quick Start：'+request.meta.name,'正在写入所选方案，并逐项核验。');
-    let aec={supported:false,enabled:false};
-    if(T.adapterProfile(bridge.device)?.kind==='S3')aec=await bridge.getAEC();
-    if(request.meta.requiresS3AEC&&!aec.supported)throw Error('此方案需要 S3 AEC 固件 0.3.0，请先更新固件');
+    let aec=await bridge.getAEC();
+    if(request.meta.requiresAEC&&!aec.supported)throw Error('当前桥接器未提供 AEC，请检查固件和 PSRAM');
     if(activeRun?.cancelled)throw Error('已取消后续操作');
     if(aec.supported)await bridge.setAEC(false);
     const result=await session.apply(request.config,request.opt);
-    if(request.meta.requiresS3AEC){
+    if(request.meta.requiresAEC){
       try{if(activeRun?.cancelled)throw Error('已取消后续操作');aec=await bridge.setAEC(true);if(activeRun?.cancelled)throw Error('已取消后续操作');}
       catch(error){if(available()){await bridge.setAEC(false).catch(()=>{});if(result.writes>0)await session.restoreLast().catch(recovery=>{error.message+='; recovery: '+recovery.message;});}throw error;}
     }else aec={...aec,enabled:false};
+    if(bridgeStatus)bridgeStatus.aec=aec;
     const unchanged=request.generation===generation&&request.revision===A.getDraftRevision();
     if(unchanged)A.importHardwareConfig(request.config,{presetId:request.meta.presetId});
     quickState={phase:'verified',exampleId:request.meta.id,name:request.meta.name,message:unchanged?'已写入并核验：'+request.meta.name+'；点击图上模块继续调整。':'Quick Start 提交时配置已核验；保留你随后修改的草稿，图中显示设备读回。',writes:result.writes,aec};
@@ -167,7 +168,7 @@
     if(!fresh())throw Error('请先连接并完整读回设备');
     const profile=T.adapterProfile(bridge.device),base=A.getConfig(),meta=AudioExamples.quickExamples.find(x=>x.id===exampleId);
     if(!meta)throw Error('未知 Quick Start 方案');
-    if(meta.requiresS3AEC&&(profile?.kind!=='S3'||base.profile!=='AC101S'))throw Error('AEC 需要 S3 适配器和 AC101S 参数表');
+    if(meta.requiresAEC&&(!aecSupported()||base.profile!=='AC101S'))throw Error('AEC 需要支持 AEC 的桥接器和 AC101S 参数表');
     const inputMode=$('#quickStartMic').value;
     const config=A.validateConfig(AudioExamples.quickExample(exampleId,base,{inputMode,fixedAudio:Boolean(profile?.fixedAudio),lineDifferential:Boolean(session.snapshot[0x26]&16)}));
     const opt={groups:['routing','eq','dynamics','clock'],scope:null,label:meta.name,mclkHz:profile?.fixedAudio?12288000:A.getReferenceMclk(),profile:base.profile};

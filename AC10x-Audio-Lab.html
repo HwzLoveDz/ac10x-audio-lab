@@ -1,7 +1,7 @@
 <!doctype html>
 <!-- AC10x Audio Lab · By mondraker · CC BY-NC-SA 4.0 · https://creativecommons.org/licenses/by-nc-sa/4.0/ -->
 
-<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>AC10x Audio Lab v0.8.15-rc.1 · 音频调试工作台</title><style>@charset "UTF-8";
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>AC10x Audio Lab v0.8.16-rc.1 · 音频调试工作台</title><style>@charset "UTF-8";
 :root{--ink:#19292f;--muted:#75838a;--accent:#087f83;--accent-soft:#e8f5f3;--nav:#172c34;--paper:#fff;--line:#e2e8e9;--bg:#f3f6f6;--band1:#bd7a35;--band2:#0b8b88;--band3:#7371bc;--mono:Consolas,"SFMono-Regular",monospace}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Segoe UI","Microsoft YaHei",sans-serif;font-size:14px;line-height:1.5}button,input,select{font:inherit}button,a,input,select{-webkit-tap-highlight-color:transparent}button{cursor:pointer}button:disabled{cursor:default;opacity:.5}button,input,select{accent-color:var(--accent)}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:3px solid #77bfbe;outline-offset:3px}button{transition:background .15s,border-color .15s}button:hover{filter:brightness(.97)}a{color:inherit;text-decoration:none}h1,h2,p{margin:0}h2{font-size:16px;font-weight:650;letter-spacing:-.3px}small{font-weight:400}svg{display:block;width:100%;overflow:visible}select,input[type=number],input[type=search]{border:1px solid #d8e1e2;border-radius:6px;background:white;color:var(--ink);padding:9px 10px;min-width:0}select{padding-right:25px}input[type=range]{width:100%;cursor:pointer;height:22px}input[type=checkbox]{width:15px;height:15px;cursor:pointer}input[type=number]{font-family:var(--mono)}.sidebar{position:fixed;inset:0 auto 0 0;width:218px;background:var(--nav);color:#a4b7be;display:flex;flex-direction:column;padding:33px 18px 20px;z-index:10}.brand{display:flex;align-items:center;gap:12px;color:#fff;font-size:23px;font-weight:650;letter-spacing:-.8px;padding:0 8px}.brand small{display:block;font-family:var(--mono);font-size:8px;letter-spacing:1.6px;margin-top:4px;color:#99b3bd}.brand-icon{display:flex;gap:3px;align-items:center;height:31px}.brand-icon i{display:block;width:3px;height:11px;border-radius:2px;background:#70c5bf}.brand-icon i:nth-child(2),.brand-icon i:nth-child(4){height:22px}.brand-icon i:nth-child(3){height:32px}.workspace-label{font-size:10px;letter-spacing:1.4px;margin:48px 13px 14px;color:#78949e;display:flex;justify-content:space-between}.workspace-label span{font-family:var(--mono);font-size:10px}nav{display:grid;gap:6px}.nav{border:0;color:#a9bfc6;background:none;border-radius:6px;display:flex;align-items:center;gap:12px;width:100%;padding:13px;font-size:13px;text-align:left}.nav.active{background:#27464d;color:#e1fffa;box-shadow:inset 3px 0 #61beb4}.nav:hover{background:#213c45}.nav-icon{font-size:19px;line-height:18px;width:20px;text-align:center}.nav-number{margin-left:auto;color:#65848e;font-family:var(--mono);font-size:10px}.nav.active .nav-number{color:#8ec9c5}.sidebar-device{margin-top:auto;border:1px solid #344a52;border-radius:8px;padding:16px 13px}.eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:1.7px;color:var(--accent);font-weight:500}.sidebar-device .eyebrow{color:#70949f;font-size:8px;letter-spacing:1.4px}.sidebar-device strong{font-family:var(--mono);font-size:23px;color:#e7f5f3;display:block;margin-top:8px;font-weight:500}.sidebar-device>span{display:block;font-size:10px;color:#91aab2;margin-top:3px}.device-line{display:flex;align-items:center;gap:7px;font-size:11px;color:#c5d4d8;margin:16px 0}.dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#ab9a7e;flex:none}.subtle-dark{border:1px solid #425e66;border-radius:4px;background:none;color:#c3d8db;font-size:11px;padding:9px;width:100%;display:flex;justify-content:space-between}.sidebar-device p{font-size:9px;line-height:1.6;color:#7f9aa5;margin-top:12px;overflow-wrap:anywhere}.sidebar-bottom{margin-top:24px;font-family:var(--mono);font-size:8px;display:flex;gap:5px;align-items:center;color:#6c8d97;letter-spacing:.5px}.sidebar-bottom>span:last-child{margin-left:auto}.live-dot{width:4px;height:4px;border-radius:50%;background:#6faaa4}main{margin-left:218px}.topbar{height:74px;display:flex;align-items:center;justify-content:space-between;padding:0 38px;background:#fff;border-bottom:1px solid var(--line);gap:20px}.breadcrumb{font-size:12px;color:#8a979c;white-space:nowrap}.breadcrumb span{padding:0 14px;color:#bcc6ca}.breadcrumb b{font-weight:500;color:#324950}.top-actions{display:flex;gap:10px;align-items:center}.offline{display:flex;align-items:center;gap:7px;font-size:11px;color:#7e898f;margin-right:9px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:16px;padding:9px 13px;font-size:12px;font-weight:500;line-height:1.6;border:1px solid #d4dddf;border-radius:6px;background:white;color:#3e545c;white-space:nowrap}.btn.primary{background:var(--accent);color:white;border-color:var(--accent)}.btn.quiet{border-color:transparent;background:transparent}.btn span{font-size:14px}.page{max-width:1510px;margin:0 auto;padding:35px 38px 20px}.page-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px;gap:18px}h1{font-size:29px;letter-spacing:-1px;font-weight:650;margin:8px 0}.page-heading p{font-size:12px;color:var(--muted)}.heading-meta{text-align:right;display:grid;gap:9px}.model-badge{border:1px solid #d4dfe0;color:#4e676f;background:#edf2f2;font-family:var(--mono);font-size:10px;border-radius:4px;padding:5px 9px}.heading-meta small{font-size:10px;color:#8b989e}.configuration-strip{display:flex;background:white;border:1px solid var(--line);border-radius:8px;align-items:center;padding:17px 20px;margin-bottom:23px;gap:28px}.strip-item{min-width:120px;border-right:1px solid var(--line);padding-right:25px}.strip-item>span{display:block;font-size:10px;color:#8a979c;margin-bottom:3px}.strip-item b{font-size:17px;font-family:var(--mono);font-weight:500;color:#28434b}.strip-item small{font-size:10px;color:#6e848b}.strip-item.model-status{border:0;min-width:85px;margin-left:auto;padding-right:0}.model-status b{font-family:inherit;font-size:11px;color:var(--accent)}.model-status b.dirty{color:#b77a29}.view{display:none}.view.active{display:block}.panel{background:var(--paper);border:1px solid var(--line);border-radius:9px;min-width:0;margin-bottom:22px}.panel-heading{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:22px 24px 18px}.panel-heading p{font-size:11px;color:#8a979d;margin-top:5px}.tiny-tag{font-family:var(--mono);font-size:9px;letter-spacing:.7px;white-space:nowrap;background:#f1f5f5;color:#799097;border-radius:3px;padding:4px 6px}.path-layout{display:grid;grid-template-columns:minmax(0,1fr) 278px;gap:22px}.route-diagram{padding:0 22px 8px;min-height:277px}.route-section{padding:14px 0}.route-title{display:flex;align-items:center;gap:9px;margin-bottom:19px;font-size:11px;color:#536d76}.route-title .route-number{font-family:var(--mono);font-size:9px;color:#a9b9bd}.route-title .route-end{margin-left:auto;font-family:var(--mono);font-size:9px;color:#8da2aa}.route-track{display:flex;align-items:center;position:relative;isolation:isolate}.route-track:before{content:"";height:1px;background:#a8c9c8;position:absolute;left:20px;right:20px;top:50%;z-index:-1}.route-node{position:relative;flex:1;min-width:0;border:1px solid #dce6e7;border-radius:7px;background:white;padding:13px 3px 10px;margin-right:15px;color:#5f737c;text-align:center;height:74px}.route-node:after{content:'›';position:absolute;right:-12px;top:23px;font-size:16px;color:#7aaca9}.route-node:last-child{margin-right:0}.route-node:last-child:after{display:none}.route-node.selected{border-color:#269b98;background:#edf8f6;box-shadow:0 0 0 2px #e0f3ef}.route-node.bypassed{border-style:dashed;background:#f7f9f9;color:#a4b0b5}.route-node strong{font-family:var(--mono);font-size:13px;font-weight:550;display:block;color:#36575e}.route-node.selected strong{color:var(--accent)}.route-node small{display:block;font-size:9px;margin-top:7px;color:#8a9da3}.route-divider{height:1px;background:#eef2f2;margin:8px 0}.diagram-legend{display:flex;align-items:center;gap:15px;font-size:9px;color:#8f9fa5;padding:13px 24px;border-top:1px solid #eef1f2}.diagram-legend>span{display:flex;align-items:center;gap:6px}.diagram-legend>span:last-child{margin-left:auto}.legend-line{width:15px;height:2px;background:var(--accent);display:inline-block}.legend-line.dashed{background:none;border-top:1px dashed #aab9bd}.inspector .panel-heading{padding-bottom:0}.inspector h3{font-family:var(--mono);font-size:24px;font-weight:500;letter-spacing:-.6px;margin:18px 0 5px}.inspector-desc{font-size:11px;line-height:1.8;color:#7c9098;margin-bottom:16px}.inspector-content{padding:0 24px 22px}.metric-big{font-family:var(--mono);font-size:34px;margin:12px 0 5px;letter-spacing:-1.5px;display:block}.metric-big small{font-size:13px;letter-spacing:0;color:#8b9ca2}.range-labels{font-family:var(--mono);font-size:9px;color:#9caaaf;display:flex;justify-content:space-between}.inspector-info{display:flex;justify-content:space-between;border-top:1px solid #edf1f1;padding-top:13px;margin-top:19px;font-size:10px;color:#8c9da4}.inspector-info b{color:#45616a;font-weight:500}.text-btn{border:0;background:none;padding:0;color:var(--accent);font-size:11px}.bottom-grid{display:grid;grid-template-columns:minmax(0,1fr) 278px;gap:22px}.mini-chart{padding:0 20px;max-height:200px}.band-summary{display:flex;border-top:1px solid #edf1f2;margin-top:14px;padding:14px 24px;gap:26px}.band-pill{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9px;color:#6a7f87}.band-dot{width:6px;height:6px;border-radius:50%;display:inline-block}.workflow{padding:25px 24px}.workflow h2{font-size:18px;margin:15px 0 12px}.workflow p{font-size:11px;color:#84969d;line-height:1.9}.workflow .btn{margin-top:18px;width:100%;justify-content:space-between}.workflow-note{display:flex;gap:9px;font-size:9px;color:#94a3a9;line-height:1.7;margin-top:20px}.status-check{color:#459e93}.footer{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:9px;color:#99a7ac;padding-top:4px}.footer b{font-weight:400;margin-left:9px;color:#afb9be}.footer .text-btn{font-size:9px}.inline-controls{display:flex;align-items:center;gap:18px}.inline-controls select{font-size:11px}.switch-label{display:inline-flex;align-items:center;gap:7px;font-size:11px;color:#56717a;white-space:nowrap}.eq-chart-wrap{padding:0 24px 12px}.eq-chart-wrap svg{touch-action:none}.chart-caption{display:flex;justify-content:space-between;color:#92a1a8;font-family:var(--mono);font-size:9px;padding-top:5px}.pre-gain{border-top:1px solid #edf1f2;padding:16px 24px;display:flex;align-items:center;gap:25px}.pre-gain label{display:flex;align-items:center;gap:15px;font-size:11px;white-space:nowrap}.pre-gain input{width:150px}.pre-gain output{font-family:var(--mono);min-width:56px}.pre-gain>span{margin-left:auto;font-size:10px;color:#8a989d}.eq-bands{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.band-card{padding:20px 22px;border-top:3px solid var(--band)}.band-card .band-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}.band-title h2{font-family:var(--mono);font-size:13px;color:var(--band)}.band-title input{accent-color:var(--band)}.band-card select{width:100%;font-size:11px}.band-control{margin-top:15px}.band-control>div{display:flex;align-items:center;justify-content:space-between;font-size:10px;color:#82959d}.band-control input[type=number]{width:85px;font-size:12px;text-align:right;padding:4px 6px}.band-control input[type=range]{accent-color:var(--band);margin-top:10px}.coefficient-panel .panel-heading{padding-bottom:12px}.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;text-align:left;font-size:10px}th{font-weight:500;color:#95a3aa;background:#f7f9f9;font-size:9px;letter-spacing:.4px}th,td{padding:12px 19px;border-top:1px solid #edf1f2;white-space:nowrap}td{font-family:var(--mono);color:#526b75}.panel-footnote{font-size:9px;color:#93a4ab;padding:14px 24px;border-top:1px solid #edf1f2;line-height:1.8}.stable{color:#168881}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:22px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px 24px;padding:4px 24px 24px}.form-grid label{font-size:11px;color:#758b94;display:flex;flex-direction:column;gap:9px}.form-grid label span{font-family:var(--mono);font-size:13px;color:#31565d}.inset-note{background:#f5f8f8;border:1px solid #edf2f2;border-radius:5px;margin:0 24px 24px;padding:12px 15px;font-size:10px;line-height:1.8;color:#879ba3}.medium-chart{padding:0 20px 12px}.hpf-panel{display:grid;grid-template-columns:1fr 1fr;align-items:center}.hpf-panel .field-label{margin:0 24px;display:flex;align-items:center;gap:20px;font-size:11px;color:#7c919a}.field-label input{width:110px}.hpf-panel .muted{padding:14px 24px}.hpf-panel svg{padding:20px 24px}.muted{font-size:10px;color:#8a9ba3;line-height:1.8}.clock-metrics{padding:0 25px;display:grid;gap:16px}.clock-metric{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #eef2f3;padding:8px 0 15px;color:#79919a;font-size:11px}.clock-metric b{font-family:var(--mono);font-size:25px;font-weight:400;color:#2d5962}.clock-metric small{font-size:11px;margin-left:6px}.clock-formula{font-family:var(--mono);font-size:10px;color:#91a2a9;line-height:2;padding:18px 24px 24px}.frame-chart{padding:0 24px 20px}.register-toolbar{display:flex;gap:20px;align-items:center;padding:0 24px 20px}.register-toolbar input[type=search]{width:350px;font-size:11px}.register-toolbar .muted{margin-left:auto}.register-layout{display:grid;grid-template-columns:minmax(0,1fr) 280px;border-top:1px solid var(--line)}.register-table{max-height:490px;overflow:auto}.register-table thead{position:sticky;top:0;z-index:1}.register-table tr{cursor:pointer}.register-table tr:hover td{background:#f2f8f7}.register-table tr.selected td{background:#eaf6f3}.register-table td{padding-top:9px;padding-bottom:9px}.pending{color:#b37625}.register-inspector{padding:25px;border-left:1px solid var(--line)}.register-inspector h3{font-size:13px;font-family:var(--mono);overflow-wrap:anywhere;margin:8px 0 18px}.reg-hex{font-size:32px!important;width:100%;margin-bottom:18px}.bit-buttons{display:flex;gap:4px}.bit-button{border:1px solid #d7e2e3;background:#f8faf9;border-radius:4px;min-width:0;flex:1;padding:9px 0;color:#769199;font-family:var(--mono);font-size:11px}.bit-button.on{border-color:#4baba2;background:#e3f3ef;color:#147f76}.bit-index{display:flex;justify-content:space-around;font-family:var(--mono);font-size:8px;color:#9cadb3;margin:6px 0 22px}.register-inspector .btn{margin-top:16px;width:100%}.audio-banner{display:flex;align-items:center;background:#e5f1ef;border:1px solid #d2e5e1;border-radius:8px;padding:19px 24px;margin-bottom:22px;gap:18px}.audio-banner h2{font-size:18px}.audio-banner p{font-size:10px;color:#6b8a90;margin-top:6px}.audio-banner .tiny-tag{margin-left:auto;background:#d7e9e5;color:#50877f}.audio-symbol{font-size:34px;color:#358d86}.audio-controls{padding:0 24px 18px;display:flex;gap:20px}.ab-toggle{display:flex;border:1px solid #dbe5e5;border-radius:7px;margin:0 24px 22px;overflow:hidden}.ab-toggle button{flex:1;border:0;background:#fafbfb;color:#9caaaf;padding:12px;font-family:var(--mono);font-size:14px}.ab-toggle button+button{border-left:1px solid #dbe5e5}.ab-toggle button span{font-family:"Segoe UI","Microsoft YaHei",sans-serif;font-size:11px;margin-left:8px}.ab-toggle button.active{color:#177d78;background:#e8f5f0}.transport{display:flex;align-items:center;gap:12px;padding:0 24px 24px}.play-btn{width:39px;height:39px;border:0;border-radius:50%;background:var(--accent);color:white;font-size:13px}.transport>div{display:grid;gap:3px}.transport strong{font-size:11px;font-weight:500}.transport span{font-size:9px;color:#8b9da5;font-family:var(--mono)}.transport .btn:last-child{margin-left:auto}.monitor-volume{display:flex;align-items:center;gap:15px;padding:0 24px;font-size:10px;color:#82979e}.monitor-volume input{flex:1}.monitor-volume output{font-family:var(--mono);width:50px}.panel>p.muted{padding:18px 24px}.audio-plots{display:grid;grid-template-columns:1fr 1fr;gap:26px;padding:0 24px 22px}.audio-plots .eyebrow{color:#8b9da4;font-size:9px;margin:0 0 12px}.audio-plots svg{background:#fbfcfc;border:1px solid #edf2f2;border-radius:5px}.audio-stats{display:flex;gap:22px;font-family:var(--mono);font-size:10px;color:#7a939b}.audio-stats b{font-weight:500;color:#375e66}.audio-stats .warning{color:#c17d2f}.plot-grid{stroke:#e8eeee;stroke-width:1}.plot-label{fill:#9aa9af;font-family:var(--mono);font-size:9px}.plot-zero{stroke:#c8d8d9;stroke-width:1}.curve{fill:none;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}.eq-point{cursor:grab;stroke:white;stroke-width:3}.eq-point:active{cursor:grabbing}#toast{position:fixed;bottom:25px;left:calc(50% + 100px);transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;max-width:650px;background:#213c43;color:#e3f4f1;padding:13px 22px;border-radius:7px;font-size:12px;box-shadow:0 6px 25px #17313c22;transition:opacity .2s,transform .2s;z-index:99}#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 @media(min-width:1650px){.route-diagram{padding:8px 30px 15px}.route-node{height:85px;padding-top:17px;margin-right:24px}.route-node:after{right:-17px;top:29px}.route-section{padding:18px 0}.route-node strong{font-size:14px}.route-node small{font-size:10px}.page{padding-top:40px}.page-heading{margin-bottom:30px}.mini-chart{max-height:228px}}
@@ -454,7 +454,7 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
 .workbench-brand .brand-credit{font:500 10px/1.2 var(--sans, "Segoe UI", "Microsoft YaHei", sans-serif);letter-spacing:.035em;color:var(--text-secondary);white-space:nowrap}
 </style></head>
 <body class="workbench" data-inspector-open="false">
-<header class="workbench-header"><a class="workbench-brand" href="#path" aria-label="Audio Lab 信号图"><span class="brand-icon"><i></i><i></i><i></i><i></i><i></i></span><span class="brand-name"><strong>Audio Lab</strong><span class="brand-credit" data-no-i18n>By mondraker</span></span><span class="app-version" title="页面版本 0.8.15-rc.1 · 支持 TI、S31 与 S3 USB 控制">v0.8.15-rc.1</span></a><button id="quickStart" class="btn quick-start" aria-describedby="quickStartStatus" aria-haspopup="dialog" aria-expanded="false">Quick Start</button>
+<header class="workbench-header"><a class="workbench-brand" href="#path" aria-label="Audio Lab 信号图"><span class="brand-icon"><i></i><i></i><i></i><i></i><i></i></span><span class="brand-name"><strong>Audio Lab</strong><span class="brand-credit" data-no-i18n>By mondraker</span></span><span class="app-version" title="页面版本 0.8.16-rc.1 · 支持 TI 适配器与 AC10x USB 桥接器">v0.8.16-rc.1</span></a><button id="quickStart" class="btn quick-start" aria-describedby="quickStartStatus" aria-haspopup="dialog" aria-expanded="false">Quick Start</button>
 <div class="workbench-metrics"><div class="metric-button" title="顶部参数来自草稿；设备实际配置见设备诊断"><span class="metric-draft-label">草稿</span><span id="summaryFs">48 kHz</span><small id="summaryFormat">I²S / 24 bit</small></div><div class="metric-button"><span>EQ</span><small id="summaryEQ">3 段启用</small></div></div>
 <div class="workbench-tools"><button id="themeSwitch" class="theme-switch" type="button" aria-label="暗色主题" aria-pressed="false" title="切换浅色／暗色主题"><span aria-hidden="true">◐</span></button><select id="languageSwitch" class="language-switch" aria-label="界面语言"><option value="zh-CN" data-no-i18n>中文</option><option value="en" data-no-i18n>English</option></select><span id="connectionLabel" class="connection-pill">未连接设备</span><button id="usbConnect" class="btn primary">连接 USB</button><details class="tools-menu"><summary>文件与工具 ⋯</summary><div><button id="importConfig">导入草稿</button><button id="exportConfig">导出草稿</button><button id="importLegacyPreset">导入旧 EQ / AGC</button><button id="resetConfig">恢复默认草稿</button></div></details></div></header>
 <nav id="workspaceNav" class="workspace-nav" aria-label="工作区导航"><div class="workspace-tabs"><button data-workspace="overview">信号图</button><button data-workspace="eq">EQ</button><button data-workspace="dynamics">AGC / HPF</button><button data-workspace="clock">时钟</button><button data-workspace="hardware">设备诊断</button><button data-workspace="registers">寄存器</button><button data-workspace="audio">试听 / 录音</button></div><button id="openFeatureFinder" class="feature-trigger" aria-keyshortcuts="Control+k Meta+k">找功能 <kbd>Ctrl K</kbd></button></nav>
@@ -488,7 +488,7 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
     </section>
 <section id="view-hardware" class="view">
 
-<article class="panel"><div class="panel-heading"><div><h2>适配器与芯片</h2><p>TI / S31 / S3 · USB HID → I²C</p></div><span class="tiny-tag" id="hwCapability">WEBHID</span></div>
+<article class="panel"><div class="panel-heading"><div><h2>适配器与芯片</h2><p>USB HID → I²C</p></div><span class="tiny-tag" id="hwCapability">WEBHID</span></div>
 <fieldset id="hwConnectionFields" class="hardware-fieldset"><div class="form-grid">
 <label>目标寄存器表<select id="hwProfile"><option value="AC101S">AC101S · 配套驱动</option><option value="AC102">AC102 · 原厂手册</option></select></label>
 <label>I²C 地址 · 7 bit<select id="hwAddress"><option value="51">0x33 · 总线 0x66</option><option value="48">0x30 · 总线 0x60</option></select></label>
@@ -498,7 +498,6 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
 <div class="hardware-actions"><button id="hwImport" class="btn" disabled>设备标量 → 草稿</button><button id="hwExport" class="btn" disabled>导出读回</button></div><p id="hwImportNotes" class="inset-note" hidden></p></article>
 <article class="panel"><div class="panel-heading"><div><h2>调试与诊断</h2><p>设备读回、草稿与推导结果分别显示。</p></div></div>
 <div class="hardware-actions"><button id="hwQueryBridge" class="btn" disabled>查询桥接器状态</button><button id="hwMuteDAC" class="btn" disabled>DAC 静音并核验</button></div>
-<p id="hwAdapterNotice" class="inset-note" hidden>S3 原生 USB · 48kHz 双向音频 · HID 协议 0.1</p>
 <p id="hwBridgeStatus" class="inset-note">桥接状态尚未查询；TI 适配器不提供此状态接口。</p>
 <div id="diagnosticTable" class="table-wrap" tabindex="0" role="region" aria-label="设备诊断"><table><thead><tr><th>检查</th><th>结果</th><th>依据 / 说明</th></tr></thead><tbody id="hwDiagnosticRows"></tbody></table></div>
 <div class="hardware-actions"><button id="hwSaveBaseline" class="btn" disabled>设为比较基线</button><button id="hwLoadBaseline" class="btn">导入比较基线</button><button id="hwExportDebug" class="btn">导出完整调试包</button></div><input id="hwBaselineFile" type="file" accept=".json,application/json" hidden>
@@ -509,7 +508,7 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
 <label><input type="checkbox" data-hw-group="routing" checked>路径与音量</label><label><input type="checkbox" data-hw-group="eq" checked>三段 EQ</label><label><input type="checkbox" data-hw-group="dynamics" checked>AGC / HPF</label><label><input type="checkbox" data-hw-group="clock">时钟与接口</label></div></fieldset><p class="inset-note">仅在此连接窗口使用批量范围；点击框图模块时只写该模块。</p></details>
 <details class="technical"><summary>适配器 MCLK 输出</summary><p class="hardware-clock-note">只控制适配器输出开关，不设置或测量频率。板端由其他主控供时钟时保持原连接。</p><div class="hardware-actions"><button id="hwMclkOn" class="btn" disabled>开启 MCLK</button><button id="hwMclkOff" class="btn" disabled>关闭 MCLK</button></div><p id="hwMclkResult" class="inset-note">未发送 MCLK 命令。</p></details>
 <details class="technical"><summary>通信记录</summary><div class="hardware-actions"><button id="hwLogExport" class="btn">导出通信记录</button></div><div class="table-wrap hardware-log-table"><table><thead><tr><th>时间</th><th>方向</th><th>命令</th><th>地址</th><th>报文</th></tr></thead><tbody id="hwLogRows"></tbody></table></div></details>
-<details class="technical" id="releaseInfo"><summary>版本与支持范围</summary><p class="inset-note">当前页面 <b data-app-version>v0.8.15-rc.1</b>；TI / S31 / S3 控制。S3 使用原生 USB Full Speed、GPIO8–14。协议版本不等于固件版本。</p></details>
+<details class="technical" id="releaseInfo"><summary>版本与支持范围</summary><p class="inset-note">当前页面 <b data-app-version>v0.8.16-rc.1</b>；连接 TI 适配器或 AC10x USB 桥接器后可读回并核验配置。</p></details>
 </section>
 <details class="technical" id="planDetails"><summary>本模块待写差异 <span id="hwPlanCount">未就绪</span></summary><p id="hwPlanError" class="hardware-error" hidden></p><div class="table-wrap hardware-plan-table"><table><thead><tr><th>地址</th><th>参数</th><th>当前</th><th>目标</th><th>掩码</th></tr></thead><tbody id="hwPlanRows"></tbody></table></div><p id="hwPlanNotes" class="inset-note">写入前重新读取设备，按掩码保留其他位，写后逐项核验。</p></details></div>
 <footer class="settings-action" id="settingsAction"><div id="hwStatus" class="device-action-status" role="status">未连接设备</div><p id="hwStatusDetail">请先连接右上角 USB 设备。</p><div class="hardware-progress"><progress id="hwProgress" value="0" max="1" aria-labelledby="hwProgressLabel"></progress><span id="hwProgressLabel">等待操作</span></div><div class="action-row"><button id="hwApply" class="btn primary" disabled>请先连接设备</button><button id="hwCancel" class="btn" disabled hidden>取消后续操作</button><button id="hwRefresh" class="icon-button" title="重新读取设备" aria-label="重新读取设备">↻</button></div></footer></aside>
@@ -808,7 +807,7 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
   function inspector(id,c){const r=c.routing;let title='',desc='',controls='',ref='',note='修改后在本悬窗底部写入；只更新当前模块并核验读回。';
     switch(id){
       case 'bias':title='MIC BIAS';desc='给模拟麦克风提供偏置，和音频输入信号分开显示。';controls=(r.input==='dmic'?'<fieldset disabled>':'')+check('routing.mbias','启用麦克风偏置')+(r.input==='dmic'?'</fieldset>':'');note=r.input==='dmic'?'DMIC 使用独立供电；本评估板由 H32 接通 MIC3 电源，模拟咪头偏置不控制 DMIC。':note;ref='PWR_CTRL2 · 0x02[2]';break;
-      case 'input':case 'source':case 'dmic':case 'dmicport':title='输入选择 · AMIC / DMIC';desc='模拟 PGA / ΣΔ ADC 和 DMIC 数据在共享抽取滤波器前选择。DMIC 使用 MICP 输出时钟，MICN 输入 PDM 数据。';controls=select('routing.input','录音输入',[['analog','模拟麦克风 · AMIC'],['dmic','数字麦克风 · DMIC']])+check('adc.enabled','启用 ADC 数字通道');ref='ADC_DIG_CTRL · 0x19[7,0]';note=c.profile==='AC101S'?'AC101S 数字输入可用 16 / 48 kHz；S3 固件 0.3.1 使用固定 48 kHz。DMIC 接 MICP 时钟和 MICN 数据，评估板 C34 留空、H29 移除。':'AC102 按手册使用 8–24 kHz DMIC；48 kHz 适配仅用于 AC101S / S3。';break;
+      case 'input':case 'source':case 'dmic':case 'dmicport':title='输入选择 · AMIC / DMIC';desc='模拟 PGA / ΣΔ ADC 和 DMIC 数据在共享抽取滤波器前选择。DMIC 使用 MICP 输出时钟，MICN 输入 PDM 数据。';controls=select('routing.input','录音输入',[['analog','模拟麦克风 · AMIC'],['dmic','数字麦克风 · DMIC']])+check('adc.enabled','启用 ADC 数字通道');ref='ADC_DIG_CTRL · 0x19[7,0]';note=c.profile==='AC101S'?'AC101S 数字输入可用 16 / 48 kHz；USB 桥接固件使用固定 48 kHz。DMIC 接 MICP 时钟和 MICN 数据，评估板 C34 留空、H29 移除。':'AC102 按手册使用 8–24 kHz DMIC；48 kHz DMIC 配置使用 AC101S 参数表。';break;
       case 'pga':title='PGA · 模拟输入增益';desc='差分输入前置放大，只作用于模拟麦克风路径；DMIC 绕过此模块。';controls=(r.input==='dmic'?'<fieldset disabled>':'')+range('pga','PGA 增益',0,31,1,'dB')+(r.input==='dmic'?'</fieldset>':'');note=r.input==='dmic'?'数字麦克风绕过模拟 PGA；请在录音音量模块调整数字增益。':note;ref='ADC_ANA_CTRL1 · 0x20[7:3]';break;
       case 'adc':title='ΣΔ ADC';desc='模拟麦克风的 ΣΔ 调制器。DMIC 模式绕过模拟调制器并共用后续抽取滤波。';controls=check('adc.enabled','启用 ADC 数字通道')+jump('clock','配置采样率与时钟');ref='ADC_DIG_CTRL · 0x19[0]';break;
       case 'decim':title='DECIM · 抽取滤波';desc='将 ADC 调制器或 DMIC 的过采样数据转换为录音采样率，再进入 HPF、AGC 和数字音量。';controls=jump('clock','查看采样率');ref='手册 Fig 9-24';break;
@@ -849,9 +848,9 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
 (function(root){
   'use strict';
   const ADAPTERS=Object.freeze([
-    {vendorId:0x0451,productId:0x4822,kind:'TI',statusQuery:false,fixedAudio:false,softwareCandidate:false},
-    {vendorId:0x303a,productId:0x4004,kind:'S31',statusQuery:true,fixedAudio:true,softwareCandidate:false},
-    {vendorId:0x303a,productId:0x4005,kind:'S3',statusQuery:true,fixedAudio:true,softwareCandidate:true}
+    {vendorId:0x0451,productId:0x4822,kind:'TI',statusQuery:false,fixedAudio:false},
+    {vendorId:0x303a,productId:0x4004,kind:'S31',statusQuery:true,fixedAudio:true},
+    {vendorId:0x303a,productId:0x4005,kind:'S3',statusQuery:true,fixedAudio:true}
   ].map(Object.freeze));
   const capabilityCache=new WeakMap();
   const deviceCapabilities=device=>device?capabilityCache.get(device)||null:null;
@@ -871,7 +870,7 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
     if(![0,1,2,0x7a,0x7c,0x7d,0x7e].includes(command))throw new BridgeError('COMMAND','不支持此调试命令');
     if(!Number.isInteger(length)||length<8)throw new BridgeError('DESCRIPTOR','输出报告长度不足');
     const p=new Uint8Array(length);p[0]=command;p[1]=1;
-    if(command===0x7a){if(length!==10)throw new BridgeError("DESCRIPTOR","S3 capability query requires 10-byte reports");return p;}
+    if(command===0x7a){if(length!==10)throw new BridgeError("DESCRIPTOR","Audio capability query requires 10-byte reports");return p;}
     if(command===0x7c||command===0x7d){if(length!==10)throw new BridgeError("DESCRIPTOR","AEC requires 10-byte reports");if(command===0x7c&&![0,1].includes(value))throw new BridgeError("ARGUMENT","Invalid AEC mode");p[2]=value;return p;}
     if(command===0x7e){if(length!==10)throw new BridgeError('DESCRIPTOR','桥接状态命令需要10字节报告');return p;}
     if(command===2){p[2]=value?1:0;return p;}
@@ -882,9 +881,9 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
   function decode(data,request){const p=data instanceof Uint8Array?data:new Uint8Array(data.buffer,data.byteOffset||0,data.byteLength);if(p.length<1)return null;
     if(request.command===0x7a){
       if(p[0]!==0x7a)return null;
-      if(p.length!==10)throw new BridgeError('SHORT_REPORT','S3 capability response must contain 10 bytes');
-      if(p[1]===0&&p[9]===0)return{supported:false,dmic48:false,analog:true};
-      if(p[1]!==0xd4||p[2]!==1||(p[3]&~7)||p[7]!==48||p[8]!==48||p[9]!==1)throw new BridgeError('CAPABILITY_RESPONSE','Invalid S3 audio capabilities');
+      if(p.length!==10)throw new BridgeError('SHORT_REPORT','Audio capability response must contain 10 bytes');
+      if(p.subarray(1).every(value=>value===0))return{supported:false,dmic48:false,analog:true};
+      if(p[1]!==0xd4||p[2]!==1||(p[3]&~7)||p[7]!==48||p[8]!==48||p[9]!==1)throw new BridgeError('CAPABILITY_RESPONSE','Invalid bridge audio capabilities');
       return{supported:true,dmic48:Boolean(p[3]&1),aec:Boolean(p[3]&2),analog:Boolean(p[3]&4),firmwareVersion:[p[4],p[5],p[6]].join('.'),usbRate:p[7]*1000,i2sRate:p[8]*1000,raw:Array.from(p)};
     }
     if(request.command===0x7c||request.command===0x7d){
@@ -906,7 +905,7 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
   }
   class HidBridge{
     constructor(device,{i2cAddress=0x33,timeoutMs=1200,onLog=()=>{},onState=()=>{}}={}){this.device=device;this.i2cAddress=i2cAddress;this.timeoutMs=timeoutMs;this.onLog=onLog;this.onState=onState;this.reports=null;this.pending=null;this.queue=Promise.resolve();this.connected=false;this.fault=null;this.inputHandler=e=>this.handleInput(e);this.disconnectHandler=e=>{if(e.device===this.device)this.disconnected();};}
-    async open(){const profile=adapterProfile(this.device);if(!profile)throw new BridgeError('DEVICE','请选择 TI 0451:4822、S31 303A:4004 或 S3 303A:4005 适配器');this.reports=selectReports(this.device);if(profile.fixedAudio&&(this.reports.input.bytes!==10||this.reports.output.bytes!==10))throw new BridgeError('DESCRIPTOR','S3 / S31 需要双向 10 字节 HID 报告');if(!this.device.opened)await this.device.open();this.device.addEventListener('inputreport',this.inputHandler);if(typeof navigator!=='undefined'&&navigator.hid)navigator.hid.addEventListener('disconnect',this.disconnectHandler);this.connected=true;this.fault=null;this.onState('connected');return this;}
+    async open(){const profile=adapterProfile(this.device);if(!profile)throw new BridgeError('DEVICE','请选择 TI 0451:4822、S31 303A:4004 或 S3 303A:4005 适配器');this.reports=selectReports(this.device);if(profile.fixedAudio&&(this.reports.input.bytes!==10||this.reports.output.bytes!==10))throw new BridgeError('DESCRIPTOR','AC10x 桥接器需要双向 10 字节 HID 报告');if(!this.device.opened)await this.device.open();this.device.addEventListener('inputreport',this.inputHandler);if(typeof navigator!=='undefined'&&navigator.hid)navigator.hid.addEventListener('disconnect',this.disconnectHandler);this.connected=true;this.fault=null;this.onState('connected');return this;}
     log(direction,request,payload,extra={}){try{this.onLog({time:new Date().toISOString(),direction,command:request.command,address:request.address,payload:Array.from(payload),...extra});}catch{}}
     async close(){capabilityCache.delete(this.device);this.capabilities=null;this.connected=false;this.rejectPending(new BridgeError('DISCONNECTED','设备连接已关闭'));this.device.removeEventListener('inputreport',this.inputHandler);if(typeof navigator!=='undefined'&&navigator.hid)navigator.hid.removeEventListener('disconnect',this.disconnectHandler);if(this.device.opened)await this.device.close();this.onState('disconnected');}
     disconnected(){capabilityCache.delete(this.device);this.capabilities=null;this.connected=false;this.rejectPending(new BridgeError('DISCONNECTED','USB 设备已断开'));this.onState('disconnected');}
@@ -922,14 +921,15 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
     exclusive(work){const run=this.queue.then(()=>{if(!this.connected)throw new BridgeError('DISCONNECTED','请先连接 USB 调试设备');if(this.fault)throw new BridgeError('DESYNC','上一笔通信失去同步，请断开后重新连接',{cause:this.fault.code});return work();});this.queue=run.catch(()=>{});return run;}
     async exchange(request){if(this.pending)throw new BridgeError('BUSY','已有待完成的 HID 请求');const payload=encode({...request,i2cAddress:this.i2cAddress},this.reports.output.bytes);let resolve,reject;const reply=new Promise((a,b)=>{resolve=a;reject=b;});reply.catch(()=>{});
       const timer=setTimeout(()=>{const error=new BridgeError('TIMEOUT','适配器应答超时；为避免串包，本次连接已停止读写');this.rejectPending(error);this.fail(error);},this.timeoutMs);this.pending={request,resolve,reject,timer};
-      try{this.log('OUT',request,payload);await this.device.sendReport(this.reports.output.id,payload);const answer=await reply;const profile=adapterProfile(this.device);if(profile?.fixedAudio&&request.command===2&&(answer.raw[8]!==1||answer.raw[2]!==request.value))throw new BridgeError('GATE_REJECTED','桥接器未确认音频时钟开关');if(profile?.kind==='S3'&&request.command===0x7e&&answer.protocolVersion!=='0.1')throw new BridgeError('PROTOCOL_VERSION','S3 协议版本不受支持；当前仅支持协议 0.1',{received:answer.protocolVersion});return answer;}catch(error){this.rejectPending(error);if(!['I2C_NACK','DISCONNECTED','AEC_REJECTED'].includes(error.code))this.fail(error);throw error;}
+      try{this.log('OUT',request,payload);await this.device.sendReport(this.reports.output.id,payload);const answer=await reply;const profile=adapterProfile(this.device);if(profile?.fixedAudio&&request.command===2&&(answer.raw[8]!==1||answer.raw[2]!==request.value))throw new BridgeError('GATE_REJECTED','桥接器未确认音频时钟开关');if(profile?.statusQuery&&request.command===0x7e&&answer.protocolVersion!=='0.1')throw new BridgeError('PROTOCOL_VERSION','桥接器协议版本不受支持；当前仅支持协议 0.1',{received:answer.protocolVersion});return answer;}catch(error){this.rejectPending(error);if(!['I2C_NACK','DISCONNECTED','AEC_REJECTED'].includes(error.code))this.fail(error);throw error;}
     }
     readRegister(address){byte(address,'寄存器地址');return this.exclusive(async()=>{const reply=await this.exchange({command:1,address,dataWidth:1,addressWidth:1});return reply.value;});}
     writeRegister(address,value){byte(address,'寄存器地址');byte(value,'寄存器值');return this.exclusive(async()=>{await this.exchange({command:0,address,value,dataWidth:1,addressWidth:1});const read=await this.exchange({command:1,address,dataWidth:1,addressWidth:1});return read.value;});}
     setMclk(enabled){if(typeof enabled!=='boolean')throw new BridgeError('ARGUMENT','时钟开关必须是布尔值');return this.exclusive(()=>this.exchange({command:2,value:enabled?1:0}));}
-    getCapabilities(){return this.exclusive(async()=>{const info=adapterProfile(this.device)?.kind==='S3'?await this.exchange({command:0x7a}):{supported:false,dmic48:false,analog:true};this.capabilities=info;capabilityCache.set(this.device,info);return info;});}
-    getAEC(){return this.exclusive(()=>{if(adapterProfile(this.device)?.kind!=='S3')return{supported:false,enabled:false};return this.exchange({command:0x7d});});}
-    setAEC(enabled){if(typeof enabled!=='boolean')throw new BridgeError('ARGUMENT','AEC mode must be boolean');return this.exclusive(()=>{if(adapterProfile(this.device)?.kind!=='S3')throw new BridgeError('CAPABILITY','AEC requires S3 firmware');return this.exchange({command:0x7c,value:enabled?1:0});});}
+    getCapabilities(){return this.exclusive(async()=>{const info=adapterProfile(this.device)?.fixedAudio?await this.exchange({command:0x7a}):{supported:false,dmic48:false,analog:true};this.capabilities=info;capabilityCache.set(this.device,info);return info;});}
+    canQueryAEC(){return this.capabilities?.supported?this.capabilities.aec:adapterProfile(this.device)?.kind==='S3';}
+    getAEC(){return this.exclusive(()=>this.canQueryAEC()?this.exchange({command:0x7d}):{supported:false,enabled:false});}
+    setAEC(enabled){if(typeof enabled!=='boolean')throw new BridgeError('ARGUMENT','AEC mode must be boolean');return this.exclusive(()=>{if(!this.canQueryAEC())throw new BridgeError('CAPABILITY','AEC is unavailable on the connected bridge');return this.exchange({command:0x7c,value:enabled?1:0});});}
     getStatus(){return this.exclusive(()=>{if(!adapterProfile(this.device)?.statusQuery)throw new BridgeError('CAPABILITY','此适配器未提供桥接状态查询');return this.exchange({command:0x7e});});}
   }
   const api={ADAPTERS,adapterProfile,deviceCapabilities,deviceFilters,BridgeError,reportBytes,descriptors,selectReports,encode,decode,HidBridge};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.AudioHardwareTransport=api;
@@ -963,17 +963,17 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
     const adapter=T.adapterProfile(device);
     const touchesInput=options.groups?.includes('routing')&&(!options.scope||Boolean(NODE_MASKS[options.scope]?.[25]&128));
     if(adapter?.fixedAudio&&touchesInput&&config.routing.input==='dmic'){
-      if(adapter.kind!=='S3'||(options.profile||config.profile)!=='AC101S'||config.clock.fs!==48000||!T.deviceCapabilities(device)?.dmic48)throw new Error('48 kHz DMIC 需要 AC101S 和支持 DMIC 的 S3 0.3.1 固件');
+      if((options.profile||config.profile)!=='AC101S'||config.clock.fs!==48000||!T.deviceCapabilities(device)?.dmic48)throw new Error('48 kHz DMIC 需要 AC101S 和支持 DMIC 的桥接固件');
     }
     if(!adapter?.fixedAudio||!options.groups?.includes('clock'))return;
     const c=config.clock,mclk=options.mclkHz||c.fs*256;
-    if(c.fs!==48000||c.bits!==16||c.slot!==32||c.slots!==2||c.format!=='I2S'||c.role!=='slave'||mclk!==12288000)throw new Error(adapter.kind==='S3'?'S3 固定为48kHz、16位数据、32位双时隙I²S从机，MCLK参考为12.288MHz':'S31 固定为48kHz、16位数据、32位双时隙I²S从机，MCLK参考为12.288MHz');
+    if(c.fs!==48000||c.bits!==16||c.slot!==32||c.slots!==2||c.format!=='I2S'||c.role!=='slave'||mclk!==12288000)throw new Error('桥接音频使用 48 kHz、16 位数据、32 位双时隙 I²S，Codec 为从机，MCLK 为 12.288 MHz');
   }
   function assertAdapterRegister(address,value,device=null){
     const adapter=T.adapterProfile(device);if(!adapter?.fixedAudio)return;
-    if(address===25&&(value&128)&&!(adapter.kind==='S3'&&T.deviceCapabilities(device)?.dmic48))throw new Error('当前适配器未提供 48 kHz DMIC 支持');
+    if(address===25&&(value&128)&&!T.deviceCapabilities(device)?.dmic48)throw new Error('当前适配器未提供 48 kHz DMIC 支持');
     const fixed={4:[15,1],5:[15,1],7:[0xc0,0],8:[15,3],9:[3,0],10:[255,31],11:[0x34,0x14],12:[0x77,0x73],13:[0xef,0],14:[15,5]};
-    const p=fixed[address];if(p&&(value&p[0])!==p[1])throw new Error(adapter.kind==='S3'?'此寄存器值不符合S3固定音频格式；使用时钟模块查看受支持配置':'此寄存器值不符合S31固定音频格式；使用时钟模块查看受支持配置');
+    const p=fixed[address];if(p&&(value&p[0])!==p[1])throw new Error('此寄存器值与桥接音频格式冲突，请在时钟模块查看配置');
   }
   function encode(config,{groups=['routing','eq','dynamics','clock'],mclkHz=config.clock.fs*256,checkStability=true,manualBase={},profile=(config.profile==='AC101S'?'AC101S':'AC102'),scope=null}={}){
     const c=normalize(clone(config)),r=c.routing,map=new Map(),notes=[],chosen=new Set(groups);
@@ -1025,7 +1025,7 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
       const mode={PCM:0,LJ:0x10,I2S:0x14,RJ:0x20}[c.clock.format];if(mode===undefined)throw new Error('数据格式无效');add(11,0x34,mode,'clock','串行格式与偏移');add(12,0x77,((c.clock.slot/4-1)<<4)|(c.clock.bits/4-1),'clock','时隙 / 数据宽度');add(14,15,(c.clock.slots-1)*5,'clock','TX / RX 时隙数');
     }
     const touchesInput=!scope||Boolean(NODE_MASKS[scope]?.[25]&0x80);
-    if(chosen.has('routing')&&touchesInput&&r.input==='dmic'&&!R.dmicSupported({...c,profile}))throw new Error(profile==='AC101S'?'AC101S DMIC 使用 16 或 48 kHz；48 kHz 需要配套 S3 固件':'AC102 DMIC 采样率范围为 8–24 kHz');
+    if(chosen.has('routing')&&touchesInput&&r.input==='dmic'&&!R.dmicSupported({...c,profile}))throw new Error(profile==='AC101S'?'AC101S DMIC 使用 16 或 48 kHz；48 kHz 需要支持 DMIC 的桥接固件':'AC102 DMIC 采样率范围为 8–24 kHz');
     return{patches:Array.from(map.values()).sort((a,b)=>a.address-b.address),notes};
   }
   function inferFs(snapshot,mclkHz){const a=ADC_DIV[(snapshot[4]||0)&15],b=ADC_DIV[(snapshot[5]||0)&15];if(!a||a!==b)return null;const fs=mclkHz/a/128;return FS.find(x=>Math.abs(fs-x)<.01)||null;}
@@ -1072,7 +1072,7 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
   const common=typeof module!=='undefined'&&module.exports;
   const C=common?require('./codec.js'):root.AudioCodec,R=common?require('./routing.js'):root.AudioRouting,D=common?require('./dsp.js'):root.AudioDSP;
   const T=common?require('./transport.js'):root.AudioHardwareTransport;
-  const VERSION='0.8.15-rc.1',profiles=['AC102-reference','AC101S','AC102'];
+  const VERSION='0.8.16-rc.1',profiles=['AC102-reference','AC101S','AC102'];
   const clone=x=>JSON.parse(JSON.stringify(x));
   function safeObject(value,depth=0){
     if(depth>12)throw new Error('配置嵌套过深');
@@ -1112,7 +1112,7 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
       .filter(address=>a[address]!==b[address]).map(address=>({address,before:a[address]??null,after:b[address]??null,
         changedMask:a[address]===undefined||b[address]===undefined?null:a[address]^b[address],writableMask:C.masks[address]||0}));
   }
-  function mutedS31Template(config,{lineDifferential=false}={}){
+  function mutedBridgeTemplate(config,{lineDifferential=false}={}){
     const c=parseConfig(config);c.profile='AC101S';c.pga=12;
     c.adc={enabled:true,gain:0,mute:false};c.dac={enabled:true,gain:-12,mute:true};
     c.clock={fs:48000,format:'I2S',bits:16,slot:32,slots:2,role:'slave'};
@@ -1126,7 +1126,7 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
     if(!device)return null;
     const profile=T.adapterProfile(device);
     return{vendorId:device.vendorId,productId:device.productId,productName:String(device.productName||''),
-      kind:profile?.kind||'unknown',statusQuery:Boolean(profile?.statusQuery),softwareCandidate:Boolean(profile?.softwareCandidate)};
+      kind:profile?.kind||'unknown',statusQuery:Boolean(profile?.statusQuery)};
   }
   function diagnose(snapshot,{stale=true,adapter=null,mclkHz=12288000,status=null,profile='AC101S'}={}){
     const out=[],add=(id,severity,title,detail,evidence='register-readback')=>out.push({id,severity,title,detail,evidence});
@@ -1139,8 +1139,7 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
     if((snapshot[49]&8)&&C.inferHpfFrequency(snapshot,fs)===null)add('hpf-frequency','warning','HPF 截止频率未知','当前系数或参考时钟无法给出支持范围内的频率；草稿数值不是设备读回。','calculated');
     if(['S31','S3'].includes(adapter?.kind)){
       const match=fs===48000&&(snapshot[7]&0xc0)===0&&(snapshot[12]&0x77)===0x73&&snapshot[10]===31&&(snapshot[11]&0x34)===0x14;
-      const s3=adapter.kind==='S3';add(s3?'s3-format':'s31-format',match?'ok':'error',s3?(match?'S3 固定格式一致':'S3 与 Codec 格式不一致'):(match?'S31 固定格式一致':'S31 与 Codec 格式不一致'),'48kHz / 16位数据 / 32位双时隙 / I²S 从机');
-      if(s3)add('s3-validation','info','S3 开发适配器','GPIO8–14；原生 USB Full Speed；PID 303A:4005','support-status');
+      add('bridge-format',match?'ok':'error',match?'桥接音频格式一致':'桥接器与 Codec 格式不一致','48kHz / 16位数据 / 32位双时隙 / I²S 从机');
       if(status){
         add('bridge',status.clockGate?'ok':'warning',status.clockGate?'桥接时钟已开启':'桥接时钟已关闭',`协议${status.protocolVersion}；播放${status.playbackActive?'活动':'空闲'}；录音${status.captureActive?'活动':'空闲'}`,'bridge-status');
         if(status.i2cErrorsLow8||status.busyLow8)add('bridge-errors','warning','桥接端有错误或忙记录',`I²C=${status.i2cErrorsLow8}，忙=${status.busyLow8}（协议计数读回）`,'bridge-status');
@@ -1149,7 +1148,12 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
     const dmic=Boolean(snapshot[25]&128),adc=Boolean(snapshot[3]&16)&&Boolean(snapshot[25]&1)&&(dmic||Boolean(snapshot[32]&1));
     add('record',adc?'ok':'info',dmic?(adc?'数字录音通道已开启':'数字录音通道未完全开启'):(adc?'模拟录音通道已开启':'模拟录音通道未完全开启'),dmic?'DMIC 绕过模拟 PGA；检查 REC 和 ADC_DIG_EN，使能后由 MICN 接收 PDM 数据。':'检查 REC、ADC_DIG_EN、ADC/PGA 三处使能');
     if(dmic)add('dmic-wiring','info','DMIC · MICP 时钟 / MICN 数据','AC101S 评估板 C34 留空、H29 移除、H32 接通数字麦克风供电；返回模拟输入前按接线说明恢复。');
-    if(status?.capabilities?.supported)add('audio-capabilities','info','S3 固件 '+status.capabilities.firmwareVersion,status.capabilities.dmic48?'USB / I²S 48 kHz · AMIC / DMIC · AEC':'USB / I²S 48 kHz · AMIC','firmware-capabilities');
+    if(status?.capabilities?.supported){
+      const caps=status.capabilities;
+      const features=['USB / I²S 48 kHz',caps.dmic48?'AMIC / DMIC':'AMIC'];
+      if(caps.aec)features.push('AEC');
+      add('audio-capabilities','info',(adapter?.kind||'AC10x')+' '+caps.firmwareVersion,features.join(' · '),'firmware-capabilities');
+    }
     if(snapshot[25]&0x30)add('adc-pattern','warning','ADC 正在使用调试源','当前采集不代表所选麦克风输入');
     if(snapshot[27]&6)add('dac-pattern','warning','DAC 正在使用调试源','当前播放源并非普通 USB PCM');
     const playback=(snapshot[3]&0x21)===0x21&&Boolean(snapshot[27]&1)&&Boolean(snapshot[38]&32);
@@ -1173,7 +1177,7 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
       transactions:clone(history),events:clone(events),droppedEvents,diagnostics:clone(diagnostics),monitor:clone(monitor),
       evidenceNote:'设备读回、推导、桥接状态、草稿和未测量项目分别记录；不自动采集录音、设备序列号或本机文件路径'};
   }
-  const api={VERSION,profiles,parseConfig,normalizeSnapshot,diffSnapshots,mutedS31Template,mutedBridgeTemplate:mutedS31Template,adapterInfo,diagnose,monitorAddresses,debugBundle};
+  const api={VERSION,profiles,parseConfig,normalizeSnapshot,diffSnapshots,mutedBridgeTemplate,adapterInfo,diagnose,monitorAddresses,debugBundle};
   if(common)module.exports=api;else root.AudioDebug=api;
 })(typeof globalThis!=='undefined'?globalThis:this);
 </script><script>/* Local examples. These functions change a cloned draft only, never hardware. */
@@ -1227,7 +1231,7 @@ body.workbench .workbench-canvas .graph-edge .routing-junction{fill:var(--route-
     {id:'playback-loopback',name:'播放数字回采',tag:'数字排查',note:'USB 录音左路接处理后播放数据，右路接输入混音，便于比较；不采集咪头。',path:'USB → EQ → 扬声器；PLAY / RXM → USB',effect:'录音左路为处理后数据，右路为 EQ 前数据',presetId:'voice'},
     {id:'left-channel',name:'仅左声道播放',tag:'声道排查',note:'只把电脑的左声道送到扬声器；用于排查声道选择和接线。',path:'USB 左声道 → 人声清晰 → 扬声器',effect:'右播放声道不混入 · 麦克风独立录音',presetId:'voice'},
     {id:'right-channel',name:'仅右声道播放',tag:'声道排查',note:'只把电脑的右声道送到扬声器；用于排查声道选择和接线。',path:'USB 右声道 → 人声清晰 → 扬声器',effect:'左播放声道不混入 · 麦克风独立录音',presetId:'voice'},
-    {id:'aec-call',name:'AEC 免提通话',tag:'S3 · 消回声',note:'所选麦克风与播放参考同步送入 S3 AEC，保留人声清晰播放。模拟输入使用 0.3.0 起的 AEC 固件，数字输入使用 0.3.1。',path:'USB → EQ → 扬声器；MIC + PLAY → S3 AEC → USB',effect:'16 kHz 语音处理 · USB 48 kHz · 单声道录音复制到左右路',presetId:'voice',requiresS3AEC:true},
+    {id:'aec-call',name:'AEC 免提通话',tag:'回声消除',note:'使用所选麦克风和播放参考做回声消除，保留人声清晰播放。',path:'USB → EQ → 扬声器；MIC + PLAY → AEC → USB',effect:'16 kHz 语音处理 · USB 48 kHz · 单声道录音复制到左右路',presetId:'voice',requiresAEC:true},
     {id:'mute',name:'静音待机',tag:'暂停音频',note:'关闭芯片录放和模拟输出；USB 控制保持可用，可再写入任一方案。',path:'播放关闭 · 录音关闭 · USB 控制保留',effect:'不休眠 MCU、不刷固件、不改电脑音量',presetId:'voice'}
   ];
   function quickExample(id,config,options={}){
@@ -1607,8 +1611,19 @@ const api={Camera,Canvas,svgPoint};if(typeof module!=='undefined'&&module.export
 })(typeof globalThis!=='undefined'?globalThis:this);
 </script><script>/* English UI catalog. Register addresses, values and machine keys are not localized. */
 (function(root){const catalog={
+  "桥接器协议版本不受支持；当前仅支持协议 0.1": "Unsupported bridge protocol version. Use protocol 0.1.",
+  "桥接音频使用 48 kHz、16 位数据、32 位双时隙 I²S，Codec 为从机，MCLK 为 12.288 MHz": "Bridge audio uses 48 kHz, 16-bit samples, two 32-bit I²S slots, a codec slave, and 12.288 MHz MCLK.",
+  "此寄存器值与桥接音频格式冲突，请在时钟模块查看配置": "This register value conflicts with the bridge audio format. Check the Clock module.",
+  "桥接音频格式一致": "Bridge audio format matches",
+  "桥接器与 Codec 格式不一致": "Bridge and codec audio formats differ",
+  "AC10x 桥接器需要双向 10 字节 HID 报告": "AC10x bridges require 10-byte HID reports in both directions",
+  "支持 TI 适配器与 AC10x USB 桥接器": "Supports TI adapters and AC10x USB bridges",
+  "；连接 TI 适配器或 AC10x USB 桥接器后可读回并核验配置。": "; connect a TI adapter or an AC10x USB bridge to read and verify settings.",
+  "AC101S 数字输入可用 16 / 48 kHz；USB 桥接固件使用固定 48 kHz。DMIC 接 MICP 时钟和 MICN 数据，评估板 C34 留空、H29 移除。": "AC101S digital input supports 16 / 48 kHz. The USB bridge uses 48 kHz. Connect MICP to clock and MICN to data. Leave C34 unpopulated and remove H29 on the evaluation board.",
+  "AC102 按手册使用 8–24 kHz DMIC；48 kHz DMIC 配置使用 AC101S 参数表。": "AC102 DMIC uses 8–24 kHz. Use the AC101S register profile for 48 kHz DMIC.",
+
 "选择用途，点击“写入并核验”即可应用。这里应用芯片与音频处理配置，不刷写固件，也不会自动播放或录音。":"Choose a task and click Write & verify to apply codec and audio-processing settings. This does not flash firmware or start playback or recording.",
-"AEC 免提通话":"AEC speakerphone","S3 · 消回声":"S3 \u00b7 Echo cancellation","播放参考与咪头同步送入 S3 的 ESP-SR AEC；保留人声清晰播放。需要 AEC 固件 0.3.0。":"Synchronized playback reference and microphone feed ESP-SR AEC on S3. Clear-vocal playback is preserved. Requires AEC firmware 0.3.0.","USB → EQ → 扬声器；MIC + PLAY → S3 AEC → USB":"USB \u2192 EQ \u2192 Speaker; MIC + PLAY \u2192 S3 AEC \u2192 USB","16 kHz 语音处理 · USB 48 kHz · 单声道录音复制到左右路":"16 kHz speech processing \u00b7 USB 48 kHz \u00b7 Mono capture duplicated to both channels","此方案需要 S3 AEC 固件 0.3.0，请先更新固件":"This setup requires S3 AEC firmware 0.3.0. Update the firmware first.","AEC 需要 S3 适配器和 AC101S 参数表":"AEC requires the S3 adapter and AC101S register profile","AEC 未能启用：请核对固件、剩余内存和参考路由":"AEC could not start. Check firmware, available memory and reference routing.",
+"48 kHz DMIC 需要 AC101S 和支持 DMIC 的桥接固件":"48 kHz DMIC requires AC101S and bridge firmware with DMIC support","AC101S DMIC 使用 16 或 48 kHz；48 kHz 需要支持 DMIC 的桥接固件":"AC101S DMIC uses 16 or 48 kHz. The 48 kHz mode requires bridge firmware with DMIC support.","当前桥接器未提供 AEC，请检查固件和 PSRAM":"AEC is unavailable. Check the bridge firmware and PSRAM.","AEC 需要支持 AEC 的桥接器和 AC101S 参数表":"AEC requires a compatible bridge and the AC101S register profile","回声消除":"Echo cancellation","使用所选麦克风和播放参考做回声消除，保留人声清晰播放。":"Cancels echo using the selected microphone and playback reference. Retains clear-vocal playback.","USB → EQ → 扬声器；MIC + PLAY → AEC → USB":"USB → EQ → Speaker; MIC + PLAY → AEC → USB","AEC 免提通话":"AEC speakerphone","16 kHz 语音处理 · USB 48 kHz · 单声道录音复制到左右路":"16 kHz speech processing \u00b7 USB 48 kHz \u00b7 Mono capture duplicated to both channels","AEC 未能启用：请核对固件、剩余内存和参考路由":"AEC could not start. Check firmware, available memory and reference routing.",
 "打开 Quick Start 快捷方案":"Open Quick Start setups",
 "Quick Start · 快捷方案":"Quick Start · Ready-to-use setups",
 "选择用途，点击“写入并核验”即可应用。这里只恢复芯片配置，不刷写固件，也不会自动播放或录音。":"Choose a task and click Write & verify to apply. These setups configure the codec; they do not flash firmware or start playback or recording.",
@@ -1752,7 +1767,6 @@ const api={Camera,Canvas,svgPoint};if(typeof module!=='undefined'&&module.export
   "连接并只读检查": "Connect and read only",
   "音频源与帧格式": "Audio source and frame format",
   "外部时钟，保留当前帧格式": "External clocks; keep the current frame format",
-  "S31 / S3固定48kHz格式": "S31 / S3 fixed 48 kHz format",
   "真实板端MCLK / Hz": "Actual board MCLK / Hz",
   "我已按板卡资料接好所需音频输入、输出与I²S连接": "I connected the required audio inputs, outputs and I²S wiring according to the board documentation",
   "我已核对芯片型号、真实MCLK及帧格式，允许本次配置包含时钟": "I checked the chip model, actual MCLK and frame format, and allow this configuration to include clocks",
@@ -2161,7 +2175,6 @@ const api={Camera,Canvas,svgPoint};if(typeof module!=='undefined'&&module.export
   "电平 / dBFS": "Level / dBFS",
   "通信超时 / ms": "Communication timeout / ms",
   "设备标量 → 草稿": "Device scalars → draft",
-  "查询 S31 状态": "Query S31 status",
   "DAC 静音并核验": "Mute DAC & verify",
   "恢复上次已核验写入": "Restore last verified write",
   "搜索名称 / 地址": "Search name / address",
@@ -2175,7 +2188,6 @@ const api={Camera,Canvas,svgPoint};if(typeof module!=='undefined'&&module.export
   "全双工 · 人声处理": "Full duplex · processed voice",
   "语音处理与USB混合": "Processed voice + USB mix",
   "配置文档版本不受支持": "Unsupported configuration version",
-  "S31 固定格式一致": "S31 fixed format matches",
   "桥接端有错误或忙记录": "Bridge reports errors or busy events",
   "桥接实时状态尚未查询": "Bridge live status not queried",
   "AGC 恢复时间 H": "AGC decay high",
@@ -2286,7 +2298,6 @@ const api={Camera,Canvas,svgPoint};if(typeof module!=='undefined'&&module.export
   "录音 + 播放 + 可选监听与回环": "Record + play + optional monitor / loopback",
   "快照地址必须为十六进制或十进制字节": "Snapshot addresses must be hexadecimal or decimal bytes",
   "快照缺少匹配的芯片 ID 0x12": "Snapshot is missing matching chip ID 0x12",
-  "S31 与 Codec 格式不一致": "S31 and codec formats differ",
   "当前播放源并非普通 USB PCM": "Playback source is not ordinary USB PCM",
   "这是设备数字音量读回，不是声压测量": "Digital volume readback; not a sound-pressure measurement",
   "先核对系数和格式，避免继续提高增益": "Check coefficients and format before increasing gain",
@@ -2300,7 +2311,6 @@ const api={Camera,Canvas,svgPoint};if(typeof module!=='undefined'&&module.export
   "多音（250 / 1k / 4k）": "Multitone (250 / 1k / 4k)",
   "使用已更新的浏览器试听 EQ 配置": "Uses the updated browser-preview EQ",
   "设备读回、草稿与推导结果分别显示。": "Device readback, draft and inferred results are shown separately.",
-  "载入 S31 / ECM 静音草稿": "Load muted S31 / ECM draft",
   "完整路径 · 点击任意模块开始调试": "Full routing · click a module to begin",
   "抬升低频，轻收低中频，保留输出余量。": "Boost bass, gently reduce lower mids and retain output headroom.",
   "只选择RXL，便于检查左右通道来源。": "Select RXL only to identify left/right channel sources.",
@@ -2353,14 +2363,12 @@ const api={Camera,Canvas,svgPoint};if(typeof module!=='undefined'&&module.export
   "此 MCLK / 时隙配置不能生成所需 BCLK": "This MCLK / slot setup cannot generate the required BCLK",
   "DMIC 参数只支持手册列出的 8–24 kHz": "DMIC parameters support only the documented 8–24 kHz rates",
   "流动表示草稿中的启用通路方向，不代表实测音频活动": "Flow animation represents the enabled draft path, not measured audio activity",
-  "点击“查询 S31 状态”；固件版本未由此协议提供": "Click Query S31 status; this protocol does not report a firmware version",
   "HPF 系数不在当前截止频率滑块范围内，保留草稿。": "HPF coefficients exceed the cutoff slider range; draft retained.",
   "设备采样率与草稿不一致；请先导入设备标量或配置时钟": "Device Fs differs from the draft; import device scalars or configure the clock first",
   "MIC → SDOUT，同时 SDIN → 模拟输出": "MIC → SDOUT, while SDIN → analog output",
   "两条独立路径同时工作，不接通本地录音监听或数字回环。": "Two independent paths; local recording monitor and digital loopback remain off.",
   "独立录音/播放，两条主路径同时可见，关闭监听与回环。": "Independent record/play paths shown together; monitor and loopback are off.",
   "跳过复位 / 供电电压 / 只读 / 保留地址 0x": "Skipping reset / supply-voltage / read-only / reserved address 0x",
-  "S31 状态尚未查询；TI 适配器不提供此状态接口。": "S31 status not queried; TI adapters do not expose this status interface.",
   "写入前重新读取设备，按掩码保留其他位，写后逐项核验。": "Fresh read, masked read-modify-write, then verify each write.",
   "输入选择、四组混音、监听与数字回环，完整显示连接关系。": "Input selection, four mixers, monitor and loopback with complete connections.",
   "减少两端刺激，保留中频清晰；不包含压缩或响度自动控制。": "Reduce bass and treble stimulation while keeping mids clear; no compression or auto-loudness.",
@@ -2392,7 +2400,6 @@ const api={Camera,Canvas,svgPoint};if(typeof module!=='undefined'&&module.export
   "选择声卡输入，录成PCM后在下方查看波形、FFT和A/B；不自动监听。": "Select a sound card input and capture PCM for waveform, FFT and A/B views. No live monitoring.",
   "两种来源在DAC_MIX汇合，示例各衰减6dB，便于观察混音电平与来源。": "Two sources join at DAC_MIX, each at -6 dB, to inspect mixing levels and sources.",
   "12dB PGA、0dB录音音量，HPF/AGC旁路，左右TX均送录音。": "12 dB PGA, 0 dB recording volume, HPF/AGC bypassed; both TX slots carry recording.",
-  "页面版本 0.7.4-rc.1 · 支持 TI 与 S31 USB 控制": "Page version 0.7.4-rc.1 · TI and S31 USB control",
   "不经过ADC、DAC或播放EQ，适合区分USB/I²S传输与模拟链的问题。": "Bypasses ADC, DAC and playback EQ to separate USB/I²S transport issues from analog ones.",
   "ADC / DAC 分频或 MCLK 无法推导统一采样率，保留当前 Fs。": "ADC/DAC dividers or MCLK do not yield a common Fs; current Fs retained.",
   "AC10x Audio Lab v0.7.4-rc.1 · 音频调试工作台": "AC10x Audio Lab v0.7.4-rc.1 · Audio workbench",
@@ -2409,7 +2416,6 @@ const api={Camera,Canvas,svgPoint};if(typeof module!=='undefined'&&module.export
   "MIC → 录音处理 → RECD_DAT → DAC_MIX → EQ → 模拟输出": "MIC → record DSP → RECD_DAT → DAC_MIX → EQ → analog output",
   "仅在明确开始后读取；写入时暂停，最长30分钟，最多保留600条。关闭页面或断线后停止。": "Read only after starting. Pauses for writes; 30-minute limit and latest 600 samples. Stops on disconnect or page close.",
   "设备读回、推导、桥接状态、草稿和未测量项目分别记录；不自动采集录音、设备序列号或本机文件路径": "Readback, inferred values, bridge state, draft and unmeasured items are distinct; no automatic audio, serial-number or local-path collection",
-  "S31 固定为48kHz、16位数据、32位双时隙I²S从机，MCLK参考为12.288MHz": "S31 is fixed at 48 kHz, 16-bit data, 32-bit stereo I²S slots, codec slave, with 12.288 MHz reference MCLK",
   "通过“文件与工具”导入原厂 EQ / AGC .AC102；按当前草稿Fs重算，不会自动写入。": "Use Files & tools to import vendor EQ / AGC .AC102 files. Recalculated using draft Fs; no automatic writes.",
   "回采点在播放数字处理后，EQ与DAC数字音量会影响回采；示例关闭Line Out而保留数字音量。": "Recapture follows digital playback processing, including EQ and DAC volume; Line Out is disabled while digital volume stays active.",
   "启动 / 恢复时间是每 0.5 dB 增益步长的间隔，按当前 Fs 编码；消抖会量化至离散值。曲线为静态示意。": "Attack/decay are intervals per 0.5 dB gain step, encoded at draft Fs. Debounce is quantized. The curve is static.",
@@ -2611,7 +2617,6 @@ const api={Camera,Canvas,svgPoint};if(typeof module!=='undefined'&&module.export
   "生成信号": "Generated signal",
   "通道计算结果": "channel calculation",
   "尚无完整设备读回": "No complete device readback",
-  "S31 状态尚未查询；查询值不代表时钟频率的实测。": "S31 status not queried. Status does not measure clock frequency.",
   "连接并读取后显示差异。": "Connect and read the device to view changes.",
   "范围：": "Scope:",
   "只修改所选模块的位。写入前重新读取，写后逐项核验。": "Only this module's bits are changed. Fresh read before writing; verify every write.",
@@ -2737,7 +2742,6 @@ const api={Camera,Canvas,svgPoint};if(typeof module!=='undefined'&&module.export
   "计算结果": "calculated result",
   "所选": "selected",
   "页面版本": "Page version",
-  "支持 TI 与 S31 USB 控制": "TI and S31 USB control",
   "音频调试工作台": "Audio workbench",
   "· 前 30 秒": "· first 30 seconds",
   "复位命令，不能下发": "Reset command; writes blocked",
@@ -2772,7 +2776,6 @@ const api={Camera,Canvas,svgPoint};if(typeof module!=='undefined'&&module.export
   "请选择实际USB声卡输入": "Select the actual USB sound card input",
   "已达到30分钟上限，监视已停止": "Monitoring stopped at the 30-minute limit",
   "设备不可用，监视已停止": "Device unavailable; monitoring stopped",
-  "TI 适配器未提供 S31 状态接口。": "TI adapters do not expose the S31 status interface.",
   "缺失": "Missing",
   "至少选择一组参数": "Select at least one settings group",
   "未知": "Unknown",
@@ -2824,7 +2827,6 @@ const api={Camera,Canvas,svgPoint};if(typeof module!=='undefined'&&module.export
   "写入与读回核验完成；草稿差异已更新。": "Write and readback verification complete; draft differences updated.",
   "上次写入已恢复": "Previous write restored",
   "次；完整读回核验通过。": "operations; complete readback verification passed.",
-  "S31 静音基础草稿已载入": "Muted S31 base draft loaded",
   "先查看全部差异，再写入并核验。": "Review all differences before writing and verifying.",
   "已载入草稿；尚未写入硬件": "Draft loaded; not written to hardware",
   "基线文件超过1MB": "Baseline file exceeds 1 MB",
@@ -2854,41 +2856,28 @@ const api={Camera,Canvas,svgPoint};if(typeof module!=='undefined'&&module.export
   "未找到原适配器要求的 Report ID 0（输出至少 8 字节、输入至少 9 字节）": "Required report ID 0 not found (output at least 8 bytes; input at least 9 bytes)",
   "不支持此调试命令": "Unsupported debug command",
   "输出报告长度不足": "Output report too short",
-  "S31 状态命令需要10字节报告": "S31 status requires a 10-byte report",
   "I²C 地址必须使用 7 位格式": "I²C address must use 7-bit format",
   "寄存器宽度或数据超出范围": "Register width or data out of range",
-  "S31 状态报告长度不正确": "Incorrect S31 status report length",
-  "S31 状态回复无效": "Invalid S31 status reply",
   "适配器返回的数据长度不足": "Adapter response too short",
   "I²C 读取失败：检查地址、供电与连接": "I²C read failed: check address, power and wiring",
   "适配器未确认寄存器写入": "Adapter did not acknowledge the register write",
-  "请选择 TI 0451:4822 或 AC10x S31 303A:4004 适配器": "Select a TI 0451:4822 or AC10x S31 303A:4004 adapter",
-  "S31 需要双向 10 字节 HID 报告": "S31 requires 10-byte HID reports in both directions",
   "USB 设备已断开": "USB device disconnected",
-  "S31 必须返回10字节报告": "S31 must return a 10-byte report",
   "请先连接 USB 调试设备": "Connect the USB control device first",
   "上一笔通信失去同步，请断开后重新连接": "Previous request lost synchronization; disconnect and reconnect",
   "已有待完成的 HID 请求": "A HID request is already pending",
   "适配器应答超时；为避免串包，本次连接已停止读写": "Adapter timed out; this connection stopped reading and writing to avoid mismatched replies",
-  "S31 未确认音频时钟开关": "S31 did not acknowledge the audio clock gate",
   "寄存器值": "Register value",
-  "此适配器未提供 S31 状态查询": "This adapter does not expose S31 status queries",
   "· 旧快照": "· stale snapshot",
   "正常播放": "Normal playback",
   "正常录音": "Normal recording",
   "请选择 TI 0451:4822、S31 303A:4004 或 S3 303A:4005 适配器": "Select a TI 0451:4822, S31 303A:4004, or S3 303A:4005 adapter",
-  "S3 / S31 需要双向 10 字节 HID 报告": "S3 / S31 requires 10-byte HID reports in both directions",
   "桥接状态命令需要10字节报告": "Bridge status requires a 10-byte report",
   "桥接状态报告长度不正确": "Incorrect bridge status report length",
   "桥接状态回复无效": "Invalid bridge status reply",
   "桥接器必须返回10字节报告": "The bridge must return a 10-byte report",
   "桥接器未确认音频时钟开关": "The bridge did not acknowledge the audio clock gate",
   "此适配器未提供桥接状态查询": "This adapter does not expose bridge status queries",
-  "S3 协议版本不受支持；当前仅支持协议 0.1": "Unsupported S3 protocol version; only protocol 0.1 is supported",
-  "S3 固定为48kHz、16位数据、32位双时隙I²S从机，MCLK参考为12.288MHz": "S3 is fixed at 48 kHz, 16-bit data, 32-bit stereo I²S slots, codec slave, with 12.288 MHz reference MCLK",
   "此寄存器值不符合S3固定音频格式；使用时钟模块查看受支持配置": "Register value conflicts with S3 fixed format; inspect supported clock settings",
-  "S3 固定格式一致": "S3 fixed format matches",
-  "S3 与 Codec 格式不一致": "S3 and codec formats differ",
   "开发 PID 303A:4005；实际板型、供电与引脚需另行核对": "Development PID 303A:4005; board model, power and pins require separate verification",
   "点击“查询桥接器状态”；固件版本未由此协议提供": "Click Query bridge status; this protocol does not report a firmware version",
   "TI 适配器未提供桥接状态接口。": "TI adapters do not expose the bridge status interface.",
@@ -2897,7 +2886,6 @@ const api={Camera,Canvas,svgPoint};if(typeof module!=='undefined'&&module.export
   "查询桥接器状态": "Query bridge status",
   "载入 ECM 静音草稿": "Load muted ECM draft",
   "ECM 静音基础草稿已载入": "Muted ECM base draft loaded",
-  "支持 TI、S31 与 S3 USB 控制": "TI, S31 and S3 USB control",
   "完整路径总图": "Full routing overview",
   "EQ 与预设": "EQ and presets",
   "麦克风输入增益": "Microphone input gain",
@@ -2960,35 +2948,25 @@ const api={Camera,Canvas,svgPoint};if(typeof module!=='undefined'&&module.export
   "操作已取消": "Operation canceled",
   "未开始新的操作。": "No new operation was started.",
   "已取消排队操作，未开始写入": "Queued operation canceled; no write started",
-  "S3 开发适配器": "S3 development adapter",
   "GPIO8–14；开发 PID 303A:4005；应用固件版本由烧录包确认": "GPIO8–14; development PID 303A:4005; application firmware version is identified by the flashed package",
-  "S3 原生 USB · 48kHz 双向音频 · HID 协议 0.1": "S3 native USB · 48kHz duplex audio · HID protocol 0.1",
-  "；TI / S31 / S3 控制。S3 使用原生 USB Full Speed、GPIO8–14。协议版本不等于固件版本。": "; TI / S31 / S3 control. S3 uses native Full Speed USB and GPIO8–14. Protocol version is not firmware version.",
   "麦克风类型": "Microphone type",
   "按板上接线选择麦克风；选择方案后写入并核验。": "Choose the microphone to match the board wiring, then apply a setup.",
-  "48 kHz DMIC 需要 AC101S 和支持 DMIC 的 S3 0.3.1 固件": "48 kHz DMIC requires AC101S and S3 firmware 0.3.1 with DMIC support",
   "当前适配器未提供 48 kHz DMIC 支持": "This adapter does not provide 48 kHz DMIC support",
-  "AC101S DMIC 使用 16 或 48 kHz；48 kHz 需要配套 S3 固件": "AC101S DMIC uses 16 or 48 kHz; 48 kHz requires the matching S3 firmware",
   "AC102 DMIC 采样率范围为 8–24 kHz": "AC102 DMIC sample rates range from 8 to 24 kHz",
   "麦克风类型无效": "Invalid microphone type",
   "DMIC：MICP 接时钟，MICN 接数据；评估板 C34 留空、H29 移除，H32 供电。": "DMIC: MICP is clock, MICN is data. Leave C34 unpopulated, remove H29, and power MIC3 through H32 on this evaluation board.",
   "AMIC 使用模拟咪头接线；PGA 和麦克风偏置只作用于模拟输入。": "AMIC uses the analog microphone wiring. PGA and microphone bias apply only to the analog input.",
   "数字麦克风绕过模拟 PGA；请在录音音量模块调整数字增益。": "The digital microphone bypasses the analog PGA. Adjust digital gain in the recording volume module.",
   "DMIC 使用独立供电；本评估板由 H32 接通 MIC3 电源，模拟咪头偏置不控制 DMIC。": "DMIC uses a separate supply. H32 powers MIC3 on this evaluation board; analog microphone bias does not control DMIC.",
-  "AC101S 支持本板已适配的 16 / 48 kHz DMIC；正式 48 kHz 模式使用 S3 0.3.1。DMIC 接 MICP 时钟和 MICN 数据，评估板 C34 留空、H29 移除。": "This AC101S board supports the integrated 16 / 48 kHz DMIC modes. Use S3 0.3.1 for the production 48 kHz mode. MICP is clock and MICN is data; leave C34 unpopulated and remove H29 on the evaluation board.",
-  "AC102 按手册使用 8–24 kHz DMIC；48 kHz 适配仅用于 AC101S / S3。": "AC102 uses the documented 8–24 kHz DMIC range. The 48 kHz integration applies to AC101S / S3.",
   "所选麦克风经 80 Hz 高通送到 USB；AGC 关闭，扬声器静音。": "The selected microphone passes through an 80 Hz high-pass filter to USB; AGC is off and the speaker is muted.",
   "MIC → HPF 80 Hz → USB": "MIC → HPF 80 Hz → USB",
-  "所选麦克风与播放参考同步送入 S3 AEC，保留人声清晰播放。模拟输入使用 0.3.0 起的 AEC 固件，数字输入使用 0.3.1。": "The selected microphone and playback reference feed S3 AEC in sync, retaining clear-vocal playback. Analog input uses AEC firmware 0.3.0 or later; digital input uses 0.3.1.",
 
   "DMIC 采样率不适用于所选型号：": "DMIC sample rate is unavailable for this chip:",
-  "AC101S 数字输入可用 16 / 48 kHz；S3 固件 0.3.1 使用固定 48 kHz。DMIC 接 MICP 时钟和 MICN 数据，评估板 C34 留空、H29 移除。": "AC101S digital input supports 16 / 48 kHz. S3 firmware 0.3.1 uses fixed 48 kHz. Connect MICP to clock and MICN to data; leave C34 unpopulated and remove H29 on the evaluation board.",
   "数字录音通道已开启": "Digital capture path enabled",
   "数字录音通道未完全开启": "Digital capture path is incomplete",
   "DMIC 绕过模拟 PGA；检查 REC 和 ADC_DIG_EN，使能后由 MICN 接收 PDM 数据。": "DMIC bypasses the analog PGA. Check REC and ADC_DIG_EN; MICN receives PDM data when enabled.",
   "DMIC · MICP 时钟 / MICN 数据": "DMIC · MICP clock / MICN data",
   "AC101S 评估板 C34 留空、H29 移除、H32 接通数字麦克风供电；返回模拟输入前按接线说明恢复。": "On the AC101S evaluation board, leave C34 unpopulated, remove H29 and use H32 for digital microphone power. Follow the wiring guide before returning to analog input.",
-  "S3 固件 ": "S3 firmware ",
   "当前采集不代表所选麦克风输入": "Capture does not represent the selected microphone input",
   "GPIO8–14；原生 USB Full Speed；PID 303A:4005": "GPIO8–14; native USB Full Speed; PID 303A:4005",
   "正在整理原始 PCM…": "Preparing raw PCM…",
@@ -3390,10 +3368,10 @@ const api={translate,install,measureText};if(common)module.exports=api;else{root
     $('#quickStartStatus').textContent=busy?lastMessage+' · '+$('#hwProgressLabel').textContent:failure||quickState.message||(fresh()?'Quick Start：默认声卡、播放、录音和数字排查；选择方案后明确写入并核验。':'可先打开 Quick Start 浏览方案；连接 USB 并完整读回后可写入。');
     $('#quickStartReady').textContent=fresh()?'设备已就绪；点击任一方案的“写入并核验”。':'可先浏览方案；连接 USB 并完整读回后可写入。';
     $('#quickStartConnect').hidden=fresh();$('#quickStartConnect').disabled=busy;
-    const mic=$('#quickStartMic'),digital=mic.value==='dmic',dmicReady=T.adapterProfile(bridge?.device)?.kind==='S3'&&T.deviceCapabilities(bridge?.device)?.dmic48&&A.getConfig().profile==='AC101S';
+    const mic=$('#quickStartMic'),digital=mic.value==='dmic',dmicReady=T.deviceCapabilities(bridge?.device)?.dmic48&&A.getConfig().profile==='AC101S';
     mic.disabled=busy;
-    $('#quickStartMicNote').textContent=digital?(fresh()&&!dmicReady?'48 kHz DMIC 需要 AC101S 和支持 DMIC 的 S3 0.3.1 固件':'DMIC：MICP 接时钟，MICN 接数据；评估板 C34 留空、H29 移除，H32 供电。'):'AMIC 使用模拟咪头接线；PGA 和麦克风偏置只作用于模拟输入。';
-    for(const button of $$('[data-quick-apply]'))button.disabled=busy||!fresh()||(digital&&!dmicReady)||(button.dataset.quickApply==='aec-call'&&T.adapterProfile(bridge?.device)?.kind!=='S3');
+    $('#quickStartMicNote').textContent=digital?(fresh()&&!dmicReady?'48 kHz DMIC 需要 AC101S 和支持 DMIC 的桥接固件':'DMIC：MICP 接时钟，MICN 接数据；评估板 C34 留空、H29 移除，H32 供电。'):'AMIC 使用模拟咪头接线；PGA 和麦克风偏置只作用于模拟输入。';
+    for(const button of $$('[data-quick-apply]'))button.disabled=busy||!fresh()||(digital&&!dmicReady)||(button.dataset.quickApply==='aec-call'&&!(aecSupported()&&A.getConfig().profile==='AC101S'));
     if(!$('#quickStartPicker').hidden&&document.activeElement?.matches('[data-quick-apply]:disabled'))$('#closeQuickStart').focus();
     if(!activeRun&&focusedCancel){const target=$('#settingsWindow').hidden?$('#canvasScroll'):$('#inspectorTitle');target.tabIndex=-1;target.focus({preventScroll:true});}
   }
@@ -3459,14 +3437,14 @@ const api={translate,install,measureText};if(common)module.exports=api;else{root
     if(!busy){if(failure)setStatus('操作未完成',failure);else if(error)setStatus('参数尚不能下发',error);else if(ready&&plan)setStatus(plan.steps.length?opt.label+' · '+plan.steps.length+' 项待写入':'与设备读回一致',plan.steps.length?'调整仅保存在草稿；点击下方按钮写入当前模块。':'下次写入仍会重新读取并核验。最近读回 '+new Date(session.readAt).toLocaleTimeString());else setStatus(lastMessage,lastDetail);}
     $('#canvasNotice').textContent=busy?lastMessage:ready?'设备已读回 · 编辑后在悬窗底部写入':bridge?.fault?'通信待恢复 · 重新连接 USB':'完整路径 · 点击模块设置，右上角连接 USB';
     renderOperation();
-    $('#hwAdapterNotice').hidden=T.adapterProfile(bridge?.device)?.kind!=='S3';renderDebug();window.dispatchEvent(new Event('audiolab:hardwarestate'));
+    renderDebug();window.dispatchEvent(new Event('audiolab:hardwarestate'));
   }
   function describeError(error){const d=error.details||{};let text=error.message;if(d.attempted?.length)text+='；已尝试 '+d.attempted.length+' 个地址，恢复 '+d.restored.length+' 个'+(d.restoreFailed.length?'，'+d.restoreFailed.length+' 个未确认恢复，请核对连接并重新读回。':'，已改位已恢复。');if(d.recoveryConflicts?.length)text=text.replace(/。$/,'')+'；目标位发生外部变化，未覆盖新值。';return text;}
   async function run(action,prepare){if(busy)return;failure='';busy=true;const operation={cancelled:false};activeRun=operation;let outcome;try{const request=prepare?.();$('#hwProgress').value=0;$('#hwProgress').max=1;$('#hwProgressLabel').textContent=monitorFlight?'等待现有读取结束…':'准备操作…';render();if(monitorFlight)await monitorFlight.catch(()=>{});if(operation.cancelled){if(quickState.phase==='applying')quickState={phase:'cancelled',message:'Quick Start 已取消，未开始写入。'};setStatus('操作已取消','未开始新的操作。');A.toast('已取消排队操作，未开始写入');return;}outcome=await action(request);}catch(e){if(quickState.phase==='applying')quickState={phase:'error',message:describeError(e)};failure=describeError(e);setStatus('操作未完成',failure);A.toast(failure);}finally{if(activeRun===operation)activeRun=null;busy=false;updateSnapshot();render();}return outcome;}
   async function connect(){if(!navigator.hid){A.toast('请使用支持 WebHID 的桌面 Chrome / Edge');return;}if(available()||busy)return;const timeout=Number($('#hwTimeout').value),mclk=A.getReferenceMclk();if(timeout<200||timeout>5000||!Number.isInteger(timeout)||mclk<1e6||mclk>5e7){A.toast('请检查参考时钟和通信超时');return;}
     failure='';quickState={phase:'idle',message:''};busy=true;stopMonitor();bridgeStatus=null;render();const token=++generation;try{if(monitorFlight)await monitorFlight.catch(()=>{});if(bridge)await bridge.close();const picked=await navigator.hid.requestDevice({filters:T.deviceFilters()});if(!picked.length){setStatus('未选择设备','继续编辑草稿，尚未连接设备。');return;}
       bridge=new T.HidBridge(picked[0],{i2cAddress:Number($('#hwAddress').value),timeoutMs:timeout,onLog:log,onState:(state,error)=>{if(token!==generation)return;if(state==='disconnected'){stopMonitor('设备已断开，监视已停止');bridgeStatus=null;if(session)session.stale=true;setStatus('设备已断开','旧读回已标记，重新连接后再写入。');}if(state==='fault'){stopMonitor('通信故障，监视已停止');bridgeStatus=null;if(session)session.stale=true;setStatus('通信已停止',error.message);}updateSnapshot();render();}});
-      session=new S.RegisterSession(bridge,{onProgress:progress});await bridge.open();if(T.adapterProfile(bridge.device)?.fixedAudio){A.setReferenceMclk(12288000);}if(T.adapterProfile(bridge.device)?.kind==='S3'){bridgeStatus={...(await bridge.getStatus()),readAt:new Date().toISOString()};bridgeStatus.capabilities=await bridge.getCapabilities();}$('#hwImportNotes').hidden=true;setStatus('正在读回设备','连接时只读取，不自动写入。');await session.readAll();setStatus('设备已读回','点击框图模块设置，并在悬窗底部写入。');
+      session=new S.RegisterSession(bridge,{onProgress:progress});await bridge.open();if(T.adapterProfile(bridge.device)?.fixedAudio){A.setReferenceMclk(12288000);}if(T.adapterProfile(bridge.device)?.fixedAudio){bridgeStatus={...(await bridge.getStatus()),readAt:new Date().toISOString()};bridgeStatus.capabilities=await bridge.getCapabilities();bridgeStatus.aec=await bridge.getAEC();}$('#hwImportNotes').hidden=true;setStatus('正在读回设备','连接时只读取，不自动写入。');await session.readAll();setStatus('设备已读回','点击框图模块设置，并在悬窗底部写入。');
     }catch(error){setStatus('连接 / 读回未完成',error.name==='NotFoundError'?'未选择 USB 设备。':describeError(error));if(session)session.stale=true;A.toast(lastDetail);}finally{busy=false;updateSnapshot();render();}
   }
   $('#usbConnect').addEventListener('click',()=>{A.navigate('hardware');if(!available())connect();});
@@ -3484,7 +3462,7 @@ const api={translate,install,measureText};if(common)module.exports=api;else{root
   async function mclk(enabled){await run(async()=>{await bridge.setMclk(enabled);bridgeStatus=null;$('#hwMclkResult').textContent='适配器已应答 '+(enabled?'开启':'关闭')+'命令；未测量频率。';if(session)session.stale=true;setStatus('MCLK 命令已应答','时钟变化后请重新读回。');});}
   $('#hwMclkOn').addEventListener('click',()=>mclk(true));$('#hwMclkOff').addEventListener('click',()=>mclk(false));
   $('#hwLogExport').addEventListener('click',()=>download('AC10x-HID-log.json',{format:'AC10x-HID-log',schemaVersion:1,adapter:D.adapterInfo(bridge?.device),droppedEvents,events:logs}));
-  $('#hwQueryBridge').addEventListener('click',()=>run(async()=>{bridgeStatus={...(await bridge.getStatus()),readAt:new Date().toISOString()};if(T.adapterProfile(bridge.device)?.kind==='S3'){bridgeStatus.aec=await bridge.getAEC();bridgeStatus.capabilities=T.deviceCapabilities(bridge.device);}setStatus('桥接状态已读回','查询没有写入芯片寄存器。');}));
+  $('#hwQueryBridge').addEventListener('click',()=>run(async()=>{bridgeStatus={...(await bridge.getStatus()),readAt:new Date().toISOString()};bridgeStatus.capabilities=await bridge.getCapabilities();bridgeStatus.aec=await bridge.getAEC();setStatus('桥接状态已读回','查询没有写入芯片寄存器。');}));
   $('#hwMuteDAC').addEventListener('click',()=>run(async()=>{await session.writeOne(0x1c,0);setStatus('设备 DAC 已静音','写入与读回核验完成；草稿差异已更新。');}));
   $('#hwRestoreLast').addEventListener('click',()=>run(async()=>{const r=await session.restoreLast();setStatus('上次写入已恢复','实际写入 '+r.writes+' 次；完整读回核验通过。');}));
   $('#hwSaveBaseline').addEventListener('click',()=>{if(!fresh()||busy)return;baselineRequest++;baseline={snapshot:{...session.snapshot},readAt:session.readAt,label:'设备读回 '+new Date(session.readAt).toLocaleTimeString(),adapter:D.adapterInfo(bridge.device)};render();});
@@ -3506,18 +3484,19 @@ const api={translate,install,measureText};if(common)module.exports=api;else{root
   window.addEventListener('pagehide',()=>{++generation;stopMonitor();if(logPaint!==null)clearTimeout(logPaint);logPaint=null;session?.cancel();bridge?.close().catch(()=>{});});
   function cancel(){const fromButton=['hwCancel','quickStartCancel'].includes(document.activeElement?.id);if(activeRun)activeRun.cancelled=true;session?.cancel();$('#hwProgressLabel').textContent='等待当前通信结束，然后取消并尝试恢复…';renderOperation();if(fromButton){const target=$('#settingsWindow').hidden?$('#canvasScroll'):$('#inspectorTitle');target.tabIndex=-1;target.focus({preventScroll:true});}}
   const cloneState=x=>x?JSON.parse(JSON.stringify(x)):null;
+  function aecSupported(){return T.deviceCapabilities(bridge?.device)?.aec??Boolean(bridgeStatus?.aec?.supported);}
   function quickStart(exampleId='default'){return run(async request=>{
     setStatus('正在应用 Quick Start：'+request.meta.name,'正在写入所选方案，并逐项核验。');
-    let aec={supported:false,enabled:false};
-    if(T.adapterProfile(bridge.device)?.kind==='S3')aec=await bridge.getAEC();
-    if(request.meta.requiresS3AEC&&!aec.supported)throw Error('此方案需要 S3 AEC 固件 0.3.0，请先更新固件');
+    let aec=await bridge.getAEC();
+    if(request.meta.requiresAEC&&!aec.supported)throw Error('当前桥接器未提供 AEC，请检查固件和 PSRAM');
     if(activeRun?.cancelled)throw Error('已取消后续操作');
     if(aec.supported)await bridge.setAEC(false);
     const result=await session.apply(request.config,request.opt);
-    if(request.meta.requiresS3AEC){
+    if(request.meta.requiresAEC){
       try{if(activeRun?.cancelled)throw Error('已取消后续操作');aec=await bridge.setAEC(true);if(activeRun?.cancelled)throw Error('已取消后续操作');}
       catch(error){if(available()){await bridge.setAEC(false).catch(()=>{});if(result.writes>0)await session.restoreLast().catch(recovery=>{error.message+='; recovery: '+recovery.message;});}throw error;}
     }else aec={...aec,enabled:false};
+    if(bridgeStatus)bridgeStatus.aec=aec;
     const unchanged=request.generation===generation&&request.revision===A.getDraftRevision();
     if(unchanged)A.importHardwareConfig(request.config,{presetId:request.meta.presetId});
     quickState={phase:'verified',exampleId:request.meta.id,name:request.meta.name,message:unchanged?'已写入并核验：'+request.meta.name+'；点击图上模块继续调整。':'Quick Start 提交时配置已核验；保留你随后修改的草稿，图中显示设备读回。',writes:result.writes,aec};
@@ -3527,7 +3506,7 @@ const api={translate,install,measureText};if(common)module.exports=api;else{root
     if(!fresh())throw Error('请先连接并完整读回设备');
     const profile=T.adapterProfile(bridge.device),base=A.getConfig(),meta=AudioExamples.quickExamples.find(x=>x.id===exampleId);
     if(!meta)throw Error('未知 Quick Start 方案');
-    if(meta.requiresS3AEC&&(profile?.kind!=='S3'||base.profile!=='AC101S'))throw Error('AEC 需要 S3 适配器和 AC101S 参数表');
+    if(meta.requiresAEC&&(!aecSupported()||base.profile!=='AC101S'))throw Error('AEC 需要支持 AEC 的桥接器和 AC101S 参数表');
     const inputMode=$('#quickStartMic').value;
     const config=A.validateConfig(AudioExamples.quickExample(exampleId,base,{inputMode,fixedAudio:Boolean(profile?.fixedAudio),lineDifferential:Boolean(session.snapshot[0x26]&16)}));
     const opt={groups:['routing','eq','dynamics','clock'],scope:null,label:meta.name,mclkHz:profile?.fixedAudio?12288000:A.getReferenceMclk(),profile:base.profile};

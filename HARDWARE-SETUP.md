@@ -13,4 +13,4 @@
 
 改线或更换跳帽前，断开板上全部供电。
 
-S31 和 S3 默认提供 USB 播放、人声清晰 EQ 和独立麦克风录音。浏览器中分别选择 USB 控制设备与录音输入，电脑音频输出选择 **AC10x Duplex**。S3 主控接线见[GPIO 表](firmware/s3/README.md)。
+AC10x 桥接固件默认提供 USB 播放、人声清晰 EQ 和独立麦克风录音。浏览器中分别选择 USB 控制设备与录音输入，电脑音频输出选择 **AC10x Duplex**。两种主控的 I²S、I²C 和 USB 接线见[桥接固件接线表](firmware/README.md)。

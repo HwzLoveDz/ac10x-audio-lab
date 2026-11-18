@@ -1,7 +1,7 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs'),crypto=require('node:crypto');
 const E=require('../examples.js'),C=require('../codec.js'),D=require('../dsp.js');
-const seed=require('../AC101S-S31-ECM-Speaker-muted.json'),artifact=require('../DEFAULT-FIRMWARE.json');
+const seed=require('../AC101S-ECM-Speaker-muted.json'),artifact=require('../DEFAULT-FIRMWARE.json');
 let n=0;function test(name,fn){fn();n++;console.log('PASS '+name);}
 test('the published default-firmware preset and Quick Start have the same canonical configuration',()=>{const c=E.defaultFirmware(seed,{fixedAudio:true,lineDifferential:false});assert.deepEqual(c,artifact.config);assert.deepEqual(E.quickStart(seed,{fixedAudio:true}),c);assert.equal(crypto.createHash('sha256').update(JSON.stringify(c)).digest('hex'),artifact.canonicalConfigSHA256);assert.equal(artifact.name,'默认固件');});
 test('both physical output modes match the generated firmware patches and preserve unowned bits',()=>{for(const differential of [false,true]){const c=E.defaultFirmware(seed,{fixedAudio:true,lineDifferential:differential});const patches=C.encode(c,{groups:['routing','eq','dynamics','clock'],profile:'AC101S',mclkHz:12288000,manualBase:{38:differential?16:0}}).patches;assert.equal(patches.length,artifact.registerPatches.length);patches.forEach((p,i)=>{const f=artifact.registerPatches[i];assert.deepEqual([p.address,p.mask,p.value],[f.address,f.mask,differential?f.differential:f.single]);assert.equal(p.mask&~C.masks[p.address],0);assert.ok(p.address>1);});}});

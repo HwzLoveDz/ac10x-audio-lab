@@ -6,7 +6,7 @@
 
 A browser-based audio tool for AC101S and AC102 codecs. Configure signal routing, tune EQ, read and write registers, and test USB playback and recording from a signal graph. Available in Chinese and English, with light and dark themes.
 
-Web app **0.8.15-rc.1** · S31 firmware **0.3.3** · ESP32-S3 firmware **0.3.1**
+Web app **0.8.16-rc.1** · bridge firmware **0.4.0**
 
 ![AC10x Audio Lab signal graph](docs/audio-lab-dark.jpg)
 
@@ -29,7 +29,7 @@ The default setup provides **USB audio with clear-vocal EQ** and independent mic
 
 ## Features
 
-- **Quick Start:** nine setups for playback, recording, channel checks, digital loopback capture, and S3 hands-free calling with AEC. See [setup details](EXAMPLES.md).
+- **Quick Start:** nine setups for playback, recording, channel checks, digital loopback capture, and hands-free calling with AEC. See [setup details](EXAMPLES.md).
 - **EQ:** sixteen presets, three filters, response plots, bypass, and A/B listening.
 - **Register tools:** read device configuration, apply and verify module settings, compare configurations, monitor registers, and undo the last write.
 - **Playback and recording:** select an audio input, inspect waveforms and spectra, and export the original WAV. Switch between A and B to compare the browser EQ effect.
@@ -39,24 +39,12 @@ Edits stay in the draft until you click **Write & verify**. Quick Start applies 
 
 ## Hardware and firmware
 
-| Bridge | VID:PID | Audio and control |
-|---|---|---|
-| TI adapter | 0451:4822 | Original adapter protocol, variable-length HID reports |
-| S31 | 303A:4004 | 48 kHz duplex USB audio, 10-byte HID reports |
-| ESP32-S3 | 303A:4005 | Full Speed USB, 48 kHz duplex audio, 10-byte HID reports |
+ESP32-S3 and ESP32-S31 share bridge firmware and use the same browser controls. USB audio runs at 48 kHz in both directions. For AC101S, Quick Start lets you choose an analog microphone or 48 kHz DMIC. Both inputs support clear-vocal playback and AEC. AEC uses octal PSRAM and processes speech at 16 kHz. Select the AC101S or AC102 register profile to match the chip marking. The TI adapter provides register control.
 
-S31 and S3 use 16-bit samples, two 32-bit I²S slots, and a 12.288 MHz MCLK, with the codec in slave mode. Select the AC101S or AC102 register profile to match the chip marking.
-
-S3 firmware 0.3.1 provides AEC for hands-free calls using octal PSRAM. It processes speech at 16 kHz while USB capture remains 48 kHz stereo. See [AEC setup](AEC.md).
-
+- [Firmware download, wiring, and updates](firmware/README.md#english)
 - [AC101S board wiring](HARDWARE-SETUP.md)
-- [48 kHz digital microphone](DMIC.en.md)
-- [S31 firmware and source](firmware/README.md)
-- [S3 firmware, wiring, and source](firmware/s3/README.md)
-- [USB bridge protocol](S3-INTEGRATION.md)
+- [Digital microphone](DMIC.en.md) · [AEC setup](AEC.md)
 - [Importing settings from the original tools](COMPARISON.md)
-
-S3 0.3.1 supports AC101S digital microphone capture at 48 kHz. Select AMIC or DMIC in Quick Start; clear-vocal playback and S3 AEC work with either input. See the [DMIC guide](DMIC.en.md).
 
 ## Development
 
@@ -72,9 +60,7 @@ npm test
 
 ## Downloads
 
-- [0.8.15-rc.1 complete package](releases/AC10x-Audio-Lab-0.8.15-rc.1.zip)
-- [ESP32-S3 0.3.1 firmware and source](releases/AC10x-S3-Default-Firmware-0.3.1.zip)
-- [SHA-256 checksums](releases/SHA256SUMS.txt)
+[0.8.16-rc.1 complete package](releases/AC10x-Audio-Lab-0.8.16-rc.1.zip) · [SHA-256](releases/SHA256SUMS.txt) · [Previous releases](releases/)
 
 ## License
 

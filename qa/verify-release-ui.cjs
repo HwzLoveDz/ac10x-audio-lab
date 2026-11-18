@@ -25,13 +25,13 @@ async function make(){
  let x=await make();try{
   const {w,$,device,wait,load,click,blobs}=x;
   const before=device.writes;
-  const preset=JSON.parse(fs.readFileSync(path.join(__dirname,'../AC101S-S31-ECM-Speaker-muted.json'),'utf8'));
+  const preset=JSON.parse(fs.readFileSync(path.join(__dirname,'../AC101S-ECM-Speaker-muted.json'),'utf8'));
   load('#configFile',preset);await wait(()=>/草稿已导入/.test($('#toast').textContent));assert.equal($('#hwProfile').value,'AC101S');assert.equal(device.writes,before);
   assert.equal($('#hwLoadS31Template'),null);assert.equal(w.AudioLab.getConfig().dac.mute,true);assert.equal(w.AudioLab.getConfig().hpf.enabled,false);assert.equal(device.writes,before);
   pass('own AC101S preset loads into the actual draft; redundant template button removed without hardware writes');
   $('#exportConfig').click();const document=JSON.parse(blobs.at(-1).parts.join(''));assert.equal(document.format,'AC10x-configuration');assert.equal(document.schemaVersion,1);assert.equal(w.AudioLab.validateConfig(document).profile,'AC101S');load('#configFile',document);await wait(()=>/草稿已导入/.test($('#toast').textContent));assert.equal(device.writes,before);
   pass('versioned configuration export reimports through the actual file handler without writes');
-  await click('#hwQueryBridge');assert.match($('#hwBridgeStatus').textContent,/协议/);assert.equal(device.sent.at(-1).command,126);assert.equal(device.writes,before);
+  await click('#hwQueryBridge');assert.match($('#hwBridgeStatus').textContent,/协议/);assert.deepEqual(device.sent.slice(-2).map(r=>r.command),[126,122]);assert.equal(device.writes,before);
   pass('explicit S31 status query uses read-only protocol and displays queried evidence');
   $('#hwSaveBaseline').click();device.mem[32]^=8;await click('#hwRead');assert.match($('#hwBaselineInfo').textContent,/1个地址变化/);assert.match($('#hwBaselineRows').textContent,/0x20/);
   load('#hwBaselineFile',{registers:{0:18,32:device.mem[32]}});await sleep(20);assert.match($('#hwBaselineInfo').textContent,/QA.json/);assert.equal(device.writes,before);

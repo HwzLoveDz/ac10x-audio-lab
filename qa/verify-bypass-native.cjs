@@ -40,7 +40,7 @@ async function audio(label){
 }
 (async()=>{try{
  await bridge.open();result.bridgeBefore=await bridge.getStatus();const before=await session.readAll();result.before=before;
- const seed=JSON.parse(fs.readFileSync(path.join(__dirname,'../AC101S-S31-ECM-Speaker-muted.json'),'utf8'));
+ const seed=JSON.parse(fs.readFileSync(path.join(__dirname,'../AC101S-ECM-Speaker-muted.json'),'utf8'));
  config=E.defaultFirmware(seed,{fixedAudio:true,lineDifferential:Boolean(before[38]&16)});
  const opt={groups:['eq'],profile:'AC101S',mclkHz:12288000};
  check('existing default voice plan is already exact before native acceptance',C.makePlan(config,before,{...opt,groups:['routing','eq','dynamics','clock']}).steps.length===0);

@@ -11,7 +11,7 @@ class FakeHID{
  async sendReport(id,buffer){if(!this.opened)throw new Error('fake disconnected');if(id!==0)throw new Error('wrong report ID');const p=Uint8Array.from(buffer),command=[0x7a,0x7c,0x7d,0x7e].includes(p[0])?p[0]:p[0]&15,address=(p[3]<<8)|p[4],value=p[5];this.sent.push({id,payload:Array.from(p),command,address,value});this.active++;this.maxActive=Math.max(this.maxActive,this.active);if(command===0)this.writes++;const action=this.hook?.({command,address,value,writes:this.writes,device:this})||{};
    const response=new Uint8Array(p.length);response[0]=command;response[4]=address>>8;response[5]=address&255;
    if(this.vendorId===0x303a){response[1]=1;if([0,1].includes(command)){response[6]=p[7];response[command===1?8:7]=p[2];}if(command===2){response[2]=p[2];response[8]=1;}if(command===0x7e)response.set([0x7e,1,0,1,1,0,0,0,1,0]);}
-   if(command===0x7a){response.fill(0);response[0]=command;if(this.dmicFirmware)response.set([0x7a,0xd4,1,7,0,3,1,48,48,1]);}
+   if(command===0x7a){response.fill(0);response[0]=command;if(this.dmicFirmware)response.set([0x7a,0xd4,1,this.aecFirmware?7:5,0,4,0,48,48,1]);}
    if([0x7c,0x7d].includes(command)){response.fill(0);response[0]=command;if(this.aecFirmware){if(command===0x7c)this.aecEnabled=Boolean(p[2]);response.set([command,0xae,1,1,this.aecEnabled?1:0,0,0,7,1,0]);}}
    if(command===1){response[2]=this.mem[address]??0;response[7]=action.nack?0:1;}
    if(command===0){this.aecEnabled=false;if(!action.nack){const eqBase=[0x50,0x60,0x70].find(a=>address>=a&&address<a+15);const mask=eqBase!==undefined?((address-eqBase)%3===0?0x07:0xff):(C.masks[address]??255);this.mem[address]=((this.mem[address]||0)&~mask)|(value&mask);}response[8]=action.nack?0:1;}
